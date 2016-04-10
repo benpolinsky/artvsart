@@ -27,7 +27,11 @@ group :development, :test do
 end
 
 group :test do
-  gem 'rspec-rails'
+  gem "rspec-rails", git: "https://github.com/rspec/rspec-rails.git", branch: "master"
+  gem "rspec-core", git: "https://github.com/rspec/rspec-core.git", branch: "master"
+  gem "rspec-support", git: "https://github.com/rspec/rspec-support.git", branch: "master"
+  gem "rspec-expectations", git: "https://github.com/rspec/rspec-expectations.git", branch: "master"
+  gem "rspec-mocks", git: "https://github.com/rspec/rspec-mocks.git", branch: "master"
 end
 
 group :development do
