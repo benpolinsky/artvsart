@@ -7,6 +7,7 @@ gem 'rails', '>= 5.0.0.beta3', '< 5.1'
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
 gem 'puma'
+gem 'active_model_serializers'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.0'
@@ -24,6 +25,7 @@ gem 'puma'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  gem "factory_girl_rails", "~> 4.0"
 end
 
 group :test do
@@ -32,6 +34,9 @@ group :test do
   gem "rspec-support", git: "https://github.com/rspec/rspec-support.git", branch: "master"
   gem "rspec-expectations", git: "https://github.com/rspec/rspec-expectations.git", branch: "master"
   gem "rspec-mocks", git: "https://github.com/rspec/rspec-mocks.git", branch: "master"
+  gem 'rails-controller-testing'
+  
+
 end
 
 group :development do
