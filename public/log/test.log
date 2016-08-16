@@ -1,0 +1,281 @@
+  [1m[35m (113.4ms)[0m  [1m[35mDROP DATABASE IF EXISTS "artvsart-api_test"[0m
+  [1m[35m (235.2ms)[0m  [1m[35mCREATE DATABASE "artvsart-api_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (4.8ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (4.8ms)[0m  [1m[35mCREATE TABLE "arts" ("id" serial primary key, "name" character varying, "creator" character varying, "creation_date" timestamp, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "description" text)[0m
+  [1m[35m (2.0ms)[0m  [1m[35mCREATE TABLE "competitions" ("id" serial primary key, "challenger_id" integer, "art_id" integer, "winner" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX  "index_competitions_on_art_id" ON "competitions" USING btree ("art_id")[0m
+  [1m[35m (2.6ms)[0m  [1m[35mALTER TABLE "competitions" ADD CONSTRAINT "fk_rails_74283b9b85"
+FOREIGN KEY ("art_id")
+  REFERENCES "arts" ("id")
+[0m
+  [1m[35m (2.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying PRIMARY KEY)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT version FROM "schema_migrations"[0m
+  [1m[35m (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES ('20160410031552')[0m
+  [1m[35m (0.3ms)[0m  [1m[32mINSERT INTO schema_migrations (version) VALUES ('20160407020656'), ('20160407023702');
+
+[0m
+  [1m[35m (2.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", 2016-08-16 21:21:20 UTC], ["updated_at", 2016-08-16 21:21:20 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:20 UTC], ["updated_at", 2016-08-16 21:21:20 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:20 UTC], ["updated_at", 2016-08-16 21:21:20 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Processing by CompetitionsController#new as HTML
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "arts"[0m
+  [1m[36mArt Load (0.2ms)[0m  [1m[34mSELECT "arts".* FROM "arts"[0m
+  [1m[36mArt Load (0.1ms)[0m  [1m[34mSELECT "arts".* FROM "arts"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.8ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["challenger_id", 1], ["art_id", 2], ["created_at", 2016-08-16 21:21:20 UTC], ["updated_at", 2016-08-16 21:21:20 UTC]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Completed 200 OK in 17ms (Views: 1.5ms | ActiveRecord: 3.3ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:20 UTC], ["updated_at", 2016-08-16 21:21:20 UTC]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Processing by CompetitionsController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "arts"[0m
+  [1m[36mArt Load (0.1ms)[0m  [1m[34mSELECT "arts".* FROM "arts"[0m
+  [1m[36mArt Load (0.1ms)[0m  [1m[34mSELECT "arts".* FROM "arts"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["challenger_id", 3], ["art_id", 4], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Completed 200 OK in 4ms (Views: 0.8ms | ActiveRecord: 0.8ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+Processing by CompetitionsController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "arts"[0m
+Completed 422 Unprocessable Entity in 2ms (Views: 0.9ms | ActiveRecord: 0.2ms)
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Processing by CompetitionsController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "arts"[0m
+Completed 422 Unprocessable Entity in 1ms (Views: 0.8ms | ActiveRecord: 0.4ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["challenger_id", 7], ["art_id", 6], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Processing by CompetitionsController#create as HTML
+  Parameters: {"id"=>"3", "winner"=>"1"}
+  [1m[36mCompetition Load (0.2ms)[0m  [1m[34mSELECT  "competitions".* FROM "competitions" WHERE "competitions"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mArt Load (0.2ms)[0m  [1m[34mSELECT  "arts".* FROM "arts" WHERE "arts"."id" = $1 LIMIT $2[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mArt Load (0.2ms)[0m  [1m[34mSELECT  "arts".* FROM "arts" WHERE "arts"."id" = $1 LIMIT $2[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[33mUPDATE "competitions" SET "winner" = $1, "updated_at" = $2 WHERE "competitions"."id" = $3[0m  [["winner", 1], ["updated_at", 2016-08-16 21:21:21 UTC], ["id", 3]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Completed 200 OK in 12ms (Views: 0.9ms | ActiveRecord: 1.3ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "competitions" WHERE "competitions"."art_id" = $1[0m  [["art_id", 8]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "competitions" ("art_id", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["art_id", 9], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mCompetition Load (0.2ms)[0m  [1m[34mSELECT "competitions".* FROM "competitions" WHERE "competitions"."art_id" = $1[0m  [["art_id", 9]]
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "competitions" WHERE "competitions"."challenger_id" = $1[0m  [["challenger_id", 11]]
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["challenger_id", 11], ["art_id", 10], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "competitions" WHERE "competitions"."challenger_id" = $1[0m  [["challenger_id", 11]]
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["challenger_id", 13], ["art_id", 12], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mArt Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "arts" INNER JOIN "competitions" ON "arts"."id" = "competitions"."art_id" WHERE "competitions"."challenger_id" = $1 AND "arts"."id" = $2 LIMIT $3[0m  [["challenger_id", 13], ["id", 12], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art One"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Two"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Three"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Four"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "winner", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["challenger_id", 15], ["art_id", 14], ["winner", 0], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "winner", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["challenger_id", 16], ["art_id", 14], ["winner", 0], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "winner", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["challenger_id", 17], ["art_id", 14], ["winner", 1], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "winner", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["challenger_id", 14], ["art_id", 17], ["winner", 1], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "competitions" WHERE "competitions"."art_id" = $1 AND "competitions"."winner" = $2[0m  [["art_id", 14], ["winner", 0]]
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "competitions" WHERE "competitions"."challenger_id" = $1 AND "competitions"."winner" = $2[0m  [["challenger_id", 14], ["winner", 1]]
+  [1m[36mCompetition Load (0.1ms)[0m  [1m[34mSELECT "competitions".* FROM "competitions" WHERE "competitions"."art_id" = $1 AND "competitions"."winner" = $2[0m  [["art_id", 14], ["winner", 0]]
+  [1m[36mCompetition Load (0.1ms)[0m  [1m[34mSELECT "competitions".* FROM "competitions" WHERE "competitions"."challenger_id" = $1 AND "competitions"."winner" = $2[0m  [["challenger_id", 14], ["winner", 1]]
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art One"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Two"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Three"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Four"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "winner", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["challenger_id", 19], ["art_id", 18], ["winner", 0], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "winner", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["challenger_id", 20], ["art_id", 18], ["winner", 0], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "winner", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["challenger_id", 21], ["art_id", 18], ["winner", 1], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "winner", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["challenger_id", 18], ["art_id", 21], ["winner", 1], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "competitions" WHERE "competitions"."art_id" = $1 AND "competitions"."winner" = $2[0m  [["art_id", 18], ["winner", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "competitions" WHERE "competitions"."challenger_id" = $1 AND "competitions"."winner" = $2[0m  [["challenger_id", 18], ["winner", 0]]
+  [1m[36mCompetition Load (0.2ms)[0m  [1m[34mSELECT "competitions".* FROM "competitions" WHERE "competitions"."art_id" = $1 AND "competitions"."winner" = $2[0m  [["art_id", 18], ["winner", 1]]
+  [1m[36mCompetition Load (0.1ms)[0m  [1m[34mSELECT "competitions".* FROM "competitions" WHERE "competitions"."challenger_id" = $1 AND "competitions"."winner" = $2[0m  [["challenger_id", 18], ["winner", 0]]
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art One"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Two"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "winner", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["challenger_id", 23], ["art_id", 22], ["winner", 0], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Competitor"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Challenger"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["challenger_id", 25], ["art_id", 24], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[33mUPDATE "competitions" SET "winner" = $1, "updated_at" = $2 WHERE "competitions"."id" = $3[0m  [["winner", 0], ["updated_at", 2016-08-16 21:21:21 UTC], ["id", 16]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Competitor"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Art Challenger"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["challenger_id", 27], ["art_id", 26], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[33mUPDATE "competitions" SET "winner" = $1, "updated_at" = $2 WHERE "competitions"."id" = $3[0m  [["winner", 0], ["updated_at", 2016-08-16 21:21:21 UTC], ["id", 17]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/api/v1/battle" for 127.0.0.1 at 2016-08-16 17:21:21 -0400
+Processing by CompetitionsController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "arts"[0m
+  [1m[36mArt Load (0.1ms)[0m  [1m[34mSELECT "arts".* FROM "arts"[0m
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT "arts".* FROM "arts"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["challenger_id", 29], ["art_id", 28], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Completed 200 OK in 4ms (Views: 1.0ms | ActiveRecord: 0.8ms)
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "arts" ("name", "creator", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "A Piece of Art"], ["creator", "A Fine Creator"], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/api/v1/battle" for 127.0.0.1 at 2016-08-16 17:21:21 -0400
+Processing by CompetitionsController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "arts"[0m
+  [1m[36mArt Load (0.1ms)[0m  [1m[34mSELECT "arts".* FROM "arts"[0m
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT "arts".* FROM "arts"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "competitions" ("challenger_id", "art_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["challenger_id", 31], ["art_id", 30], ["created_at", 2016-08-16 21:21:21 UTC], ["updated_at", 2016-08-16 21:21:21 UTC]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Completed 200 OK in 4ms (Views: 0.9ms | ActiveRecord: 0.7ms)
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m

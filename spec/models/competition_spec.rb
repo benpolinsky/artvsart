@@ -1,15 +1,12 @@
 require 'rails_helper'
 
 COMPETITION_ATTRIBUTES = [:winner]
+
 RSpec.describe Competition, type: :model do
   COMPETITION_ATTRIBUTES.each do |attr|
     it "has a #{attr}" do
       expect(Competition.new).to respond_to attr
     end
-  end
-  
-  context "validations" do
-    
   end
     
   it "'s winner attr determines the #winning_art and #losing_art" do
@@ -31,7 +28,7 @@ RSpec.describe Competition, type: :model do
     competitor = create(:art, name: "Art Competitor")
     challenger = create(:art, name: "Art Challenger")
     
-    competition = competitor.competitions.create(challenger: challenger)
+    competition = competitor.competitions.create(challenger: challenger, art: competitor)
     expect{competition.competitor_wins!}.to change{competition.winner}.to(0)
   end
   

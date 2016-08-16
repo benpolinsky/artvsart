@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 5.0.0.beta3', '< 5.1'
+gem 'rails'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
@@ -35,8 +35,6 @@ group :test do
   gem "rspec-expectations", git: "https://github.com/rspec/rspec-expectations.git", branch: "master"
   gem "rspec-mocks", git: "https://github.com/rspec/rspec-mocks.git", branch: "master"
   gem 'rails-controller-testing'
-  
-
 end
 
 group :development do
