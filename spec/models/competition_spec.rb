@@ -13,15 +13,19 @@ RSpec.describe Competition, type: :model do
     winner = create(:art, name: "Art One")
     loser = create(:art, name: "Art Two")
     
-    competition = winner.competitions.create(challenger: loser, winner: 0)
+    competition = winner.competitions.create(challenger: loser, winner: winner)
     
     expect(competition.winning_art).to eq winner
     expect(competition.losing_art).to eq loser
     
-    competition.winner = 1
+    competition.winner = loser
     
     expect(competition.winning_art).to eq loser
     expect(competition.losing_art).to eq winner
+  end
+  
+  it "doesn't set winning or losing arts if an invalid winner is selected" do
+    
   end
   
   it "sets the competitor as a winner" do
@@ -29,7 +33,7 @@ RSpec.describe Competition, type: :model do
     challenger = create(:art, name: "Art Challenger")
     
     competition = competitor.competitions.create(challenger: challenger, art: competitor)
-    expect{competition.competitor_wins!}.to change{competition.winner}.to(0)
+    expect{competition.competitor_wins!}.to change{competition.winner}.to(competitor)
   end
   
   it "sets the challenger" do
@@ -37,6 +41,11 @@ RSpec.describe Competition, type: :model do
     challenger = create(:art, name: "Art Challenger")
     
     competition = competitor.competitions.create(challenger: challenger)
-    expect{competition.competitor_wins!}.to change{competition.winner}.to(0)
+    expect{competition.competitor_wins!}.to change{competition.winner}.to(competitor)
+  end
+  
+  context "competition state" do
+    pending "begins as fresh"
+    pending "transitions to winner_picked once a winner is picked"
   end
 end

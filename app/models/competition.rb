@@ -1,20 +1,21 @@
 class Competition < ApplicationRecord
   belongs_to :challenger, class_name: "Art"
   belongs_to :art # the competitor
+  belongs_to :winner, class_name: "Art", required: false
   
   def winning_art
-    winner == 0 ? art : challenger
+    winner
   end
   
   def losing_art
-    winner == 0 ? challenger : art
+    art == winner ? challenger : art
   end
   
   def competitor_wins!
-    update(winner: 0)
+    update(winner: art)
   end
   
   def challenger_wins!
-    update(winner: 1)
+    update(winner: challenger)
   end
 end

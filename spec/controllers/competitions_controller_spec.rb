@@ -31,7 +31,7 @@ RSpec.describe CompetitionsController do
       art = create(:art)
       challenger = create(:art)
       competition = Competition.create(art: art, challenger: challenger)
-      post :create, params: {id: competition.id, winner: 1}
+      post :create, params: {competition: {id: competition.id, winner_id: challenger.id}}
       expect(assigns(:competition).winning_art).to eq challenger
       expect(assigns(:competition).losing_art).to eq art
       expect(assigns(:competition).persisted?).to be true

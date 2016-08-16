@@ -1,5 +1,6 @@
 class CompetitionsController < ApplicationController
   include ActionController::Serialization
+
   def new
     if Art.all.size >= 2
       pick_battle_pair
@@ -12,11 +13,13 @@ class CompetitionsController < ApplicationController
   end
   
   def create
-    @competition = Competition.find(params[:id]) 
-    if @competition.update(winner: params[:winner].to_i)
+    @competition = Competition.find_by(id: params[:competition][:id]) 
+    if @competition && @competition.update(winner_id: params[:competition][:winner_id].to_i)
       render json: @competition
-    else
+    elsif @competition
       render json: {errors: @competition.errors}
+    else
+      render status: 404
     end
   end
   
@@ -24,7 +27,9 @@ class CompetitionsController < ApplicationController
   protected
   
   def pick_battle_pair
-    @competitor = Art.all.sample
+    # Replace with some fun randomization or algo
+    @competitor = Art.all.sample 
     @challenger = (Art.all - [@competitor]).sample
   end
+  
 end

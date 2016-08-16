@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :art do
-    name "A Piece of Art"
-    creator "A Fine Creator"
+    name {Faker::Book.title}
+    creator {Faker::Book.author}
   end
 end

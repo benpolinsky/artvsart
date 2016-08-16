@@ -27,10 +27,12 @@ ActiveRecord::Schema.define(version: 20160410031552) do
   create_table "competitions", force: :cascade do |t|
     t.integer  "challenger_id"
     t.integer  "art_id"
-    t.integer  "winner"
+    t.integer  "winner_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.index ["art_id"], name: "index_competitions_on_art_id", using: :btree
+    t.index ["challenger_id"], name: "index_competitions_on_challenger_id", using: :btree
+    t.index ["winner_id"], name: "index_competitions_on_winner_id", using: :btree
   end
 
   add_foreign_key "competitions", "arts"

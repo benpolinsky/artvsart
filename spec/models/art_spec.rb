@@ -64,12 +64,12 @@ RSpec.describe Art, type: :model do
       @second_challenger = create(:art, name: "Art Three")
       @third_challenger = create(:art, name: "Art Four")
     
-      @competitor.competitions.create(challenger: @first_challenger, winner: 0)
-      @competitor.competitions.create(challenger: @second_challenger, winner: 0)
-      @competitor.competitions.create(challenger: @third_challenger, winner: 1)
+      @competitor.competitions.create(challenger: @first_challenger, winner: @competitor)
+      @competitor.competitions.create(challenger: @second_challenger, winner: @competitor)
+      @competitor.competitions.create(challenger: @third_challenger, winner: @third_challenger)
       
       # ensure we test the other side of the competition
-      @third_challenger.competitions.create(challenger: @competitor, winner: 1)
+      @third_challenger.competitions.create(challenger: @competitor, winner: @competitor)
     end
     
     it "display the #number_of_wins" do

@@ -16,19 +16,19 @@ class Art < ApplicationRecord
   validates :creator, presence: true
 
   def wins_as_competitor
-    competitions.where(winner: 0)
+    competitions.where(winner: self.id)
   end
   
   def wins_as_challenger
-    challenges.where(winner: 1)
+    challenges.where(winner: self.id)
   end
   
   def losses_as_competitor
-    competitions.where(winner: 1)
+    competitions.where.not(winner: self.id)
   end
   
   def losses_as_challenger
-    challenges.where(winner: 0)
+    challenges.where.not(winner: self.id)
   end
   
   def wins
