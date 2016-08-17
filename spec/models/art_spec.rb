@@ -31,29 +31,25 @@ RSpec.describe Art, type: :model do
     end
     
     it "has many competitions" do
-      art = @art
-      expect(art.competitions.size).to eq 0
-      expect{art.competitions.create}.to change{art.competitions.size}.by(1)
+      expect(@art.competitions.size).to eq 0
+      expect{@art.competitions.create}.to change{@art.competitions.size}.by(1)
     end
        
     it "has many challengers (art) through competitions" do
-      art = @art
       challenger = Art.create
-      art.competitions.create(challenger: challenger)
-      expect(art.challengers).to include challenger
+      @art.competitions.create(challenger: challenger)
+      expect(@art.challengers).to include challenger
     end
     
     it "has many challenges (inverse competitions)" do
-      art = @art
       challenger = create(:art)
-      expect{art.competitions.create(challenger: challenger)}.to change{challenger.challenges.count}.by(1)
+      expect{@art.competitions.create(challenger: challenger)}.to change{challenger.challenges.count}.by(1)
     end
     
     it "has many challengers (inverse competitors)" do
-      art = @art
       challenger = create(:art)
-      art.competitions.create(challenger: challenger)
-      expect(challenger.competitors).to include art
+      @art.competitions.create(challenger: challenger)
+      expect(challenger.competitors).to include @art
     end
   end
   

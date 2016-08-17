@@ -6,11 +6,12 @@ class Competition < ApplicationRecord
   validate :winner_included?, if: Proc.new {|w| w.winner_id.present?}
   
   def winning_art
+    return nil unless valid?
     winner
   end
   
   def losing_art
-    return nil unless winner.present?
+    return nil unless valid? && winner.present?
     winner == art ? challenger : art
   end
   
