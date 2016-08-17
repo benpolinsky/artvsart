@@ -1,14 +1,10 @@
 Rails.application.routes.draw do
-  resources :competitions do
-    collection do
-      get 'new'
-    end
-  end
+  resources :competitions
 
   scope path: 'api' do
     scope path: 'v1' do
-      get 'battle' => 'competitions#new'
-      post 'choose' => 'competitions#create'
+      post 'battle' => 'competitions#create'
+      put 'choose' => 'competitions#update'
     end
   end
 

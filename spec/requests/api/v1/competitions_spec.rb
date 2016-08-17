@@ -5,7 +5,7 @@ RSpec.describe "Competitions API" do
     context '/battle' do
       before do
         create_list(:art, 2)
-        get '/api/v1/battle'
+        post '/api/v1/battle'
       end
   
       it "returns ok" do
@@ -13,7 +13,7 @@ RSpec.describe "Competitions API" do
       end
   
       it "returns necessary attributes for a new competition" do
-        COMPETITION_KEYS_HIDDEN = ["updated_at", "created_at", "winner"]
+        HIDDEN_COMPETITION_KEYS = ["updated_at", "created_at", "winner"]
 
         # TODO: helper
         json = JSON.parse(response.body)
@@ -22,7 +22,7 @@ RSpec.describe "Competitions API" do
         expect(json["competition"]["art"]["name"]).to_not be_nil
         expect(json["competition"]["challenger"]["name"]).to_not be_nil
   
-        COMPETITION_KEYS_HIDDEN.each do |comp_key|
+        HIDDEN_COMPETITION_KEYS.each do |comp_key|
           expect(json["competition"][comp_key]).to be_nil
         end
       end
@@ -36,7 +36,7 @@ RSpec.describe "Competitions API" do
       end
       
       it "choosing an art to win the battle returns the winning art" do
-        post "/api/v1/choose", competition: {id: @competition.id, winner_id: @art.id}
+        put "/api/v1/choose", params: {competition: {id: @competition.id, winner_id: @art.id}}
         json = JSON.parse(response.body)
         
         expect(json["competition"]["winning_art"]["name"]).to eq "Rakim's Paid in Full"
@@ -44,25 +44,29 @@ RSpec.describe "Competitions API" do
       end
     
       it "returns 404 if a competition id is not specified" do
-        post "/api/v1/choose", competition: {winner_id: @art.id}
+        put "/api/v1/choose", params: {competition: {winner_id: @art.id}}
         expect(response.code).to eq "404"
       end
 
       it "returns 404 if it picks a non-existent competition id" do
-        post "/api/v1/choose", competition: {id: Competition.last.id + 1, winner_id: @art.id}
+        put "/api/v1/choose", params: {competition: {id: Competition.last.id + 1, winner_id: @art.id}}
         expect(response.code).to eq "404"
       end
 
-      it "fails if it picks a non-existent art id" do
-        post "/api/v1/choose", competition: {id: @competition.id, winner_id: 99999999}
+      it "fails if it picks a non-existent art id", focus: true do
+        put "/api/v1/choose", params: {competition: {id: @competition.id, winner_id: 99999999}}
         json = JSON.parse(response.body)
-        pp json
-        expect(json["competition"]["errors"])
+        expect(json["competition"]["errors"]["winner"]).to include "Invalid Winner"
       end
 
-      pending "fails if it picks an art not associated with the battle"
-      
-
+      it "fails if it picks an art not associated with the battle" do
+        unassociated_art = create(:art, name: "Animaniacs Season 1")
+        put "/api/v1/choose", params: {competition: {id: @competition.id, winner_id: unassociated_art.id}}
+        json = JSON.parse(response.body)
+        expect(json["competition"]["errors"]["winner"]).to include "Invalid Winner"
+      end
     end
+    
+    
   end
 end
