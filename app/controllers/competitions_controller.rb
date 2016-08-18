@@ -13,7 +13,7 @@ class CompetitionsController < ApplicationController
   end
   
   def update
-    @competition = Competition.find_by(id: params[:competition][:id]) 
+    @competition = Competition.find_by(id: params[:id]) 
     if @competition && @competition.select_winner(params[:competition][:winner_id].to_i)
       render json: @competition
     elsif @competition
