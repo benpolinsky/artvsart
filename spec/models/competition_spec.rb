@@ -50,7 +50,7 @@ RSpec.describe Competition, type: :model do
     expect{competition.competitor_wins!}.to change{competition.winner}.to(competitor)
   end
   
-  pending "competition state" do
+  skip "competition state" do
     pending "begins as fresh"
     pending "transitions to winner_picked once a winner is picked"
   end
