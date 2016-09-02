@@ -15,8 +15,8 @@ class Competition < ApplicationRecord
     winner == art ? challenger : art
   end
   
-  def select_winner(winner_id)
-    update(winner_id: winner_id) 
+  def select_winner(new_winner_id)
+    update(winner_id: new_winner_id) unless self.winner_id.present?
   end
   
   def competitor_wins!
