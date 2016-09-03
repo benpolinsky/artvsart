@@ -62,6 +62,8 @@ RSpec.describe "Competitions API" do
         json = JSON.parse(response.body)
         expect(json["competition"]["errors"]["winner"]).to include "Invalid Winner"
       end
+      
+      skip "fails if a competition already has a winner"
     end
     
     

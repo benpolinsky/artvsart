@@ -2,9 +2,8 @@ class CompetitionsController < ApplicationController
   include ActionController::Serialization
 
   def create
-    if Art.all.size >= 2
-      pick_battle_pair
-      @competition = Competition.create(art: @competitor, challenger: @challenger)
+    @competition = Competition.stage
+    if @competition.persisted?
       render json: @competition
     else
       @error_message = "We don't have enough art for you to rank.  Check back soon!"
@@ -23,13 +22,5 @@ class CompetitionsController < ApplicationController
     end
   end
   
-  
-  protected
-  
-  def pick_battle_pair
-    # Replace with some fun randomization or algo
-    @competitor = Art.all.sample 
-    @challenger = (Art.all - [@competitor]).sample
-  end
   
 end

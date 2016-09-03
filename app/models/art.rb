@@ -6,9 +6,11 @@
 # etc...
 
 class Art < ApplicationRecord
+  # when defending
   has_many :competitions
   has_many :challengers, through: :competitions
 
+  # when challenging
   has_many :challenges, class_name: "Competition", foreign_key: "challenger_id"
   has_many :competitors, through: :challenges, source: :art
 

@@ -1,9 +1,16 @@
 class Competition < ApplicationRecord
+  # the defender
   belongs_to :challenger, class_name: "Art"
-  belongs_to :art # the competitor
+
+  # the competitor
+  belongs_to :art 
   belongs_to :winner, class_name: "Art", required: false
   
   validate :winner_included?, if: Proc.new {|w| w.winner_id.present?}
+
+  def self.stage
+    create(art: new_battle_pair[0], challenger: new_battle_pair[1])
+  end
   
   def winning_art
     return nil unless valid?
@@ -16,7 +23,7 @@ class Competition < ApplicationRecord
   end
   
   def select_winner(new_winner_id)
-    update(winner_id: new_winner_id) unless self.winner_id.present?
+    update(winner_id: new_winner_id) unless self.winner_id.present? 
   end
   
   def competitor_wins!
@@ -26,6 +33,9 @@ class Competition < ApplicationRecord
   def challenger_wins!
     update(winner: challenger)
   end
+
+
+  
   
   private
 
@@ -33,4 +43,7 @@ class Competition < ApplicationRecord
     errors.add(:winner, "Invalid Winner") unless [challenger_id, art_id].include? winner_id
   end
   
+  def self.new_battle_pair    
+    Art.all.sample(2)
+  end
 end

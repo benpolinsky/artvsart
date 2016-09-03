@@ -5,11 +5,8 @@ RSpec.describe CompetitionsController do
     it "assigns a @competitor and a @challenger" do
       create_list(:art, 2)
       post :create
-      expect(assigns(:competition).challenger).to eq assigns(:challenger)
-      expect(assigns(:competition).art).to eq assigns(:competitor)
+      expect(assigns(:competition)).to_not be_nil
     end
-    
-    pending "assigns a uid to the @competition"
 
     it "returns ok" do
       create_list(:art, 2)
@@ -25,6 +22,9 @@ RSpec.describe CompetitionsController do
       post :create
       expect(response.status).to eq 422
       expect(assigns(:error_message)).to eq "We don't have enough art for you to rank.  Check back soon!"
+      create(:art)
+      post :create
+      expect(response.status).to eq 200
     end
   end
   
