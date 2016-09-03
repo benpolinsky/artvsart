@@ -64,6 +64,14 @@ RSpec.describe Competition, type: :model do
     expect{competition.challenger_wins!}.to change{competition.winner}.to(challenger)
   end
   
+  it "cannot be judged twice", focus: true do
+    competitor = create(:art, name: "Art Competitor")
+    challenger = create(:art, name: "Art Challenger")
+    competition = Competition.create(challenger: challenger, art: competitor)
+    expect{competition.challenger_wins!}.to change{competition.winner}.from(nil).to(challenger)
+    expect{competition.competitor_wins!}.to_not change{competition.winner}
+  end
+  
   skip "competition state" do
     pending "begins as fresh"
     pending "transitions to winner_picked once a winner is picked"

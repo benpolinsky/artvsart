@@ -23,15 +23,15 @@ class Competition < ApplicationRecord
   end
   
   def select_winner(new_winner_id)
-    update(winner_id: new_winner_id) unless self.winner_id.present? 
+    update(winner_id: new_winner_id) unless winner_already_selected?
   end
   
   def competitor_wins!
-    update(winner: art)
+    update(winner: art) unless winner_already_selected?
   end
   
   def challenger_wins!
-    update(winner: challenger)
+    update(winner: challenger) unless winner_already_selected?
   end
 
 
@@ -41,6 +41,10 @@ class Competition < ApplicationRecord
 
   def winner_included?
     errors.add(:winner, "Invalid Winner") unless [challenger_id, art_id].include? winner_id
+  end
+  
+  def winner_already_selected?
+    winner_id.present?
   end
   
   def self.new_battle_pair    
