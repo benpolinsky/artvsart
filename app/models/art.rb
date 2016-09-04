@@ -17,6 +17,8 @@ class Art < ApplicationRecord
   validates :name, presence: true
   validates :creator, presence: true
 
+  enum status: [:pending_review, :published, :declined]
+
   def wins_as_competitor
     competitions.where(winner: self.id)
   end

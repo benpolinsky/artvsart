@@ -16,15 +16,15 @@ RSpec.describe "Competitions API" do
         HIDDEN_COMPETITION_KEYS = ["updated_at", "created_at", "winner"]
 
         # TODO: helper for this
-        json = JSON.parse(response.body)
+
         
         # add additional content eventually
-        expect(json["competition"]["id"]).to_not be_nil    
-        expect(json["competition"]["art"]["name"]).to_not be_nil
-        expect(json["competition"]["challenger"]["name"]).to_not be_nil
+        expect(json_response["competition"]["id"]).to_not be_nil    
+        expect(json_response["competition"]["art"]["name"]).to_not be_nil
+        expect(json_response["competition"]["challenger"]["name"]).to_not be_nil
   
         HIDDEN_COMPETITION_KEYS.each do |comp_key|
-          expect(json["competition"][comp_key]).to be_nil
+          expect(json_response["competition"][comp_key]).to be_nil
         end
       end
     end
@@ -39,10 +39,9 @@ RSpec.describe "Competitions API" do
       it "choosing an art to win the battle returns the winning art" do
         put "/api/v1/competitions/#{@competition.id}", params: {competition: {winner_id: @art.id}}
         expect(response.code).to eq "200"
-        json = JSON.parse(response.body)
 
-        expect(json["competition"]["winning_art"]["name"]).to eq "Rakim's Paid in Full"
-        expect(json["competition"]["losing_art"]["name"]).to eq "iPhone Photo of Your Dad"
+        expect(json_response["competition"]["winning_art"]["name"]).to eq "Rakim's Paid in Full"
+        expect(json_response["competition"]["losing_art"]["name"]).to eq "iPhone Photo of Your Dad"
       end
 
       it "returns 404 if it picks a non-existent competition id" do
@@ -52,15 +51,15 @@ RSpec.describe "Competitions API" do
 
       it "fails if it picks a non-existent art id", focus: true do
         put "/api/v1/competitions/#{@competition.id}", params: {competition: {winner_id: 99999999}}
-        json = JSON.parse(response.body)
-        expect(json["competition"]["errors"]["winner"]).to include "Invalid Winner"
+        
+        expect(json_response["competition"]["errors"]["winner"]).to include "Invalid Winner"
       end
 
       it "fails if it picks an art not associated with the battle" do
         unassociated_art = create(:art, name: "Animaniacs Season 1")
         put "/api/v1/competitions/#{@competition.id}", params: {competition: {winner_id: unassociated_art.id}}
-        json = JSON.parse(response.body)
-        expect(json["competition"]["errors"]["winner"]).to include "Invalid Winner"
+        
+        expect(json_response["competition"]["errors"]["winner"]).to include "Invalid Winner"
       end
       
       skip "fails if a competition already has a winner"

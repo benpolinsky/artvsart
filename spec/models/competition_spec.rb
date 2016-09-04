@@ -72,6 +72,11 @@ RSpec.describe Competition, type: :model do
     expect{competition.competitor_wins!}.to_not change{competition.winner}
   end
   
+  it "cannot hold a battle between the same art" do
+    competitor = create(:art, name: "I'm the real art.")
+    expect{Competition.create(challenger: competitor, art: competitor)}.to_not change{Competition.count}
+  end
+  
   skip "competition state" do
     pending "begins as fresh"
     pending "transitions to winner_picked once a winner is picked"

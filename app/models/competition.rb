@@ -7,9 +7,11 @@ class Competition < ApplicationRecord
   belongs_to :winner, class_name: "Art", required: false
   
   validate :winner_included?, if: Proc.new {|w| w.winner_id.present?}
+  validate :different_competitors
 
   def self.stage
-    create(art: new_battle_pair[0], challenger: new_battle_pair[1])
+    pair = new_battle_pair
+    create(art: pair[0], challenger: pair[1]) 
   end
   
   def winning_art
@@ -41,6 +43,10 @@ class Competition < ApplicationRecord
 
   def winner_included?
     errors.add(:winner, "Invalid Winner") unless [challenger_id, art_id].include? winner_id
+  end
+  
+  def different_competitors
+    errors.add(:base, "Competitor and Challenger are the same!") if art == challenger
   end
   
   def winner_already_selected?
