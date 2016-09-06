@@ -18,3 +18,10 @@
 .ruby-version
 coverage
 notes
+
+# Ignore application configuration
+/config/application.yml
+
+# Ignore spec ajax responses for now
+
+spec/support/responses/*
