@@ -67,9 +67,11 @@ class DiscogsGateway
     when 'release'
       search_type = 'artist'
     when 'master'
-     search_type = 'release'
+      search_type = 'release'
     when 'artist'
-     search_type = 'master'
+      search_type = 'master'
+    else
+      search_type = "release"
     end
     params.delete(:search_type)
     wrapper.search(query, {type: search_type}.reverse_merge(params)).results

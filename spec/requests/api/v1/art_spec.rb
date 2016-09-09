@@ -40,5 +40,11 @@ RSpec.describe "Art", type: :request do
     end
     
     
+    context "POST /art/import" do
+      it "can import a piece of art" do
+        
+      end
+    end
+    
   end
 end

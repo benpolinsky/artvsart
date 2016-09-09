@@ -8,7 +8,7 @@ RSpec.describe "Discogs Gateway" do
   let(:gateway){DiscogsGateway.new}
 
   it "returns general search results" do
-    search_results = gateway.search("Culture Industry", artist: "Philadelphia Slick").results
+    search_results = gateway.search("Earth Rocks Harder", search_by: "Artist")
     expect(search_results.first.resource_url).to match /https\:\/\/api.discogs.com/
   end
 

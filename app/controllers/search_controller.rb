@@ -7,15 +7,11 @@ class SearchController < ApplicationController
     rescue Faraday::Error::ResourceNotFound => e
       render json: {error: "Not Found"}      
     end
-
-
-
   end
   
   protected
   def search_params
-
-    params.permit(:source, :query, :query_params => [:artist, :master, :release])
+    params.permit(:source, :query, :listing_id, :listing_ids, :search => {}, :query_params => [:artist, :master, :release])
   end
   
   def gateway
