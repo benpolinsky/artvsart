@@ -11,7 +11,8 @@ gem 'active_model_serializers'
 gem 'figaro'
 
 gem 'rack-cors'
-
+gem 'hyperclient'
+gem 'hyperresource'
 
 # Gateways
 gem "discogs-wrapper"

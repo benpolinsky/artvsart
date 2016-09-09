@@ -3,17 +3,17 @@
 *Music*
 
 Discogs - https://www.discogs.com/developers - Official - JSON-API standard.
-  - Looks like you can grab tons at a time
-  - Rate Limiting: 240 per minute
+  - Rate Limiting: 240 per minute, but really, running into problems before that, working around
   - registration: https://www.discogs.com/login?nologin=1&return=%2Fsettings%2Fdevelopers%3F
   - Ruby library: https://github.com/buntine/discogs
 
 Gracenote: https://developer.gracenote.com/web-api
-  - Probably overkill right now.  Some cool stuff.
+  - All ruby libraries stink/are outdated... 
   
 
 *Paintings*
-https://developers.artsy.net/start
+  https://developers.artsy.net/start
+  - okay but weird....
 
 *Sculptures*
 

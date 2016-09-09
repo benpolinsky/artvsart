@@ -4,3 +4,6 @@ discogs_request_token_url:
 discogs_authorize_url: 
 discogs_access_token_url: 
 discogs_app_name: 
+artsy_client_id: 
+artsy_client_secret:
+artsy_app_name:

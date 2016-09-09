@@ -11,6 +11,7 @@ RSpec.describe "Discogs Gateway" do
     search_results = gateway.search("Culture Industry", artist: "Philadelphia Slick").results
     expect(search_results.first.resource_url).to match /https\:\/\/api.discogs.com/
   end
+
   
   it 'returns a single listing by id' do
     erh = gateway.single_listing('7028129')

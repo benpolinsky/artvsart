@@ -1,8 +1,8 @@
 Images, probably want to be able to link as well as upload, to save space.
 
-Then skip to:
 - adding art in bulk
-  - Art Fetcher with different Gateways
+  - if api is down...
+  
     
 - authentication for adding (admins)
 
