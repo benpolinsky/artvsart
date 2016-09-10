@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
   
-  VALID_GATEWAYS = ['Artsy', 'Discogs', 'Gracenote']
+  VALID_GATEWAYS = ['Artsy', 'Discogs', 'Gracenote', "Philart", 'IMDB']
   
   def gateway(source, atts={})
     if source.in? VALID_GATEWAYS

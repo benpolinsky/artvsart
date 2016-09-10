@@ -1,0 +1,1 @@
+VALID_GATEWAYS = ['Artsy', 'Discogs', 'Gracenote']

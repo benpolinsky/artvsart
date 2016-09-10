@@ -2,17 +2,16 @@
 
 *Music*
 
-Discogs - https://www.discogs.com/developers - Official - JSON-API standard.
+Discogs - https://www.discogs.com/developers - Official 
   - Rate Limiting: 240 per minute, but really, running into problems before that, working around
-  - registration: https://www.discogs.com/login?nologin=1&return=%2Fsettings%2Fdevelopers%3F
-  - Ruby library: https://github.com/buntine/discogs
 
 Gracenote: https://developer.gracenote.com/web-api
-  - All ruby libraries stink/are outdated
+  - All ruby libraries seem to be outdated
   
 
 *Paintings*
   https://developers.artsy.net/start
+  tokens expire...
 
 *Sculptures*
 
@@ -26,13 +25,10 @@ Google Books - https://developers.google.com/books/docs/v1/getting_started
 DPLA - https://dp.la/info/developers/codex/requests/
 
 *Street Art*
+philart.net
 
-*Movies*
+*Movies/shows*
 
-IMDB - http://www.omdbapi.com/ - UNOFFICIAL - Normalized response
-  - Can't fetch lists, need to search by title or id.
-  - Title, Year, Director/Writer, Type, Poster, Plot
-  - Rate Limiting: not sure  
-
+IMDB - http://www.omdbapi.com/ 
 
 

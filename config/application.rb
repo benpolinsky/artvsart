@@ -32,6 +32,7 @@ module ArtvsartApi
          resource '*', :headers => :any, :methods => [:get, :post, :options, :put, :patch], credentials: true
        end
      end
-     config.autoload_paths += ["lib"]
+
   end
 end
+
