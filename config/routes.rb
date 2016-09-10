@@ -3,7 +3,10 @@ Rails.application.routes.draw do
 
   scope path: 'api' do
     scope path: 'v1' do
-      resources :competitions, :art
+      resources :competitions
+      resources :art do
+        post 'import', on: :collection
+      end
       get 'search_source' => 'search#index'
     end
   end

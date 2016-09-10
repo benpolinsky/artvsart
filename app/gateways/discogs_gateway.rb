@@ -21,11 +21,9 @@ class DiscogsGateway
 
   
   def single_listing(release_id)
-    # byebug
-    # begin
+    # this is bad, mkay
     sleep 1
-    release = wrapper.get_release(release_id)      
-    release
+    wrapper.get_release(release_id)      
 
     # rescue Discogs::UnknownResource
       # wrapper.get_master_release(release_id)
@@ -74,7 +72,7 @@ class DiscogsGateway
       search_type = "release"
     end
     params.delete(:search_type)
-    wrapper.search(query, {type: search_type}.reverse_merge(params)).results
+    wrapper.search(query, {type: search_type}.reverse_merge(params)).results.map {|r| r.image = r.delete(:thumb); r}
   end
   
   # good way to get release_ids

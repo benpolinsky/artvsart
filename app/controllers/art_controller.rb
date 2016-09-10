@@ -11,6 +11,13 @@ class ArtController < ApplicationController
       render json: {errors: "Still Need to standardize my errors"}, status: 422
     end
   end
+  
+  def import
+    source_gateway = gateway(params[:source], {listing_id: params[:id]})
+    importer = ArtImporter.new(source_gateway)
+    importer.import
+    render json: {result: 'imported!'}, status: 200
+  end
 
   def edit
   end

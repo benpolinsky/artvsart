@@ -42,7 +42,14 @@ RSpec.describe "Art", type: :request do
     
     context "POST /art/import" do
       it "can import a piece of art" do
-        
+        expect(Art.count).to eq 0
+        art_params = {
+          id: '785466',
+          source: "Discogs"
+        }
+        post '/api/v1/art/import', params: art_params
+        expect(json_response['result']).to eq 'imported!'
+        expect(Art.count).to eq 1
       end
     end
     
