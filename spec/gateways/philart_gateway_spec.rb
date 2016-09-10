@@ -1,17 +1,16 @@
 require 'rails_helper'
 
-
 RSpec.describe "Philart Gateway" do
   let(:gateway){PhilartGateway.new}
   
   it "returns general search results" do
     search_results = gateway.search("zoo")
-    expect(search_results.first["name"]).to eq "Zoo Mural"
+    expect(search_results.first["title"]).to eq "Zoo Mural"
   end
   
   it "returns results for a different search" do
     search_results = gateway.search("Chestnut")
-    expect(search_results.first["name"]).to eq "1822 Chestnut"
+    expect(search_results.first["title"]).to eq "1822 Chestnut"
   end
   
   it "finds a single listing by path" do
@@ -43,6 +42,12 @@ RSpec.describe "Philart Gateway" do
     art_path = "http://www.philart.net/api/art/590.json"
     art = gateway.single_listing(art_path)
     expect(gateway.art_creator(art)).to eq "Geronimo Company, Paul Santoleri, Steve Stormer"
+  end
+  
+  it "returns 'None Listed' if no artists are present" do
+    art_path = "http://www.philart.net/api/art/934.json"
+    art = gateway.single_listing(art_path)
+    expect(gateway.art_creator(art)).to eq "None Listed"
   end
 
   it "returns a description for each result" do

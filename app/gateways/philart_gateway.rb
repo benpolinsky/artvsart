@@ -4,15 +4,20 @@ class PhilartGateway
   attr_reader :api, :path, :paths
   
   def initialize(params={})
-    @path = params[:path]
-    @paths = params[:paths]
+    @path = params[:path] || params[:listing_id]
+    @paths = params[:paths] || params[:listing_ids]
   end
   
   def search(query, params={})
     art_link = api.links.find{|link| link.rel == 'titles'}.href
     art = api art_link
     query = Regexp.new(query, Regexp::IGNORECASE)
-    art.body.list.select {|a| a["name"] =~ query}
+    art.body.list.select {|a| a["name"] =~ query}.map do |art| 
+      art["title"] = art.delete("name")
+      art["image"] = image(single_listing(link_for(art)))
+      art['id'] = link_for(art)
+      art
+    end
   end
   
   def single_listing(path)
@@ -30,11 +35,12 @@ class PhilartGateway
   end
   
   def art_name(art)
-    art.body.title['display']
+    art['body']['title']['display']
   end
   
   def art_creator(art)
-    art.body.artists.map(&:name).join(", ")
+    artists = art.body['artists']
+    artists ? art.body['artists'].map{|a| a["name"]}.join(", ") : "None Listed"
   end
   
   def art_description(art)
@@ -42,7 +48,7 @@ class PhilartGateway
   end
   
   def art_release_date(art)
-    art.body.years.map{|year| year['year']}.join(", ")
+    art['body']['years'].map{|year| year['year']}.join(", ")
   end
   
   def art_location(art)
@@ -50,7 +56,7 @@ class PhilartGateway
   end
   
   def art_comments(art)
-    art.body.comments
+    art["body"]["comments"]
   end
   
   def image(art)
@@ -63,6 +69,10 @@ class PhilartGateway
       found_images << value.values.map(&:url)
     end
     found_images.flatten
+  end
+  
+  def link_for(art)
+    art.links.find{|link| link.rel == 'self'}.href
   end
 
   

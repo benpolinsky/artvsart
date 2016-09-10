@@ -2,8 +2,8 @@ class IMDBGateway
   attr_accessor :id, :ids
   
   def initialize(params={})
-    @id = params[:id]
-    @ids = params[:ids]
+    @id = params[:id] || params[:listing_id]
+    @ids = params[:ids] || params[:listing_ids]
   end
   
   def items
@@ -19,7 +19,11 @@ class IMDBGateway
   end
   
   def search(query, params={})
-    OMDB.search(query)
+    OMDB.search(query).map do |art|
+      art[:image] = art.delete(:poster)
+      art[:id] = art.delete(:imdb_id)
+      art
+    end
   end
   
   def image(art)
