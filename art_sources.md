@@ -8,12 +8,11 @@ Discogs - https://www.discogs.com/developers - Official - JSON-API standard.
   - Ruby library: https://github.com/buntine/discogs
 
 Gracenote: https://developer.gracenote.com/web-api
-  - All ruby libraries stink/are outdated... 
+  - All ruby libraries stink/are outdated
   
 
 *Paintings*
   https://developers.artsy.net/start
-  - okay but weird....
 
 *Sculptures*
 

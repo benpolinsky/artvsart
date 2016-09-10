@@ -1,16 +1,18 @@
-Images, probably want to be able to link as well as upload, to save space.
+- Images, probably want to be able to link as well as upload, to save space.
 
 - adding art in bulk
-  - if api is down...
-  - tokens are going to expire (on artsy for some reason...)
+  - to background job
+  - api errors:
+    - if api is down...
+    - tokens are going to expire (on artsy for some reason...)
   
     
 - authentication for adding (admins)
 
-- users who select
-- filter by state
+- users who select 
 
-- results
+- filter by state (in backend)
 
-1. Return modal with winner. (let's just implement as a footer for now)
+- results/stats
+
 2. Have options for starting another battle or seeing results.

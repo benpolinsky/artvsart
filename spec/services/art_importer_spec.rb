@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 # An ArtImporter is the bridge between Gateways and Art in our Application:
-# An ArtImporter takes a Gateway-ish object, and calls it to retrieve an
-# After the Gateway fetches and normalizes (standardizes?) data from various APIs,
+# An ArtImporter takes a Gateway-ish object, and calls it to retrieve art infos
+# After the Gateway fetches and normalizes (standardizes?) data
 # the Importer imports and saves the data as Art object(s).
 
 RSpec.describe "Art Importer" do
@@ -63,6 +63,14 @@ RSpec.describe "Art Importer" do
     expect(Art.all.map(&:name)).to include "Labor Days"
     expect(Art.all.map(&:name)).to include "Bazooka Tooth"
   end 
+  
+  it "imports movies from IMDB via OMDB" do
+    usual_suspects_id = 'tt0114814'
+    gateway = IMDBGateway.new(id: usual_suspects_id)
+    importer = ArtImporter.new(gateway)
+    expect{importer.import}.to change{Art.count}.from(0).to(1)
+    expect(Art.all.first.name).to eq "The Usual Suspects"
+  end
   
 
 end
