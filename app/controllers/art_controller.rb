@@ -37,7 +37,7 @@ class ArtController < ApplicationController
   protected
 
   def art_params
-    params.require(:art).permit(:name, :creator, :description)
+    params.require(:art).permit(:name, :creator, :description, :image)
   end
     
 end
