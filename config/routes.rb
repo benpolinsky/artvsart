@@ -8,6 +8,7 @@ Rails.application.routes.draw do
         post 'import', on: :collection
       end
       get 'search_source' => 'search#index'
+      get 's3/sign' => 's3#sign'
     end
   end
 

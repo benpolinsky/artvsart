@@ -16,6 +16,8 @@ class Art < ApplicationRecord
 
   validates :name, presence: true
   validates :creator, presence: true
+  
+  mount_uploader :image, ArtUploader
 
   enum status: [:pending_review, :published, :declined]
 
