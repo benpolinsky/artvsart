@@ -10,11 +10,13 @@ RSpec.describe "Discogs Gateway" do
   it "returns general search results" do
     search_results = gateway.search("Earth Rocks Harder", search_by: "Artist")
     expect(search_results.first.resource_url).to match /https\:\/\/api.discogs.com/
+    
   end
 
   
   it 'returns a single listing by id' do
     erh = gateway.single_listing('7028129')
+    byebug
     expect(erh.title).to eq "Earth Rocks Harder"
     expect(erh.year).to eq 2015
   end

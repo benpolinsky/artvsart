@@ -29,13 +29,13 @@ RSpec.describe "IMDB Gateway" do
   it "returns an image uri for each result" do
     search_results = gateway.search("Pulp")
     pulp = search_results.first
-    expect(gateway.image(pulp)).to match /ia.media-imdb.com/
+    expect(gateway.art_image(pulp)).to match /ia.media-imdb.com/
   end
 
   it "returns an array of image uris for each result" do
     search_results = gateway.search("Pulp")
     pulp = search_results.first
-    expect(gateway.images(pulp).all?{|img| img.match /ia.media-imdb.com/}).to eq true
+    expect(gateway.art_images(pulp).all?{|img| img.match /ia.media-imdb.com/}).to eq true
   end
 
   it "returns a name for each result" do

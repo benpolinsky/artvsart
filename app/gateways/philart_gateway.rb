@@ -14,7 +14,7 @@ class PhilartGateway
     query = Regexp.new(query, Regexp::IGNORECASE)
     art.body.list.select {|a| a["name"] =~ query}.map do |art| 
       art["title"] = art.delete("name")
-      art["image"] = image(single_listing(link_for(art)))
+      art["image"] = art_image(single_listing(link_for(art)))
       art['id'] = link_for(art)
       art
     end
@@ -59,11 +59,11 @@ class PhilartGateway
     art["body"]["comments"]
   end
   
-  def image(art)
-    images(art).first
+  def art_image(art)
+    art_images(art).first
   end
   
-  def images(art)
+  def art_images(art)
     found_images = []
     art.body.pictures.each do |value| 
       found_images << value.values.map(&:url)

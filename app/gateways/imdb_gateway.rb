@@ -26,12 +26,12 @@ class IMDBGateway
     end
   end
   
-  def image(art)
-    art.image
+  def art_image(art)
+    art[:image]
   end
   
-  def images(art)
-    [art.image]
+  def art_images(art)
+    [art[:image]]
   end
   
   def art_creator(art)

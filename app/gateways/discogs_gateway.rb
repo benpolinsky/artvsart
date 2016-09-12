@@ -52,11 +52,11 @@ class DiscogsGateway
   end
   
   def art_image(art)
-    art.images.first.uri
+    art.images.first.uri if art.images
   end
   
   def art_images(art)
-    art.images.map(&:uri)
+    art.images.map(&:uri) if art.images
   end
   
   # good way to get release ids
