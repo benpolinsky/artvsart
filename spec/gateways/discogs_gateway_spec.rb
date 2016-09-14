@@ -16,7 +16,6 @@ RSpec.describe "Discogs Gateway" do
   
   it 'returns a single listing by id' do
     erh = gateway.single_listing('7028129')
-    byebug
     expect(erh.title).to eq "Earth Rocks Harder"
     expect(erh.year).to eq 2015
   end

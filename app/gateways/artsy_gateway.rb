@@ -1,8 +1,10 @@
+# obvious we've got some shameless green going on.
+# ideas: 
+# - ask the token if it's expired or expiring soon in initialize?
 
 require 'hyperclient'
 
 class ArtsyGateway
-  ARTSY_TOKEN = ENV['artsy_token']
   ARTSY_ENDPOINT = 'https://api.artsy.net/api'
   
   attr_accessor :listing_id, :listing_ids, :api
@@ -10,17 +12,18 @@ class ArtsyGateway
   def initialize(params={})
     @listing_id  = params[:listing_id]
     @listing_ids = params[:listing_ids]
+    renew_token if !token || token.expiring_soon?
   end
   
   def items
     guaranteed_items.map{|listing_id| single_listing(listing_id) }
   end
 
-
+  #  this is getting crazy..
+  # 1. we're using error handling as a conditional
+  # 2. two nested conditionals
+  # 3. will have to duplicate the behavior for single_listing as well...
   def search(query, params={})
-    # api.search(q: 'andy').results.first.self => to access attributes
-    # size: 10 to be explicit 
-
     offset = params[:offset] ? params[:offset] : 0
     begin
       whole = api.search({q: query, size: 10, offset: offset, total_count: 1}.reverse_merge(params))
@@ -33,8 +36,8 @@ class ArtsyGateway
       end
     rescue Faraday::ClientError => e
       puts e
+      e 
     end
-  
   end
   
   # this isn't really getting all works - need to add pagination
@@ -45,7 +48,7 @@ class ArtsyGateway
 
   #  #find is a better name or find_artwork
   def single_listing(listing_id)
-    api.artwork(id: listing_id)
+     api.artwork(id: listing_id)
   end
   
   def artist_works(artist_id)
@@ -86,11 +89,15 @@ class ArtsyGateway
     resource._links
   end
   
-  def api
-    @api ||=
+  def api(renewing=false)
       Hyperclient.new(ARTSY_ENDPOINT) do |api|
         api.headers['Accept'] = 'application/vnd.artsy-v2+json'
-        api.headers['X-Xapp-Token'] = ARTSY_TOKEN
+        if renewing
+          api.headers['Content-Type'] = 'application/json' 
+        else
+          api.headers['X-Xapp-Token'] = token.token
+        end
+
 
         api.connection(default: false) do |conn|
           conn.use FaradayMiddleware::FollowRedirects
@@ -100,11 +107,25 @@ class ArtsyGateway
           conn.adapter :net_http
         end
       end
+  end
 
+  def token
+    AuthorizationToken.artsy
   end
   
-  private
+  def renew_token
+    response = api(true).tokens.xapp_token._post(client_id: ENV['artsy_client_id'], client_secret: ENV['artsy_client_secret'])
+
+    if token
+      token.update(token: response.token, expires_on: response.expires_at)
+    else
+      AuthorizationToken.create(service: "artsy", token: response.token, expires_on: response.expires_at) 
+    end
+  end
   
+  
+  private
+
   def guaranteed_items
     [listing_id, listing_ids].compact.flatten(1) 
   end

@@ -5,8 +5,7 @@ require 'rails_helper'
 # After the Gateway fetches and normalizes (standardizes?) data
 # the Importer imports and saves the data as Art object(s).
 
-RSpec.describe "Art Importer" do
-
+RSpec.describe "Art Importer" do  
   it "creates an Art for Dur Kuss from its ID of 4d8b92eb4eb68a1b2c000968" do
     gateway = ArtsyGateway.new(listing_id: '4d8b92eb4eb68a1b2c000968')
     importer = ArtImporter.new(gateway)

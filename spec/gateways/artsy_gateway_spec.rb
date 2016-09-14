@@ -8,7 +8,23 @@ require 'rails_helper'
 #  and so many artworks aren't available...
 
 RSpec.describe "Artsy Gateway" do
-  let(:gateway){ArtsyGateway.new}
+  let(:old_token) {"JvTPWe4WsQO-xqX6Bts49i1QS4LS0d6TF3uhXOpx-GViySdeutQGNjljT7JhKI6d-ZEiOQMjv1Q_gzNA-uhBwVYoi2dm7BMqiSNTEjfb6lWxiDXYfR6IkkR_Nwa8BZgbmUWD7jxfurGSPbmIFEMnArfDLBPMKkXC9zqB_LrmXUK5eKEiPOUrntzPSpIzNgGdouZzCZ5M8cc5ZHCpfsbgK6K3j8jNlUN5Qsl7wRuFX_8="}
+  let(:gateway) {ArtsyGateway.new}
+  before do
+    AuthorizationToken.create(service: 'artsy', token: old_token)
+  end
+
+  it "can renew a token", focus: true do
+    expect(gateway.renew_token).to_not eq old_token
+  end
+  
+  it "can return a token" do
+    expect(gateway.token).to_not be_blank
+  end
+
+  it "automatically renews a token if one is expired" do
+    expect{gateway.search('statue')}.to_not raise_error
+  end
   
   it "returns general search results" do
     search_results = gateway.search("statue")
