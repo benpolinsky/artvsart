@@ -18,6 +18,7 @@ RSpec.describe "Results" do
     end
 
     it "returns the overall winner" do      
+      byebug
       expect(json_response["art_results"]["overall_winner"]['name']).to eq "Art One"
     end
 
@@ -33,6 +34,10 @@ RSpec.describe "Results" do
     it "returns the top losers" do
       expect(json_response["art_results"]["top_losers"][0]['name']).to eq "Art Two"
       expect(json_response["art_results"]["top_losers"].size).to eq 1
+    end
+    
+    it "returns an arts win_loss_record" do
+      expect(json_response["art_results"]["top_winners"][0]["win_loss_record"]).to eq "1-0"
     end
   end
  

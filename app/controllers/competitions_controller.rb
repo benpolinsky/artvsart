@@ -2,7 +2,7 @@ class CompetitionsController < ApplicationController
   include ActionController::Serialization
 
   def create
-    @competition = Competition.stage
+    @competition = Competition.includes(:art).stage
     if @competition.persisted?
       render json: @competition
     else
@@ -12,7 +12,7 @@ class CompetitionsController < ApplicationController
   end
   
   def update
-    @competition = Competition.find_by(id: params[:id]) 
+    @competition = Competition.includes(:art).find_by(id: params[:id]) 
     if @competition && @competition.select_winner(params[:competition][:winner_id].to_i)
       render json: @competition
     elsif @competition

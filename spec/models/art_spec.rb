@@ -86,6 +86,10 @@ RSpec.describe Art, type: :model do
       expect(@competitor.number_of_losses).to eq 1
     end
     
+    it "displays an art's record" do
+      expect(@competitor.win_loss_record).to eq "3-1"
+    end
+    
     it "orders winners by ::most_wins" do
       expect(Art.by_wins).to match [@competitor, @third_challenger]
     end
@@ -103,6 +107,7 @@ RSpec.describe Art, type: :model do
     it "returns the overall loser", focus: true do
       expect(Art.overall_loser).to eq @second_challenger
     end
+    
   end
   
 end

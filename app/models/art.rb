@@ -51,6 +51,10 @@ class Art < ApplicationRecord
     losses.size
   end
   
+  def win_loss_record
+    "#{number_of_wins}-#{number_of_losses}"
+  end
+  
   def self.by_wins    
     select("arts.*, count(arts.id) as winning_count").
     joins('INNER JOIN competitions ON arts.id = competitions.winner_id').

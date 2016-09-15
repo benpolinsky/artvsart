@@ -7,7 +7,7 @@ gem 'rails'
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
 gem 'puma'
-gem 'active_model_serializers'
+gem 'active_model_serializers', '~> 0.10'
 gem 'figaro'
 
 gem 'rack-cors'
