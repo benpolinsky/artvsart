@@ -14,12 +14,22 @@ RSpec.describe "IMDB Gateway" do
     expect(search_results.first[:title]).to eq "Pulp Fiction"
   end
   
+  it "returns an response with error if none found" do
+    search_results = gateway.search("ssss")
+    expect(search_results[:error]).to eq "Movie not found!"
+  end
+  
+  it "returns an array even when OMDB returns a single record", focus: true do
+    search_results = gateway.search("Sssss")
+    expect(search_results.first[:title]).to eq "Sssss"
+  end
+  
   it "can be initialized with an imdb_id" do
-    expect(IMDBGateway.new(id: 'tt0114814').items.first.title).to eq "The Usual Suspects"
+    expect(IMDBGateway.new(listing_id: 'tt0114814').items.first.title).to eq "The Usual Suspects"
   end
   
   it "can be initialized with an array of imdb_ids" do
-    expect(IMDBGateway.new(ids: ['tt0114814', 'tt0110912']).items.map(&:title)).to match ["The Usual Suspects", "Pulp Fiction"]
+    expect(IMDBGateway.new(listing_ids: ['tt0114814', 'tt0110912']).items.map(&:title)).to match ["The Usual Suspects", "Pulp Fiction"]
   end
   
   it "finds a single listing by imdb_id" do

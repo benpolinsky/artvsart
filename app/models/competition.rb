@@ -5,6 +5,7 @@ class Competition < ApplicationRecord
   # the competitor
   belongs_to :art 
   belongs_to :winner, class_name: "Art", required: false
+  belongs_to :loser, class_name: "Art", required: false
   
   validate :winner_included?, if: Proc.new {|w| w.winner_id.present?}
   validate :different_competitors
@@ -29,11 +30,11 @@ class Competition < ApplicationRecord
   end
   
   def competitor_wins!
-    update(winner: art) unless winner_already_selected?
+    update(winner: art, loser_id: challenger.id) unless winner_already_selected?
   end
   
   def challenger_wins!
-    update(winner: challenger) unless winner_already_selected?
+    update(winner: challenger, loser_id: art.id) unless winner_already_selected?
   end
 
 

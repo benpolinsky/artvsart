@@ -2,7 +2,11 @@ class SearchController < ApplicationController
   def index
     begin
       result = gateway(search_params[:source]).search(search_params[:query], search_params[:query_params].to_h)      
-      render json: {results: result}      
+      if result.try(:error)
+        render json: {error: "Sorry, something went wrong."}
+      else      
+        render json: {results: result}
+      end      
     rescue Faraday::Error::ResourceNotFound => e
       render json: {error: "Not Found"}      
     end

@@ -63,9 +63,9 @@ RSpec.describe "Art Importer" do
     expect(Art.all.map(&:name)).to include "Bazooka Tooth"
   end 
   
-  it "imports movies from IMDB via OMDB" do
+  it "imports movies from IMDB via OMDB", focus: true do
     usual_suspects_id = 'tt0114814'
-    gateway = IMDBGateway.new(id: usual_suspects_id)
+    gateway = IMDBGateway.new(listing_id: usual_suspects_id)
     importer = ArtImporter.new(gateway)
     expect{importer.import}.to change{Art.count}.from(0).to(1)
     expect(Art.all.first.name).to eq "The Usual Suspects"

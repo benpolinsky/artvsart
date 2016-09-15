@@ -60,12 +60,18 @@ RSpec.describe Art, type: :model do
       @second_challenger = create(:art, name: "Art Three")
       @third_challenger = create(:art, name: "Art Four")
     
-      @competitor.competitions.create(challenger: @first_challenger, winner: @competitor)
-      @competitor.competitions.create(challenger: @second_challenger, winner: @competitor)
-      @competitor.competitions.create(challenger: @third_challenger, winner: @third_challenger)
+      @competitor.competitions.create(challenger: @first_challenger, winner: @competitor, loser: @first_challenger)
+      @competitor.competitions.create(challenger: @second_challenger, winner: @competitor, loser: @second_challenger)
+      @competitor.competitions.create(challenger: @third_challenger, winner: @third_challenger, loser: @competitor)
       
       # ensure we test the other side of the competition
-      @third_challenger.competitions.create(challenger: @competitor, winner: @competitor)
+      @third_challenger.competitions.create(challenger: @competitor, winner: @competitor, loser: @third_challenger)
+      @third_challenger.competitions.create(challenger: @second_challenger, winner: @third_challenger, loser: @second_challenger)
+      
+      # third_challenger = 2-1
+      # competitor = 3-1
+      # second_challenger = 0-2
+      # first_challenger = 0-1
     end
     
     it "display the #number_of_wins" do
@@ -78,6 +84,24 @@ RSpec.describe Art, type: :model do
       expect(@competitor.losses_as_competitor.size).to eq 1
       expect(@competitor.losses_as_challenger.size).to eq 0
       expect(@competitor.number_of_losses).to eq 1
+    end
+    
+    it "orders winners by ::most_wins" do
+      expect(Art.by_wins).to match [@competitor, @third_challenger]
+    end
+    
+    it "returns the ::overall_winner" do
+      expect(Art.overall_winner).to eq @competitor
+    end
+    
+    skip "::overall_winner with ties..."
+    
+    it "orders losers by ::most_losses" do
+      expect(Art.by_losses.size).to match ({@second_challenger.id => 2, @third_challenger.id => 1, @competitor.id => 1, @first_challenger.id => 1})
+    end
+    
+    it "returns the overall loser", focus: true do
+      expect(Art.overall_loser).to eq @second_challenger
     end
   end
   

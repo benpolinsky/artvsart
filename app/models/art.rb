@@ -50,4 +50,26 @@ class Art < ApplicationRecord
   def number_of_losses
     losses.size
   end
+  
+  def self.by_wins    
+    select("arts.*, count(arts.id) as winning_count").
+    joins('INNER JOIN competitions ON arts.id = competitions.winner_id').
+    group('arts.id').
+    order("count(arts.id) DESC")
+  end
+  
+  def self.by_losses
+    select("arts.*, count(arts.id) as losing_count").
+    joins('INNER JOIN competitions ON arts.id = competitions.loser_id').
+    group('arts.id').
+    order("count(arts.id) DESC")
+  end
+  
+  def self.overall_winner
+    by_wins.first
+  end
+  
+  def self.overall_loser
+    by_losses.first
+  end
 end

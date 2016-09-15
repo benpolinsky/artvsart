@@ -1,17 +1,14 @@
 class IMDBGateway
-  attr_accessor :id, :ids
+  attr_accessor :id, :ids, :guaranteed_ids
   
   def initialize(params={})
-    @id = params[:id] || params[:listing_id]
-    @ids = params[:ids] || params[:listing_ids]
+    @id             = params[:listing_id]
+    @ids            = params[:listing_ids]
+    @guaranteed_ids = ([id]+[ids]).flatten(1).compact
   end
   
   def items
-    if id
-      [single_listing(id)]
-    else
-      ids.map {|id| single_listing(id)}
-    end
+    guaranteed_ids.map {|id| single_listing(id)}
   end
   
   def single_listing(id)
@@ -19,10 +16,15 @@ class IMDBGateway
   end
   
   def search(query, params={})
-    OMDB.search(query).map do |art|
-      art[:image] = art.delete(:poster)
-      art[:id] = art.delete(:imdb_id)
-      art
+    results = [OMDB.search(query)].flatten(1)
+    if results.first[:response] == "False"
+      {error: results.first[:error]}
+    else
+      results.map do |art|
+        art[:image] = art.delete(:poster)
+        art[:id] = art.delete(:imdb_id)
+        art
+      end
     end
   end
   
@@ -50,8 +52,5 @@ class IMDBGateway
     art.plot
   end
   
-  def id
-    @id
-  end
 
 end

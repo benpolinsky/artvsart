@@ -23,6 +23,7 @@ class ArtsyGateway
   # 1. we're using error handling as a conditional
   # 2. two nested conditionals
   # 3. will have to duplicate the behavior for single_listing as well...
+  # and most of it is because artsy doesn't provide a way to query what we need...
   def search(query, params={})
     offset = params[:offset] ? params[:offset] : 0
     begin
@@ -110,13 +111,13 @@ class ArtsyGateway
   end
 
   def token
-    AuthorizationToken.artsy
+    @token ||= AuthorizationToken.artsy
   end
   
   def renew_token
     response = api(true).tokens.xapp_token._post(client_id: ENV['artsy_client_id'], client_secret: ENV['artsy_client_secret'])
 
-    if token
+    if token.present?
       token.update(token: response.token, expires_on: response.expires_at)
     else
       AuthorizationToken.create(service: "artsy", token: response.token, expires_on: response.expires_at) 

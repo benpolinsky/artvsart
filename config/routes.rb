@@ -4,9 +4,12 @@ Rails.application.routes.draw do
   scope path: 'api' do
     scope path: 'v1' do
       resources :competitions
+      
       resources :art do
         post 'import', on: :collection
       end
+       
+      get 'results' => 'results#index' 
       get 'search_source' => 'search#index'
       get 's3/sign' => 's3#sign'
     end

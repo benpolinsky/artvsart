@@ -23,6 +23,7 @@ class ArtImporter
   end
   
   def import_item(item)
+
     Art.create({
       name: gateway.art_name(item),
       creator: gateway.art_creator(item),
