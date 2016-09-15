@@ -18,7 +18,6 @@ RSpec.describe "Results" do
     end
 
     it "returns the overall winner" do      
-      byebug
       expect(json_response["art_results"]["overall_winner"]['name']).to eq "Art One"
     end
 
