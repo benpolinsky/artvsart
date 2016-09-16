@@ -2,7 +2,7 @@ class CompetitionsController < ApplicationController
   include ActionController::Serialization
 
   def create
-    @competition = Competition.includes(:art).stage
+    @competition = Competition.stage
     if @competition.persisted?
       render json: @competition
     else

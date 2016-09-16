@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe "Results" do
   context "without results" do
-    it "returns an empty results array if no competitions" do
+    skip "returns an empty results array if no competitions" do
       get '/api/v1/results'
-      expect(json_response["art_results"]).to_not be_nil
+      expect(json_response["art_results"]).to eq {}
     end
   end
   
@@ -39,8 +39,12 @@ RSpec.describe "Results" do
       expect(json_response["art_results"]["top_winners"][0]["win_loss_record"]).to eq "1-0"
     end
     
+    it "returns an arts win_loss_rate" do
+      expect(json_response["art_results"]["top_winners"][0]["win_loss_rate"]).to eq 1.0
+    end
+    
     it "returns an arts win_loss_percentage" do
-      expect(json_response["art_results"]["top_winners"][0]["win_loss_record"]).to eq "100%"
+      expect(json_response["art_results"]["top_winners"][0]["win_loss_percentage"]).to eq "100.00%"
     end
   end
  

@@ -86,8 +86,16 @@ RSpec.describe Art, type: :model do
       expect(@competitor.number_of_losses).to eq 1
     end
     
-    it "displays an art's record" do
+    it "displays its #win_loss_record" do
       expect(@competitor.win_loss_record).to eq "3-1"
+    end
+    
+    it "displays its #win_loss_percentage" do
+      expect(@competitor.win_loss_percentage).to eq "75.00%"
+    end
+    
+    it "displays its #win_loss_rate" do
+      expect(@competitor.win_loss_rate).to eq 0.75
     end
     
     it "orders winners by ::most_wins" do
@@ -104,9 +112,10 @@ RSpec.describe Art, type: :model do
       expect(Art.by_losses.size).to match ({@second_challenger.id => 2, @third_challenger.id => 1, @competitor.id => 1, @first_challenger.id => 1})
     end
     
-    it "returns the overall loser", focus: true do
+    it "returns the overall loser" do
       expect(Art.overall_loser).to eq @second_challenger
     end
+    
     
   end
   

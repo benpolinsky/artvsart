@@ -18,6 +18,7 @@ class Art < ApplicationRecord
   validates :creator, presence: true
   
   enum status: [:pending_review, :published, :declined]
+  delegate :number_to_percentage, to: ActiveSupport::NumberHelper
 
   def wins_as_competitor
     competitions.where(winner: self.id)
@@ -53,6 +54,18 @@ class Art < ApplicationRecord
   
   def win_loss_record
     "#{number_of_wins}-#{number_of_losses}"
+  end
+  
+  def win_loss_rate
+    number_of_wins.to_f/number_of_finished_competitions.to_f
+  end
+  
+  def win_loss_percentage
+    number_to_percentage(win_loss_rate*100, precision: 2)
+  end
+
+  def number_of_finished_competitions
+    number_of_wins + number_of_losses
   end
   
   def self.by_wins    
