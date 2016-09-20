@@ -13,7 +13,7 @@ RSpec.describe "Search Source" do
       
         it "returns an empty array of results if none found" do
           get '/api/v1/search_source', params: {source: 'Artsy', query: 'Benjamin David Polinsky'}
-          expect(json_response['results']).to eq []
+          expect(json_response['results']['error']).to eq "No results found!"
         end
       
         it "retuns a 500 error if something goes wrong" do
@@ -23,7 +23,7 @@ RSpec.describe "Search Source" do
         end
       end
       
-      context "via Discogs", focus: true do
+      context "via Discogs" do
         it "returns search results" do
           get '/api/v1/search_source', params: {source: 'Discogs', query: 'Earth Rocks Harder', query_params: {search_by: 'release'}}
           expect(json_response['results']).to_not eq nil

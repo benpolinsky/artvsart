@@ -13,6 +13,14 @@ RSpec.describe "Philart Gateway" do
     expect(search_results.first["title"]).to eq "1822 Chestnut"
   end
   
+  it "returns a response with error if none found" do
+    search_results = gateway.search("sssadsa32ss")
+    expect(search_results[:error]).to eq "No results found!"
+  end
+  
+  it "returns a response with error if an error occurs" do
+  end
+  
   it "finds a single listing by path" do
     # find like this: gateway.search("zoo").first.links.find{|link| link.rel == 'self'}.href
     art_path = "http://www.philart.net/api/art/590.json"
@@ -41,7 +49,7 @@ RSpec.describe "Philart Gateway" do
   it "returns a creator for each result" do
     art_path = "http://www.philart.net/api/art/590.json"
     art = gateway.single_listing(art_path)
-    expect(gateway.art_creator(art)).to eq "Geronimo Company, Paul Santoleri, Steve Stormer"
+    expect(gateway.art_creator(art)).to eq "Geronimo Company, Paul Santoleri, and Steve Stormer"
   end
   
   it "returns 'None Listed' if no artists are present" do

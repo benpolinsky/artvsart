@@ -12,12 +12,13 @@ class PhilartGateway
     art_link = api.links.find{|link| link.rel == 'titles'}.href
     art = api art_link
     query = Regexp.new(query, Regexp::IGNORECASE)
-    art.body.list.select {|a| a["name"] =~ query}.map do |art| 
+    results = art.body.list.select {|a| a["name"] =~ query}.map do |art| 
       art["title"] = art.delete("name")
       art["image"] = art_image(single_listing(link_for(art)))
       art['id'] = link_for(art)
       art
     end
+    results.any? ? results : {error: "No results found!"}
   end
   
   def single_listing(path)
@@ -40,7 +41,7 @@ class PhilartGateway
   
   def art_creator(art)
     artists = art.body['artists']
-    artists ? art.body['artists'].map{|a| a["name"]}.join(", ") : "None Listed"
+    artists ? art.body['artists'].map{|a| a["name"]}.to_sentence : "None Listed"
   end
   
   def art_description(art)

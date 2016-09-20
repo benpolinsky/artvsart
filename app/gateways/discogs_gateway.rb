@@ -23,12 +23,12 @@ class DiscogsGateway
   def single_listing(release_id)
     # this is bad, mkay
     sleep 1
-    wrapper.get_release(release_id)      
-
-    # rescue Discogs::UnknownResource
-      # wrapper.get_master_release(release_id)
-    # rescue Discogs::UnknownResource
-    # end
+    begin
+      wrapper.get_release(release_id)
+    rescue Discogs::UnknownResource
+      {error: "No results found!"}
+    end
+    
   end
 
   # single item methods
@@ -36,7 +36,7 @@ class DiscogsGateway
   # grab art param from #single_listing above
   
   def art_creator(art)
-    art.artist || art.artists.map(&:name).join
+    art.artist || art.artists.map(&:name).to_sentence
   end
   
   def art_release_date(art)
@@ -72,7 +72,8 @@ class DiscogsGateway
       search_type = "release"
     end
     params.delete(:search_type)
-    wrapper.search(query, {type: search_type}.reverse_merge(params)).results.map {|r| r.image = r.delete(:thumb); r}
+    results = wrapper.search(query, {type: search_type}.reverse_merge(params)).results.map {|r| r.image = r.delete(:thumb); r}
+    results.empty? ? {error: 'No results found!'} : results
   end
   
   # good way to get release_ids

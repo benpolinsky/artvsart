@@ -21,7 +21,15 @@ RSpec.describe "Discogs Gateway" do
   end
   
   it "raises an error when none are found" do
-    expect{gateway.single_listing(0000000)}.to raise_error(Discogs::UnknownResource)
+    expect{gateway.single_listing(0000000)}.to_not raise_error
+  end
+  
+  it "returns a response with error if none found", focus: true do
+    search_results = gateway.search("sssadsef34f4a32ss")
+    expect(search_results[:error]).to eq "No results found!"
+  end
+  
+  it "returns a response with error if an error occurs" do
   end
   
   it "returns a list of artists for a work" do

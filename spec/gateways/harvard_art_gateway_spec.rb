@@ -20,13 +20,13 @@ RSpec.describe "HarvardArtGateway" do
     expect(search_results.first.title).to  eq "Untitled (broken pipe against white backdrop)"
   end
   
-  it "returns an response with error if none found" do
+  it "returns a response with error if none found" do
     search_results = gateway.search("sssadsa32ss")
     expect(search_results[:error]).to eq "No results found!"
   end
   
-  
-  skip "can return all works"
+  it "returns a response with error if an error occurs" do
+  end
   
   it "can be initialized with an id" do
     new_gateway = HarvardArtGateway.new(id: '299985')
@@ -48,22 +48,29 @@ RSpec.describe "HarvardArtGateway" do
     expect(gateway.art_image(orange)).to match /http\:\/\/nrs\.harvard\.edu/
   end
 
-  skip "returns an array of image uris for each result" do
-
+  it "returns an array of image uris for each result" do
+    search_results = gateway.search("Oranges")
+    orange = search_results.first
+    expect(gateway.art_images(orange).all?{|img| img.match /http\:\/\/nrs\.harvard\.edu/}).to eq true
   end
 
-  skip "returns a name for each result" do
-
+  it "returns a name for each result" do
+    listing = gateway.single_listing('299985')
+    expect(gateway.art_name(listing)).to eq "Blacksmith's Shop"
   end
 
-  skip "returns a creator for each result" do
-
+  it "returns a creator for each result" do
+    listing = gateway.single_listing('299985')
+    expect(gateway.art_creator(listing)).to eq "Richard Earlom, Joseph Wright of Derby, and John Boydell"
   end
 
-  skip "returns a description for each result" do
-
+  it "returns a description for each result" do
+    listing = gateway.single_listing('299985')
+    expect(gateway.art_description(listing)).to eq "Technique: Mezzotint\nPublished by John Boydell, 25 August 1771."
   end
 
-  skip "returns a release_date for each result" do
+  it "returns a release_date for each result" do
+    listing = gateway.single_listing('299985')
+    expect(gateway.art_release_date(listing)).to eq "1771"
   end
 end

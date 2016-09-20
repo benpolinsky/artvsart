@@ -30,14 +30,18 @@ class ArtsyGateway
       whole = api.search({q: query, size: 10, offset: offset, total_count: 1}.reverse_merge(params))
       results = parse_results(whole.self)
       if results.any? || whole.self.total_count <= offset+10
-        results
+        if results.empty?
+          {error: "No results found!"}
+        else 
+          results
+        end
       else
         offset = offset+10
         self.search(query, {size: 10, offset: offset, total_count: 1}.reverse_merge(params))
       end
     rescue Faraday::ClientError => e
       puts e
-      e 
+      {error: "Sorry, something went wrong."}
     end
   end
   
@@ -62,7 +66,7 @@ class ArtsyGateway
   end
   
   def art_creator(art)
-    art.artists.map(&:name).join  
+    art.artists.map(&:name).to_sentence  
   end
   
   def art_description(art)

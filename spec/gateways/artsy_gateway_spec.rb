@@ -14,7 +14,7 @@ RSpec.describe "Artsy Gateway" do
     AuthorizationToken.create(service: 'artsy', token: old_token)
   end
 
-  it "can renew a token", focus: true do
+  it "can renew a token" do
     expect(gateway.renew_token).to_not eq old_token
   end
   
@@ -34,6 +34,11 @@ RSpec.describe "Artsy Gateway" do
   it "returns results for a different search" do
     search_results = gateway.search("oranges")
     expect(search_results.first[:type]).to eq "Artwork"
+  end
+  
+  it "returns a response with error if none found" do
+    search_results = gateway.search("sssadsa32ss")
+    expect(search_results[:error]).to eq "No results found!"
   end
 
   it "returns an image uri for each result" do
