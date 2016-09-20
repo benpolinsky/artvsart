@@ -15,11 +15,7 @@ RSpec.describe "Competitions API" do
       it "returns necessary attributes for a new competition" do
         HIDDEN_COMPETITION_KEYS = ["updated_at", "created_at", "winner"]
 
-        # TODO: helper for this
-
-        
         # add additional content eventually
-        pp json_response.to_json
         expect(json_response["competition"]["id"]).to_not be_nil    
         expect(json_response["competition"]["art"]["name"]).to_not be_nil
         expect(json_response["competition"]["challenger"]["name"]).to_not be_nil

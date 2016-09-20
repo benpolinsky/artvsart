@@ -40,7 +40,7 @@ RSpec.describe "Results" do
     end
     
     it "returns an arts win_loss_rate" do
-      expect(json_response["art_results"]["top_winners"][0]["win_loss_rate"]).to eq 1.0
+      expect(json_response["art_results"]["top_winners"][0]["win_loss_rate"]).to eq "1.0"
     end
     
     it "returns an arts win_loss_percentage" do
