@@ -157,6 +157,24 @@ RSpec.describe Competition, type: :model do
       expect(new_competiton.percentage_between_arts).to eq ['75.00%', '25.00%']
       
     end 
+    
+    it "calculates the #percentage_between_arts_for one of current competitors", focus: true do
+      
+      arts = [competitor, challenger]
+      
+      75.times do
+        Competition.create(art: arts[0], challenger: arts[1], winner: arts[0], loser: arts[1])
+      end
+      
+      25.times do
+        Competition.create(art: arts[0], challenger: arts[1], winner: arts[1], loser: arts[0])
+      end
+      
+      new_competition = Competition.create(art: arts[0], challenger: arts[1])
+      expect(new_competition.art_winning_percentage).to eq '75.00%'
+      expect(new_competition.challenger_winning_percentage).to eq '25.00%'
+      
+    end
   end
   
   context "winners and losers" do

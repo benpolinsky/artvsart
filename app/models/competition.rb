@@ -44,8 +44,33 @@ class Competition < ApplicationRecord
     self.class.percentage_between(art, challenger)
   end
   
+  def winner_winning_percentage
+    winner.present? ? self.class.percentage_between(winner, loser).first : nil
+  end
+  
+  def loser_winning_percentage
+    loser.present? ? self.class.percentage_between(loser, winner).first : nil
+  end
+  
+  def challenger_winning_percentage
+    self.class.percentage_between(challenger, art).first
+  end
+  
+  def art_winning_percentage
+    self.class.percentage_between(art, challenger).first
+  end
+  
+  def art_percentages
+    {
+      art_winning_percentage: art_winning_percentage,
+      challenger_winning_percentage: challenger_winning_percentage,
+      winner_winning_percentage: winner_winning_percentage,
+      loser_winning_percentage: loser_winning_percentage
+    }
+  end
+  
   def self.percentage_between(art_one, art_two)
-    competitions = finished_competitions.where(art: art_one, challenger: art_two).or(where(art: art_two, challenger: art_one))
+    competitions = competitions_between_competitors(art_one, art_two)
     number_of_competitons = competitions.size
     
     art_one_wins = competitions.where(winner: art_one).size
@@ -83,6 +108,10 @@ class Competition < ApplicationRecord
     ids = [challenger_id, art_id]
     ids.delete(given_id)
     ids[0]
+  end
+  
+  def self.competitions_between_competitors(art_one, art_two)
+    finished_competitions.where(art: art_one, challenger: art_two).or(finished_competitions.where(art: art_two, challenger: art_one))
   end
   
 end

@@ -33,12 +33,20 @@ RSpec.describe "Competitions API" do
         @competition = create(:competition, art: @art, challenger: challenger)
       end
       
-      it "choosing an art to win the battle returns the winning art" do
+      it "choosing an art to win the battle returns the winning and losing art" do
         put "/api/v1/competitions/#{@competition.id}", params: {competition: {winner_id: @art.id}}
         expect(response.code).to eq "200"
 
         expect(json_response["competition"]["winning_art"]["name"]).to eq "Rakim's Paid in Full"
         expect(json_response["competition"]["losing_art"]["name"]).to eq "iPhone Photo of Your Dad"
+      end
+      
+      it "choosing an art to win the battle returns the winning art percentage and the losing art percentage" do
+        put "/api/v1/competitions/#{@competition.id}", params: {competition: {winner_id: @art.id}}
+        expect(response.code).to eq "200"
+
+        expect(json_response["competition"]["art_percentages"]["art_winning_percentage"]).to eq "100.00%"
+        expect(json_response["competition"]["art_percentages"]["challenger_winning_percentage"]).to eq "0.00%"
       end
 
       it "returns 404 if it picks a non-existent competition id" do
