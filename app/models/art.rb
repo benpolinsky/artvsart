@@ -29,11 +29,11 @@ class Art < ApplicationRecord
   end
   
   def losses_as_competitor
-    competitions.where.not(winner: self.id)
+    competitions.where(loser: self.id)
   end
   
   def losses_as_challenger
-    challenges.where.not(winner: self.id)
+    challenges.where(loser: self.id)
   end
   
   def wins
