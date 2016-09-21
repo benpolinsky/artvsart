@@ -89,4 +89,8 @@ class Art < ApplicationRecord
   def self.overall_loser
     by_losses.first
   end
+  
+  def self.has_battled
+    includes(:competitions)
+  end
 end

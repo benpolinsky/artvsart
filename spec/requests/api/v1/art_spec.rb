@@ -3,6 +3,17 @@ require 'rails_helper'
 RSpec.describe "Art", type: :request do
   context "/v1" do
     
+    context 'GET /art' do
+      it "retrieves general information" do
+        get '/api/v1/art'
+        
+        expect(response.code).to eq '200'
+        expect(json_response['total_pieces_of_art_in_catalog']).to eq 0
+        expect(json_response['total_pieces_of_art_judged']).to eq 0
+        expect(json_response['total_competitions']).to eq 0
+      end
+    end
+    
     context 'POST /art' do
       it "can be created from some params" do
         art_params = {
@@ -33,9 +44,6 @@ RSpec.describe "Art", type: :request do
         expect(response.code).to eq "200"
         expect(json_response['art']['id']).to eq 10012
         expect(json_response['art']['name']).to eq "My Fetched Art"
-      end
-      
-      it "returns a 404 if no art is found" do
       end
     end
     

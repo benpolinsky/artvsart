@@ -1,5 +1,15 @@
 class ArtController < ApplicationController
   include ActionController::Serialization
+  
+  def index
+    render json: {
+      total_pieces_of_art_judged: Art.has_battled.size,
+      total_pieces_of_art_in_catalog: Art.count,
+      total_competitions: Competition.finished_competitions.size
+    }
+  end
+  
+  
   def new
   end
 
