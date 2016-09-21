@@ -48,12 +48,24 @@ RSpec.describe Competition, type: :model do
     expect(competition.losing_art).to be_nil
   end
   
+  it "#select_winner sets winners and losers" do
+    
+  end
+  
   it "sets the competitor as a winner" do
     competitor = create(:art, name: "Art Competitor")
     challenger = create(:art, name: "Art Challenger")
     
     competition = competitor.competitions.create(challenger: challenger, art: competitor)
     expect{competition.competitor_wins!}.to change{competition.winner}.to(competitor)
+  end
+  
+  it "sets the challenger as a loser" do
+    competitor = create(:art, name: "Art Competitor")
+    challenger = create(:art, name: "Art Challenger")
+    
+    competition = competitor.competitions.create(challenger: challenger, art: competitor)
+    expect{competition.competitor_wins!}.to change{competition.loser_id}.to(challenger.id)
   end
   
   it "sets the challenger as a winner" do

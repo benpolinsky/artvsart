@@ -26,7 +26,7 @@ class Competition < ApplicationRecord
   end
   
   def select_winner(new_winner_id)
-    update(winner_id: new_winner_id) unless winner_already_selected?
+    update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id)) unless winner_already_selected?
   end
   
   def competitor_wins!
@@ -57,4 +57,11 @@ class Competition < ApplicationRecord
   def self.new_battle_pair    
     Art.all.sample(2)
   end
+  
+  def opposite_art(given_id)
+    ids = [challenger_id, art_id]
+    ids.delete(given_id)
+    ids[0]
+  end
+  
 end
