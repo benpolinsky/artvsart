@@ -10,6 +10,9 @@ gem 'puma'
 gem 'active_model_serializers', '~> 0.10'
 gem 'figaro'
 
+# auth
+gem 'devise'
+
 gem 'rack-cors'
 gem 'hyperclient'
 gem 'hyperresource'
