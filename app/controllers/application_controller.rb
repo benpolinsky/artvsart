@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
   VALID_GATEWAYS = ['Artsy', 'Discogs', 'Gracenote', "Philart", 'IMDB', "HarvardArt"]
-  # before_action :sleepy, if: Rails.env == :development
+  # before_action :sleepy
 
   
   def gateway(source, atts={})
@@ -9,9 +9,5 @@ class ApplicationController < ActionController::API
     end
   end
   
-  
-  def sleepy
-    p 'sleeps'
-    sleep 1
-  end
+
 end
