@@ -66,9 +66,7 @@ RSpec.describe "User Authentication" do
       @user.reload
       expect(@user.auth_token).to eq ""
     end
-    
-    
   end
   
-  
+
 end

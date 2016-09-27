@@ -14,4 +14,13 @@ class ApplicationController < ActionController::API
     p 'sleeps'
     sleep 1
   end
+  
+  # Override Devise to not query session
+  def current_user
+    @current_user ||= User.find_by(auth_token: request.headers['Authorization'])
+  end
+  
+  def authenticate_with_token!
+    render(json: { errors: "Not authenticated" }, status: :unauthorized) unless current_user
+  end
 end

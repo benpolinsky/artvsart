@@ -22,5 +22,30 @@ RSpec.describe SessionsController do
     skip "returns errors when signing in with invalid credentials"
     
   end
-
+  
+  context 'authentication methods' do
+    before do
+      @user = User.create(email: "validuser@email.com", password: "password")
+      @credentials = {
+        email: @user.email,
+        password: "password"
+      }
+    end
+    
+    it "retuns the current_user when auth token is specified in the headers" do
+      request.headers['Authorization'] = @user.auth_token
+      post :create, params: @credentials
+      
+      expect(subject.current_user).to eq @user
+    end
+    
+    it "returns null when no auth token is specified" do
+      post :create, params: @credentials
+      expect(subject.current_user).to eq nil      
+    end
+    
+  end
+  
+  
+  
 end
