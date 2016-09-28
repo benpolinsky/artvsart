@@ -33,8 +33,6 @@ RSpec.describe "Art", type: :request do
         end
         
         it "can be created from some params" do
-          
-        
           post '/api/v1/art', params: @art_params, headers: @headers
         
           expect(response.code).to eq "200"
@@ -50,6 +48,14 @@ RSpec.describe "Art", type: :request do
         it "returns 422 unauthorized" do
            post '/api/v1/art', params: @art_params
            expect(response.code).to eq "422"
+        end
+        
+        it "returns 422 if only authorized as non-admin user" do
+          normal_user = User.create(email: "nonadmin@me.com", password: 'password')
+          post '/api/v1/art', params: @art_params, headers: {
+            'Authorization' => normal_user.auth_token
+          }
+          expect(response.code).to eq "422"
         end
       end
     end
