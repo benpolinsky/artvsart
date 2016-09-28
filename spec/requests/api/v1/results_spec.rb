@@ -11,9 +11,10 @@ RSpec.describe "Results" do
   context "with results" do
     let(:competitor) {create(:art, name: "Art One")}
     let(:first_challenger) {create(:art, name: "Art Two")}
+    let(:judge) {create(:user)}
     
     before do
-      competitor.competitions.create(challenger: first_challenger, winner: competitor, loser: first_challenger)
+      competitor.competitions.create(challenger: first_challenger, winner: competitor, loser: first_challenger, user: judge)
       get '/api/v1/results'
     end
 

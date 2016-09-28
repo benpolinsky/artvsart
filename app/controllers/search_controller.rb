@@ -1,5 +1,5 @@
 class SearchController < ApplicationController
-  before_action :authorize_user!
+  before_action :authorize_admin!
   
   def index
     begin

@@ -6,7 +6,7 @@ RSpec.describe "Search Source" do
       context "authorized" do
       
         before do
-          @user = User.create(email: "what@what.com", password: "password")
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
           @headers = {'Authorization' => @user.auth_token}
         end
         
@@ -42,8 +42,14 @@ RSpec.describe "Search Source" do
       end
       
       context "unauthorized" do
-        it "must have a user present" do
-          get '/api/v1/search_source', params: {source: 'Artsy', query: 'Gustav Klimt'}
+      
+        before do
+          @user = User.create(email: "what@what.com", password: "password", admin: false)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+        
+        it "must have an admin user present" do
+          get '/api/v1/search_source', params: {source: 'Artsy', query: 'Gustav Klimt'}, headers: @headers
           expect(response.code).to eq '422'
           expect(json_response['errors']).to eq "Unauthorized!"
         end

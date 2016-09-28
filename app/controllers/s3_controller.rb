@@ -1,5 +1,5 @@
 class S3Controller < ApplicationController
-  before_action :authorize_user!
+  before_action :authorize_admin!
 
   def sign    
     s3_signer = S3Signer.new(params[:objectName], content_type: params[:contentType])

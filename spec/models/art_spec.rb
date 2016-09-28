@@ -59,14 +59,15 @@ RSpec.describe Art, type: :model do
       @first_challenger = create(:art, name: "Art Two")
       @second_challenger = create(:art, name: "Art Three")
       @third_challenger = create(:art, name: "Art Four")
+      judge = create(:user)
     
-      @competitor.competitions.create(challenger: @first_challenger, winner: @competitor, loser: @first_challenger)
-      @competitor.competitions.create(challenger: @second_challenger, winner: @competitor, loser: @second_challenger)
-      @competitor.competitions.create(challenger: @third_challenger, winner: @third_challenger, loser: @competitor)
+      @competitor.competitions.create(user: judge, challenger: @first_challenger, winner: @competitor, loser: @first_challenger)
+      @competitor.competitions.create(user: judge, challenger: @second_challenger, winner: @competitor, loser: @second_challenger)
+      @competitor.competitions.create(user: judge, challenger: @third_challenger, winner: @third_challenger, loser: @competitor)
       
       # ensure we test the other side of the competition
-      @third_challenger.competitions.create(challenger: @competitor, winner: @competitor, loser: @third_challenger)
-      @third_challenger.competitions.create(challenger: @second_challenger, winner: @third_challenger, loser: @second_challenger)
+      @third_challenger.competitions.create(user: judge, challenger: @competitor, winner: @competitor, loser: @third_challenger)
+      @third_challenger.competitions.create(user: judge, challenger: @second_challenger, winner: @third_challenger, loser: @second_challenger)
       
       # third_challenger = 2-1
       # competitor = 3-1

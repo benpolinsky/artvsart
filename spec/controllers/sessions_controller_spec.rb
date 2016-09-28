@@ -39,9 +39,9 @@ RSpec.describe SessionsController do
       expect(subject.current_user).to eq @user
     end
     
-    it "returns null when no auth token is specified" do
+    it "returns a guest user when no auth token is specified" do
       post :create, params: @credentials
-      expect(subject.current_user).to eq nil      
+      expect(subject.current_user.type).to eq "GuestUser"
     end
     
   end

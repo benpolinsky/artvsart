@@ -14,6 +14,10 @@ Rails.application.routes.draw do
       get 'results' => 'results#index' 
       get 'search_source' => 'search#index'
       get 's3/sign' => 's3#sign'
+      
+      get 'hi' => "application#hi"
+      
+      root to: 'application#hi'
     end
     
   end

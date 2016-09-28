@@ -30,7 +30,8 @@ RSpec.describe "Competitions API" do
       before do
         @art = create(:art, name: "Rakim's Paid in Full")
         challenger = create(:art, name: "iPhone Photo of Your Dad")
-        @competition = create(:competition, art: @art, challenger: challenger)
+        # for now just initialize a competition from a factory with user attached
+        @competition = create(:competition, art: @art, challenger: challenger) 
       end
       
       it "choosing an art to win the battle returns the winning and losing art" do
@@ -82,7 +83,5 @@ RSpec.describe "Competitions API" do
         expect(json_response["competition"]["errors"]["winner"]).to include "Invalid Winner"
       end
     end
-    
-    
   end
 end

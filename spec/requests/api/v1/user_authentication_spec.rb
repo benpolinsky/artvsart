@@ -67,6 +67,4 @@ RSpec.describe "User Authentication" do
       expect(@user.auth_token).to eq ""
     end
   end
-  
-
 end

@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :competition do
+    user
     art 
     association :challenger, factory: :art
   end

@@ -1,5 +1,4 @@
 class Competition < ApplicationRecord
-  
   belongs_to :user
   
   # the defender
@@ -12,6 +11,7 @@ class Competition < ApplicationRecord
   
   validates :winner, presence: true, on: :update
   validates :loser, presence: true, on: :update
+  validates :user, presence: true, if: Proc.new {|w| w.winner_id.present?}
     
   validate :winner_is_competitor?, if: Proc.new {|w| w.winner_id.present?}
   validate :different_competitors
@@ -32,8 +32,14 @@ class Competition < ApplicationRecord
     loser
   end
   
-  def select_winner(new_winner_id)
-    update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id)) unless winner_already_selected?
+  def select_winner(new_winner_id, user=nil)
+    if winner_already_selected?
+      return
+    elsif user
+      update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id), user: user)
+    else
+      update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id)) 
+    end
   end
   
   def competitor_wins!

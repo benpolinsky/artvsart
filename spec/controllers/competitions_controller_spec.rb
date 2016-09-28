@@ -32,7 +32,7 @@ RSpec.describe CompetitionsController do
     it "assigns a new competition with the given params" do
       art = create(:art)
       challenger = create(:art)
-      competition = Competition.create(art: art, challenger: challenger)
+      competition = Competition.create(art: art, challenger: challenger, user: create(:user))
       put :update, params: {id: competition.id, competition: {winner_id: challenger.id}}
       expect(assigns(:competition).winning_art).to eq challenger
       expect(assigns(:competition).losing_art).to eq art

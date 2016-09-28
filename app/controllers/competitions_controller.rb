@@ -11,8 +11,8 @@ class CompetitionsController < ApplicationController
   end
   
   def update
-    @competition = Competition.includes(:art).find_by(id: params[:id]) 
-    if @competition && @competition.select_winner(params[:competition][:winner_id].to_i)
+    @competition = Competition.includes(:art).find_by(id: params[:id])
+    if @competition && @competition.select_winner(params[:competition][:winner_id].to_i, current_user)
       render json: @competition
     elsif @competition
       render json: {competition: {errors: @competition.errors}}
