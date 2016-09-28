@@ -59,6 +59,7 @@ RSpec.describe Competition, type: :model do
   
   
   it "doesn't ::stage an instance of itself without 2 arts" do
+    Art.delete_all
     expect{Competition.stage}.to_not change {Competition.count}
     create(:art)
     expect{Competition.stage}.to_not change {Competition.count}

@@ -15,22 +15,42 @@ RSpec.describe "Art", type: :request do
     end
     
     context 'POST /art' do
-      it "can be created from some params" do
-        art_params = {
+      before do
+        @art_params = {
           art: {
             name: "This Album I Made in My Basement",
             creator: "Me",
             description: "Guys, please give this a listen.  I really think it's as good as Drake."
           }
         }
-        post '/api/v1/art', params: art_params
+      end
+      
+      context "if authorized as admin" do
         
-        expect(response.code).to eq "200"
-        expect(json_response['art']['id']).to_not be_blank
-        expect(json_response['art']['name']).to eq "This Album I Made in My Basement"
-        expect(json_response['art']['creator']).to eq "Me"
-        expect(json_response['art']['description']).to eq "Guys, please give this a listen.  I really think it's as good as Drake."
-        expect(json_response['art']['status']).to eq "pending_review"
+        before do
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+        
+        it "can be created from some params" do
+          
+        
+          post '/api/v1/art', params: @art_params, headers: @headers
+        
+          expect(response.code).to eq "200"
+          expect(json_response['art']['id']).to_not be_blank
+          expect(json_response['art']['name']).to eq "This Album I Made in My Basement"
+          expect(json_response['art']['creator']).to eq "Me"
+          expect(json_response['art']['description']).to eq "Guys, please give this a listen.  I really think it's as good as Drake."
+          expect(json_response['art']['status']).to eq "pending_review"
+        end
+      end
+      
+      context "if not authorized", focus: true do
+        it "returns 422 unauthorized" do
+           post '/api/v1/art', params: @art_params
+           expect(response.code).to eq "422"
+        end
       end
     end
 
@@ -49,15 +69,21 @@ RSpec.describe "Art", type: :request do
     
     
     context "POST /art/import" do
-      it "can import a piece of art" do
-        expect(Art.count).to eq 0
-        art_params = {
-          id: '785466',
-          source: "Discogs"
-        }
-        post '/api/v1/art/import', params: art_params
-        expect(json_response['result']).to eq 'imported!'
-        expect(Art.count).to eq 1
+      context "if authorized as admin" do
+        before do
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+        it "can import a piece of art" do
+          expect(Art.count).to eq 0
+          art_params = {
+            id: '785466',
+            source: "Discogs"
+          }
+          post '/api/v1/art/import', params: art_params, headers: @headers
+          expect(json_response['result']).to eq 'imported!'
+          expect(Art.count).to eq 1
+        end
       end
     end
     

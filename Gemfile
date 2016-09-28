@@ -12,6 +12,8 @@ gem 'figaro'
 
 # auth
 gem 'devise'
+gem 'cancancan', '~> 1.10'
+
 
 gem 'rack-cors'
 gem 'hyperclient'

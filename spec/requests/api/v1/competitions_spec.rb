@@ -34,40 +34,53 @@ RSpec.describe "Competitions API" do
       end
       
       it "choosing an art to win the battle returns the winning and losing art" do
-        put "/api/v1/competitions/#{@competition.id}", params: {competition: {winner_id: @art.id}}
+        put "/api/v1/competitions/#{@competition.id}", 
+            params: {competition: {winner_id: @art.id}}
+            
         expect(response.code).to eq "200"
-
-        expect(json_response["competition"]["winning_art"]["name"]).to eq "Rakim's Paid in Full"
-        expect(json_response["competition"]["losing_art"]["name"]).to eq "iPhone Photo of Your Dad"
+        
+        expect(json_response["competition"]["winning_art"]["name"]).
+        to eq "Rakim's Paid in Full"
+        
+        expect(json_response["competition"]["losing_art"]["name"]).
+        to eq "iPhone Photo of Your Dad"
       end
       
-      it "choosing an art to win the battle returns the winning art percentage and the losing art percentage" do
-        put "/api/v1/competitions/#{@competition.id}", params: {competition: {winner_id: @art.id}}
+      it "returns the winning and losing art percentages" do
+        put "/api/v1/competitions/#{@competition.id}", 
+        params: {competition: {winner_id: @art.id}}
+        
         expect(response.code).to eq "200"
-
-        expect(json_response["competition"]["art_percentages"]["art_winning_percentage"]).to eq "100.00%"
-        expect(json_response["competition"]["art_percentages"]["challenger_winning_percentage"]).to eq "0.00%"
+        
+        expect(json_response["competition"]["art_percentages"]["art_winning_percentage"]).
+        to eq "100.00%"
+        
+        expect(json_response["competition"]["art_percentages"]["challenger_winning_percentage"]).
+        to eq "0.00%"
       end
 
       it "returns 404 if it picks a non-existent competition id" do
-        put "/api/v1/competitions/#{Competition.last.id + 1}", params: {competition: {winner_id: @art.id}}
+        put "/api/v1/competitions/#{Competition.last.id + 1}", 
+        params: {competition: {winner_id: @art.id}}
+        
         expect(response.code).to eq "404"
       end
 
-      it "fails if it picks a non-existent art id", focus: true do
-        put "/api/v1/competitions/#{@competition.id}", params: {competition: {winner_id: 99999999}}
+      it "fails if it picks a non-existent art id" do
+        put "/api/v1/competitions/#{@competition.id}", 
+        params: {competition: {winner_id: 99999999}}
         
-        expect(json_response["competition"]["errors"]["winner"]).to include "Invalid Winner"
+        expect(json_response["competition"]["errors"]["winner"]).
+        to include "Invalid Winner"
       end
 
       it "fails if it picks an art not associated with the battle" do
         unassociated_art = create(:art, name: "Animaniacs Season 1")
-        put "/api/v1/competitions/#{@competition.id}", params: {competition: {winner_id: unassociated_art.id}}
+        put "/api/v1/competitions/#{@competition.id}", 
+        params: {competition: {winner_id: unassociated_art.id}}
         
         expect(json_response["competition"]["errors"]["winner"]).to include "Invalid Winner"
       end
-      
-      skip "fails if a competition already has a winner"
     end
     
     

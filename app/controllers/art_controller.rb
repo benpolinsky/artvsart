@@ -1,4 +1,6 @@
 class ArtController < ApplicationController
+  before_action :authorize_admin!, except: [:index, :show]
+  
   include ActionController::Serialization
   
   def index

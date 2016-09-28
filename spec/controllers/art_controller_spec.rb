@@ -7,4 +7,10 @@ RSpec.describe ArtController do
   
   context "PUT update/:id" do
   end
+  
+  context '' do
+  end
+  
+  context '' do
+  end
 end

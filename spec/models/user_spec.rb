@@ -46,11 +46,14 @@ RSpec.describe User, type: :model do
     end
   end
   
-  context "authentication" do
-    skip "non-authenticated users can only judge 5 competitions"
-  end
   
-  context 'authorization/roles' do
-    skip "basic users cannot modify, create or import art"
+  context "roles" do
+    it 'can be an admin' do
+      new_user = User.create(email: "okay@okay.com", password: "passwordpaass")
+      expect(new_user.admin?).to eq false
+      
+      new_user.update(admin: true)
+      expect(new_user.admin?).to eq true      
+    end
   end
 end

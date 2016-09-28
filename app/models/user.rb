@@ -11,7 +11,6 @@ class User < ApplicationRecord
      end while user_with_token_exists
    end
    
-   
    protected
    def user_with_token_exists
       self.class.exists?(auth_token: auth_token)

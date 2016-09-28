@@ -1,4 +1,6 @@
 class SearchController < ApplicationController
+  before_action :authorize_user!
+  
   def index
     begin
       # I hate this, because we have no idea where gateway is... (application_controller)

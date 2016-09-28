@@ -2,8 +2,7 @@ class CompetitionsController < ApplicationController
   include ActionController::Serialization
 
   def create
-    @competition = Competition.stage
-    if @competition.persisted?
+    if @competition = Competition.stage
       render json: @competition
     else
       @error_message = "We don't have enough art for you to rank.  Check back soon!"

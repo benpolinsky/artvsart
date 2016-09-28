@@ -14,6 +14,7 @@ class Competition < ApplicationRecord
   validate :different_competitors
 
   def self.stage
+    return unless Art.count >= 2
     pair = new_battle_pair
     create(art: pair[0], challenger: pair[1]) 
   end
