@@ -32,6 +32,7 @@ group :development, :test do
   gem 'byebug'
   gem "factory_girl_rails", "~> 4.0"
   gem 'faker'
+  
 end
 
 group :test do
@@ -48,6 +49,7 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-commands-rspec', group: :development
 end
 
 gem 'simplecov', :require => false, :group => :test

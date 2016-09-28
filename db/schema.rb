@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160928003858) do
+ActiveRecord::Schema.define(version: 20160928170023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,9 +41,11 @@ ActiveRecord::Schema.define(version: 20160928003858) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.integer  "loser_id"
+    t.integer  "user_id"
     t.index ["art_id"], name: "index_competitions_on_art_id", using: :btree
     t.index ["challenger_id"], name: "index_competitions_on_challenger_id", using: :btree
     t.index ["loser_id"], name: "index_competitions_on_loser_id", using: :btree
+    t.index ["user_id"], name: "index_competitions_on_user_id", using: :btree
     t.index ["winner_id"], name: "index_competitions_on_winner_id", using: :btree
   end
 
@@ -62,10 +64,12 @@ ActiveRecord::Schema.define(version: 20160928003858) do
     t.datetime "updated_at",                             null: false
     t.string   "auth_token",             default: ""
     t.boolean  "admin",                  default: false
+    t.string   "type"
     t.index ["auth_token"], name: "index_users_on_auth_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
   add_foreign_key "competitions", "arts"
+  add_foreign_key "competitions", "users"
 end

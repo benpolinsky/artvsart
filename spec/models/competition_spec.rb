@@ -80,6 +80,8 @@ RSpec.describe Competition, type: :model do
     expect{Competition.create(challenger: competitor, art: competitor)}.to_not change{Competition.count}
   end
   
+  it "can tell if it has been judged by a GuestUser or User"
+  
   context "statistics" do
     let(:competitor) {create(:art, name: "Art Competitor")}
     let(:challenger) {create(:art, name: "Art Challenger")}
@@ -198,12 +200,6 @@ RSpec.describe Competition, type: :model do
     end
   
   end
-  
-  
-  
-  
-  
-  
   
   skip "competition state" do
     pending "begins as fresh"

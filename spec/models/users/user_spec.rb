@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  
+  before do
+    Competition.delete_all
+  end
+  
   let(:user){User.new}
   
   context "attributes" do
@@ -46,7 +51,6 @@ RSpec.describe User, type: :model do
     end
   end
   
-  
   context "roles" do
     it 'can be an admin' do
       new_user = User.create(email: "okay@okay.com", password: "passwordpaass")
@@ -54,6 +58,24 @@ RSpec.describe User, type: :model do
       
       new_user.update(admin: true)
       expect(new_user.admin?).to eq true      
+    end
+  end
+  
+  context '#judged_competitions' do
+    it "has many judged_competitions" do   
+      competitions = create_list(:judged_competitions, 2)
+      user = create(:user)
+      user.judged_competitions << competitions
+      expect(user.judged_competitions.size).to eq 2
+    end
+    
+    it "can #judge a competition" do
+      unjudged_competitions = create_list(:competition, 2)
+      user = create(:user)
+      unjudged_competitions.each do |competition|
+        user.judge(competition, winner: competition.art_id)
+      end
+      expect(user.judged_competitions.size).to eq 2
     end
   end
 end
