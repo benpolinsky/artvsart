@@ -65,4 +65,9 @@ RSpec.describe GuestUser, type: :model do
     expect(guest_user.encrypted_password).to_not be_blank
   end
   
+  it "generates a token on create" do
+    new_guest_user = GuestUser.create
+    expect(new_guest_user.auth_token).to_not be_blank
+  end
+  
 end
