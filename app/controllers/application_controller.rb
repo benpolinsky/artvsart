@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   # include CanCan::ControllerAdditions
   include ActionController::Serialization
   VALID_GATEWAYS = ['Artsy', 'Discogs', 'Gracenote', "Philart", 'IMDB', "HarvardArt"]
-
+  before_action :set_headers
   
   def hi
     render(json: {user: serializer_for_current_user})
@@ -19,9 +19,8 @@ class ApplicationController < ActionController::API
   def current_user
     @current_user ||= if user_token_present?
       User.find_by(auth_token: request.headers['Authorization'])
-    else
-      GuestUser.create
     end
+    GuestUser.create unless @current_user
   end
   
   def authorize_user!
@@ -30,6 +29,10 @@ class ApplicationController < ActionController::API
   
   def authorize_admin!
     render(json: {errors: "Unauthorized!"}, status: 422) unless current_user.try(:admin?)
+  end
+  
+  def set_headers
+    response.headers["USER-TOKEN"] = current_user.auth_token
   end
   
   private

@@ -28,6 +28,7 @@ module ArtvsartApi
     config.api_only = true
     
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '{*/}')]
+    config.autoload_paths += Dir[Rails.root.join('lib', '{*/}')]
     
     config.middleware.insert_before 0, Rack::Cors do
        allow do
