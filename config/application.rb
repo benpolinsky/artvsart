@@ -32,7 +32,7 @@ module ArtvsartApi
     config.middleware.insert_before 0, Rack::Cors do
        allow do
          origins '*'
-         resource '*', :headers => :any, :methods => [:get, :post, :options, :put, :patch], credentials: true
+         resource '*', :headers => :any, :methods => [:get, :post, :options, :put, :patch, :delete], credentials: true
        end
      end
 

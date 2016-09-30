@@ -14,12 +14,13 @@ class SessionsController < ApplicationController
   
   
   def destroy
-    user = User.find(params[:id])
+    user = User.find_by(auth_token: request.headers['Authorization'])
     if user
       user.auth_token = ""
+      session[:pending_token] = nil
       user.save
     end
-    render status: 204
+    render json: new_guest_user, status: 200
   end
   
   protected

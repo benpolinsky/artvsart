@@ -6,6 +6,7 @@ class GuestUser < User
       super(competition, winner: winner)
     else
       errors.add(:judged_competitions, 'Guest Users can only Judge 10 times.  Please Sign Up!')
+      false
     end
   end
   
@@ -20,7 +21,7 @@ class GuestUser < User
     assign_attributes({
       email: "guest_user_#{Time.zone.now.to_i+rand(10000)}@guest.com",
       password: "password"
-    })
+      }) if email.blank?
   end
   
 end

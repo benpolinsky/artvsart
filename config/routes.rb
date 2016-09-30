@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
 
-  devise_for :users
+  devise_for :users, controllers: {registrations: 'registrations'}
   scope path: 'api' do
     scope path: 'v1' do
       resources :competitions, :sessions

@@ -15,13 +15,19 @@ class ApplicationController < ActionController::API
   end
   
   
-  # Override Devise to not query session
+
   def current_user
-    @current_user ||= if user_token_present?
-      User.find_by(auth_token: request.headers['Authorization'])
+    if user_token_present?
+      User.find_by(auth_token: user_token)
     else
-      GuestUser.create
-    end
+      new_guest_user
+    end    
+  end
+  
+  def new_guest_user
+    guest_user = GuestUser.create
+    session[:pending_token] = guest_user.auth_token
+    guest_user
   end
   
   def authorize_user!
@@ -43,7 +49,21 @@ class ApplicationController < ActionController::API
   end
   
   def user_token_present?
-    request.headers['Authorization'].present?
+    (request.headers['Authorization'].present? && 
+    request.headers['Authorization'] != 'undefined') ||
+    user_token_just_issued?
+  end
+  
+  def user_token_just_issued?
+    session[:pending_token].present?
+  end
+  
+  def user_token
+    if request.headers['Authorization'].present? && request.headers['Authorization'] != 'undefined'
+       request.headers['Authorization']
+    else
+      session[:pending_token]
+    end
   end
   
 end

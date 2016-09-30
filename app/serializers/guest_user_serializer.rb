@@ -1,3 +1,3 @@
 class GuestUserSerializer < ActiveModel::Serializer
-  attributes :auth_token, :type
+  attributes :auth_token, :type, :email
 end

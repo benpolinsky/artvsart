@@ -77,5 +77,6 @@ RSpec.describe User, type: :model do
       end
       expect(user.judged_competitions.size).to eq 2
     end
+    
   end
 end

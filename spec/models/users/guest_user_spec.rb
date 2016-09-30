@@ -20,6 +20,9 @@ RSpec.describe GuestUser, type: :model do
     
     expect{user.judge(competition_over_limit, winner: competition_over_limit.art_id)}.
       to change{user.errors.size}.from(0).to(1)
+
+    expect{user.judge(competition_over_limit, winner: competition_over_limit.art_id)}.
+      to_not change{user.judged_competitions.size}
   end
   
   it "normal users can judge more than ten competitions" do
