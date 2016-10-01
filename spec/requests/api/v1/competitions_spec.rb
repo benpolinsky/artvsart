@@ -67,10 +67,9 @@ RSpec.describe "Competitions API" do
         expect(response.code).to eq "404"
       end
 
-      it "fails if it picks a non-existent art id" do
+      it "fails if it picks a non-existent art id", focus: true do
         put "/api/v1/competitions/#{@competition.id}", 
         params: {competition: {winner_id: 99999999}}
-        
         expect(json_response["competition"]["errors"]["winner"]).
         to include "Invalid Winner"
       end

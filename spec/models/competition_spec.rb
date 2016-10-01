@@ -77,16 +77,31 @@ RSpec.describe Competition, type: :model do
   end 
   
   it "cannot be judged twice" do
+    user = create(:user)
     competitor = create(:art, name: "Art Competitor")
     challenger = create(:art, name: "Art Challenger")
     competition = Competition.create(challenger: challenger, art: competitor)
-    expect{competition.challenger_wins!}.to change{competition.winner}.from(nil).to(challenger)
-    expect{competition.competitor_wins!}.to_not change{competition.winner}
+    expect{competition.select_winner(challenger.id, user)}.to change{competition.winner}.from(nil).to(challenger)
+    expect{competition.select_winner(competitor.id, user)}.to_not change{competition.winner}
   end
   
   it "cannot hold a battle between the same art" do
     competitor = create(:art, name: "I'm the real art.")
     expect{Competition.create(challenger: competitor, art: competitor, user: create(:user))}.to_not change{Competition.count}
+  end
+  
+  it "increments winner and loser's respective counts after battle" do
+    user = create(:user)
+    competitor = create(:art, name: "Art Competitor")
+    challenger = create(:art, name: "Art Challenger")
+    competition = Competition.create(challenger: challenger, art: competitor)
+    expect(challenger.win_count).to eq 0
+    expect(competitor.loss_count).to eq 0
+    competition.select_winner(challenger.id, user)
+    challenger.reload
+    competitor.reload
+    expect(challenger.win_count).to eq 1
+    expect(competitor.loss_count).to eq 1
   end
   
   it "can tell if it has been judged by a GuestUser or User"
@@ -171,7 +186,7 @@ RSpec.describe Competition, type: :model do
       
     end 
     
-    it "calculates the #percentage_between_arts_for one of current competitors", focus: true do
+    it "calculates the #percentage_between_arts_for one of current competitors" do
       
       arts = [competitor, challenger]
       
@@ -190,23 +205,24 @@ RSpec.describe Competition, type: :model do
     end
   end
   
-  context "winners and losers" do
+  context "winners and losers", focus: true do
     let(:competitor) {create(:art, name: "Art Competitor")}
     let(:challenger) {create(:art, name: "Art Challenger")}
+    let(:user) {create(:user)}
     
     it "sets the competitor as a winner" do    
       competition = competitor.competitions.create(challenger: challenger, art: competitor)
-      expect{competition.competitor_wins!}.to change{competition.winner}.to(competitor)
+      expect{competition.select_winner(competitor.id, user)}.to change{competition.winner}.to(competitor)
     end
   
     it "sets the challenger as a loser" do    
       competition = competitor.competitions.create(challenger: challenger, art: competitor)
-      expect{competition.competitor_wins!}.to change{competition.loser_id}.to(challenger.id)
+      expect{competition.select_winner(competitor.id, user)}.to change{competition.loser_id}.to(challenger.id)
     end
   
     it "sets the challenger as a winner" do
       competition = competitor.competitions.create(challenger: challenger)
-      expect{competition.challenger_wins!}.to change{competition.winner}.to(challenger)
+      expect{competition.select_winner(challenger.id, user)}.to change{competition.winner}.to(challenger)
     end
   
   end

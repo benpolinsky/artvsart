@@ -14,7 +14,8 @@ RSpec.describe "Results" do
     let(:judge) {create(:user)}
     
     before do
-      competitor.competitions.create(challenger: first_challenger, winner: competitor, loser: first_challenger, user: judge)
+      competition = competitor.competitions.create(challenger: first_challenger, user: judge)
+      competition.select_winner competitor.id
       get '/api/v1/results'
     end
 

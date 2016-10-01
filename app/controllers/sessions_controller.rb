@@ -20,6 +20,7 @@ class SessionsController < ApplicationController
       session[:pending_token] = nil
       user.save
     end
+    
     render json: new_guest_user, status: 200
   end
   

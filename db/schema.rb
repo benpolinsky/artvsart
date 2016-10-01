@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160930161019) do
+ActiveRecord::Schema.define(version: 20161001015345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(version: 20160930161019) do
     t.text     "description"
     t.integer  "status",        default: 0
     t.string   "image"
+    t.integer  "win_count",     default: 0
+    t.integer  "loss_count",    default: 0
   end
 
   create_table "authorization_tokens", force: :cascade do |t|

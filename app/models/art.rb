@@ -45,11 +45,11 @@ class Art < ApplicationRecord
   end
   
   def number_of_wins
-    wins.size
+    win_count
   end
   
   def number_of_losses
-    losses.size
+    loss_count
   end
   
   def win_loss_record

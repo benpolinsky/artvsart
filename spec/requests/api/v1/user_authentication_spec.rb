@@ -59,10 +59,8 @@ RSpec.describe "User Authentication" do
     end
     
     it "deletes auth tokens on delete" do
-      delete '/api/v1/users/sign_out', params: {
-        id: @user.id
-      }
-      expect(response.status).to eq 204
+      delete '/api/v1/users/sign_out', headers: {'Authorization' => @user.auth_token}
+      expect(response.status).to eq 200
       @user.reload
       expect(@user.auth_token).to eq ""
     end

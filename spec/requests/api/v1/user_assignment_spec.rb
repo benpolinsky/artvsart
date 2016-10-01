@@ -6,10 +6,9 @@ RSpec.describe "User Assignment" do
     it "assigns a new guest if no token is specified" do
       allow(Devise).to receive(:friendly_token).and_return('my-auth-token')
       get '/api/v1/'
-      expect(json_response["user"]).to eq ({
-        "type" => "GuestUser",
-        "auth_token" => "my-auth-token"
-      })
+      expect(json_response["user"]["type"]).to eq "GuestUser"
+      expect(json_response["user"]["email"]).to match /guest_user_/
+      expect(json_response["user"]["auth_token"]).to eq "my-auth-token"
     end
     
     it "retrieves the same guest if same token is set" do

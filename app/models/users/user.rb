@@ -16,8 +16,9 @@ class User < ApplicationRecord
   end
 
   def judge(competition, winner: nil)
-    competition.select_winner(winner)
+    competition.select_winner(winner, self)
     judged_competitions << competition
+    competition
   end
 
   protected

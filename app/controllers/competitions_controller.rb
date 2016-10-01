@@ -13,12 +13,14 @@ class CompetitionsController < ApplicationController
   # TODO: refactor 
   def update
     @competition = Competition.includes(:art).find_by(id: params[:id])
-    if @competition && current_user.judge(@competition, winner: params[:competition][:winner_id])
-      render json: @competition
-    elsif @competition.errors
-      render json: {competition: {errors: @competition.errors}}, status: 400
-    elsif current_user.errors
-      render json: {competition: {errors: current_user.errors}}, status: 400
+    if @competition 
+      result = current_user.judge(@competition, winner: params[:competition][:winner_id])
+      
+      if result.try(:errors) && result.errors.any?
+        render json: {competition: {errors: result.errors}}, status: 400
+      else
+        render json: result
+      end
     else
       render status: 404
     end

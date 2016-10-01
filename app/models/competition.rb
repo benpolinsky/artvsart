@@ -32,24 +32,16 @@ class Competition < ApplicationRecord
     loser
   end
   
-  def select_winner(new_winner_id, user=nil)
-    if winner_already_selected?
-      return
-    elsif user
-      update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id), user: user)
+  def select_winner(new_winner_id, user=self.user)
+    
+    return if winner_already_selected? || user.nil?
+    if update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id), user: user)
+      update_counts(winner, loser)
     else
-      update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id)) 
+      false
     end
-  end
-  
-  def competitor_wins!
-    update(winner: art, loser_id: challenger.id) unless winner_already_selected?
-  end
-  
-  def challenger_wins!
-    update(winner: challenger, loser_id: art.id) unless winner_already_selected?
-  end
-  
+  end 
+ 
   def percentage_between_arts
     self.class.percentage_between(art, challenger)
   end
@@ -91,7 +83,6 @@ class Competition < ApplicationRecord
     [art_one_percentage, art_two_percentage]
   end  
   
-  
   def self.finished_competitions
     where('winner_id IS NOT NULL AND loser_id IS NOT NULL')
   end
@@ -116,12 +107,20 @@ class Competition < ApplicationRecord
   
   def opposite_art(given_id)
     ids = [challenger_id, art_id]
-    ids.delete(given_id)
+    ids.delete(given_id.to_i)
     ids[0]
   end
   
   def self.competitions_between_competitors(art_one, art_two)
     finished_competitions.where(art: art_one, challenger: art_two).or(finished_competitions.where(art: art_two, challenger: art_one))
+  end
+  
+  def update_counts(winner, loser)
+    winner.update(win_count: winner.win_count+1)
+    loser.update(loss_count: loser.loss_count+1)
+    # I'd rather not do this, but it's required b/c the winner + art are two difference instances
+    art.reload
+    challenger.reload
   end
   
 end
