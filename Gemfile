@@ -49,6 +49,7 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'spring-commands-rspec', group: :development
+  gem 'bullet'
 end
 
 gem 'simplecov', :require => false, :group => :test
