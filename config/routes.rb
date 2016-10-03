@@ -1,29 +1,35 @@
 Rails.application.routes.draw do
 
-
   devise_for :users, controllers: {registrations: 'registrations'}
+
   scope path: 'api' do
     scope path: 'v1' do
+      
       resources :competitions, :sessions
-      post 'users/sign_in' => 'sessions#create'
-      delete 'users/sign_out' => 'sessions#destroy'
+      
       resources :art do
         post 'import', on: :collection
       end
-       
+      
+      post 'users/sign_in' => 'sessions#create'
+      delete 'users/sign_out' => 'sessions#destroy'
+      
+      get 'user/competitions' => 'profile#competitions'
+      
+      get 'top_judges' => 'judges#top'
+      
       get 'results' => 'results#index' 
+
       get 'search_source' => 'search#index'
+
       get 's3/sign' => 's3#sign'
+
+      get 'profile' => 'profile#index'
       
       get 'hi' => "application#hi"
       
       root to: 'application#hi'
-    end
-    
+    end    
   end
-  
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  # Serve websocket cable requests in-process
-  # mount ActionCable.server => '/cable'
 end

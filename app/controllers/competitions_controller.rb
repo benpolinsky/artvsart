@@ -1,6 +1,7 @@
 class CompetitionsController < ApplicationController
   include ActionController::Serialization
-
+  before_action :authorize_user!, except: [:index, :show]
+  
   def create
     if @competition = Competition.stage
       render json: {competition: CompetitionSerializer.new(@competition), user: UserSerializer.new(current_user)}

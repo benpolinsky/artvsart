@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :judged_competitions, class_name: "Competition", counter_cache: :judged_competitions_count
+  has_many :judged_competitions, class_name: "Competition"
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -20,7 +20,11 @@ class User < ApplicationRecord
     judged_competitions << competition
     competition
   end
-
+  
+  def self.top_judges
+    where(type: nil).or(where(admin: true)).order(judged_competitions_count: :desc)
+  end
+  
   protected
   
   def user_with_token_exists
