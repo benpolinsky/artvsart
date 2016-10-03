@@ -24,8 +24,8 @@ ActiveRecord::Schema.define(version: 20161002004814) do
     t.text     "description"
     t.integer  "status",        default: 0
     t.string   "image"
-    t.integer  "win_count"
-    t.integer  "loss_count"
+    t.integer  "win_count",     default: 0
+    t.integer  "loss_count",    default: 0
   end
 
   create_table "authorization_tokens", force: :cascade do |t|

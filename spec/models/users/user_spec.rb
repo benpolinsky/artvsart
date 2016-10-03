@@ -66,7 +66,7 @@ RSpec.describe User, type: :model do
       competitions = create_list(:judged_competitions, 2)
       user = create(:user)
       user.judged_competitions << competitions
-      expect(user.judged_competitions.size).to eq 2
+      expect(user.judged_competitions.count).to eq 2
     end
     
     it "can #judge a competition" do

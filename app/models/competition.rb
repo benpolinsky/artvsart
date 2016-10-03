@@ -33,7 +33,6 @@ class Competition < ApplicationRecord
   end
   
   def select_winner(new_winner_id, user=self.user)
-    
     return if winner_already_selected? || user.nil?
     if update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id), user: user)
       update_counts(winner, loser)
