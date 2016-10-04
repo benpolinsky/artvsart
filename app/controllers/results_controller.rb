@@ -5,7 +5,7 @@ class ResultsController < ApplicationController
     art = Art.all
     render json: {
       art_results: {
-        top_winners: ArtResultsSerializer.new(art.by_winning_percentage)
+        top_winners: ArtResultsSerializer.new(art.by_win_percentage)
       }
     }
   end
