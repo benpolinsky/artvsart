@@ -69,17 +69,15 @@ class Art < ApplicationRecord
   end
   
   def self.by_wins    
-    select("arts.*, count(arts.id) as winning_count").
-    joins('INNER JOIN competitions ON arts.id = competitions.winner_id').
-    group('arts.id').
-    order("count(arts.id) DESC")
+    order(win_count: :desc)
   end
   
   def self.by_losses
-    select("arts.*, count(arts.id) as losing_count").
-    joins('INNER JOIN competitions ON arts.id = competitions.loser_id').
-    group('arts.id').
-    order("count(arts.id) DESC")
+    order(loss_count: :desc)
+  end
+  
+  def self.by_win_percentage
+    select("arts.*, COALESCE(arts.win_count::float / NULLIF((arts.win_count::float + arts.loss_count::float), 0), 0) as arts_percentage").order("arts_percentage DESC")
   end
   
   def self.overall_winner

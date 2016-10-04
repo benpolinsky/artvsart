@@ -62,7 +62,7 @@ RSpec.describe Art, type: :model do
       judge = create(:user)
     
       
-      competition_1 = Competition.create(user: judge, art: @competitor, challenger: @first_challenger)
+      competition_1 = Competition.create(user: judge, art: @competitor, challenger: @second_challenger)
       competition_1.select_winner(@competitor.id)
       
       competition_2 = Competition.create(user: judge, art: @competitor, challenger: @second_challenger)
@@ -78,18 +78,23 @@ RSpec.describe Art, type: :model do
       
       competition_5 = Competition.create(user: judge, art: @third_challenger, challenger: @second_challenger)
       competition_5.select_winner(@third_challenger.id)
-
       
-      # third_challenger = 2-1
-      # competitor = 3-1
-      # second_challenger = 0-2
-      # first_challenger = 0-1
+      competition_6 = Competition.create(user: judge, art: @third_challenger, challenger: @second_challenger)
+      competition_6.select_winner(@second_challenger.id)
+      
+      competition_7 = Competition.create(user: judge, art: @competitor, challenger: @second_challenger)
+      competition_7.select_winner(@competitor.id)
+      
+      # competitor = 4-1 / 80%      
+      # third_challenger = 2-2 / 50%
+      # second_challenger = 1-4 / 25%
+      # first_challenger = 0-0 / 0%
     end
     
     it "display the #number_of_wins" do
-      expect(@competitor.wins_as_competitor.size).to eq 2
+      expect(@competitor.wins_as_competitor.size).to eq 3
       expect(@competitor.wins_as_challenger.size).to eq 1
-      expect(@competitor.number_of_wins).to eq 3
+      expect(@competitor.number_of_wins).to eq 4
     end
     
     it "display the #number_of_losses" do
@@ -99,19 +104,19 @@ RSpec.describe Art, type: :model do
     end
     
     it "displays its #win_loss_record" do
-      expect(@competitor.win_loss_record).to eq "3-1"
+      expect(@competitor.win_loss_record).to eq "4-1"
     end
     
-    it "displays its #win_loss_percentage" do
-      expect(@competitor.win_loss_percentage).to eq "75.00%"
+    it "displays its #win_loss_percentage", focus: true do
+      expect(@competitor.win_loss_percentage).to eq "80.00%"
     end
     
     it "displays its #win_loss_rate" do
-      expect(@competitor.win_loss_rate).to eq 0.75
+      expect(@competitor.win_loss_rate).to eq 0.8
     end
     
     it "orders winners by ::most_wins" do
-      expect(Art.by_wins).to match [@competitor, @third_challenger]
+      expect(Art.by_wins).to match [@competitor, @third_challenger, @second_challenger, @first_challenger]
     end
     
     it "returns the ::overall_winner" do
@@ -121,11 +126,15 @@ RSpec.describe Art, type: :model do
     skip "::overall_winner with ties..."
     
     it "orders losers by ::most_losses" do
-      expect(Art.by_losses.size).to match ({@second_challenger.id => 2, @third_challenger.id => 1, @competitor.id => 1, @first_challenger.id => 1})
+      expect(Art.by_losses).to match ([@second_challenger, @third_challenger, @competitor, @first_challenger])
     end
     
     it "returns the overall loser" do
       expect(Art.overall_loser).to eq @second_challenger
+    end
+    
+    it "orders by win percentage", focus: true do
+      expect(Art.by_win_percentage).to match [@competitor, @third_challenger, @second_challenger, @first_challenger]
     end
     
     
