@@ -18,6 +18,7 @@ class GuestUser < User
   private
   
   def fill_guest_fields
+    p 'FULLING GUEST FIELDS'
     assign_attributes({
       email: "guest_user_#{Time.zone.now.to_i+rand(10000)}@guest.com",
       password: "password"

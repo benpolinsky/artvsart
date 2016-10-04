@@ -10,9 +10,7 @@ class User < ApplicationRecord
 
   # Love to move this into an Authentication service 
   def generate_auth_token!
-    begin
-     self.auth_token = Devise.friendly_token
-    end while user_with_token_exists
+    self.auth_token =  Devise.friendly_token
   end
 
   def judge(competition, winner: nil)
@@ -25,9 +23,7 @@ class User < ApplicationRecord
     where(type: nil).or(where(admin: true)).order(judged_competitions_count: :desc)
   end
   
-  protected
-  
-  def user_with_token_exists
-    self.class.exists?(auth_token: auth_token)
+  def self.admins
+    where(admin: true)
   end
 end

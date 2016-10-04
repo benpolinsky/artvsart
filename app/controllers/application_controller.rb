@@ -18,7 +18,8 @@ class ApplicationController < ActionController::API
 
   def current_user
     if user_token_present?
-      User.find_by(auth_token: user_token)
+      user = User.find_by(auth_token: user_token)
+      user ? user : new_guest_user
     else
       new_guest_user
     end    
@@ -41,6 +42,7 @@ class ApplicationController < ActionController::API
   private
   
   def serializer_for_current_user
+
     if current_user.is_a? GuestUser
       GuestUserSerializer.new(current_user)
     else

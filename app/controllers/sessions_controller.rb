@@ -6,6 +6,8 @@ class SessionsController < ApplicationController
     if user && user.valid_password?(session_params[:password])
       sign_in user, store: false
       user.generate_auth_token!
+      user.save
+      session[:pending_token] = user.auth_token
       render json: user, status: 200
     else
       render json: {errors: "Invalid email or password!"}, status: 422
@@ -21,7 +23,7 @@ class SessionsController < ApplicationController
       user.save
     end
     
-    render json: new_guest_user, status: 200
+    render json: current_user, status: 200
   end
   
   protected
