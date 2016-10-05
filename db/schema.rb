@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161002004814) do
+ActiveRecord::Schema.define(version: 20161005192611) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,8 +24,8 @@ ActiveRecord::Schema.define(version: 20161002004814) do
     t.text     "description"
     t.integer  "status",        default: 0
     t.string   "image"
-    t.integer  "win_count"
-    t.integer  "loss_count"
+    t.integer  "win_count",     default: 0
+    t.integer  "loss_count",    default: 0
   end
 
   create_table "authorization_tokens", force: :cascade do |t|
@@ -49,6 +49,18 @@ ActiveRecord::Schema.define(version: 20161002004814) do
     t.index ["loser_id"], name: "index_competitions_on_loser_id", using: :btree
     t.index ["user_id"], name: "index_competitions_on_user_id", using: :btree
     t.index ["winner_id"], name: "index_competitions_on_winner_id", using: :btree
+  end
+
+  create_table "identities", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "provider"
+    t.string   "uid"
+    t.text     "token"
+    t.text     "secret"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_identities_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -75,4 +87,5 @@ ActiveRecord::Schema.define(version: 20161002004814) do
 
   add_foreign_key "competitions", "arts"
   add_foreign_key "competitions", "users"
+  add_foreign_key "identities", "users"
 end

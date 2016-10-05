@@ -76,7 +76,16 @@ RSpec.describe User, type: :model do
         user.judge(competition, winner: competition.art_id)
       end
       expect(user.judged_competitions.size).to eq 2
+    end 
+  end
+  
+  context "identities" do
+    it "creates an identity with uid and provider" do
+      mock_auth = Hashie::Mash.new({provider: 'facebook', uid: "3i47u29834", info: {email: 'ben@ben.com'}})
+      new_user = User.from_omniauth(mock_auth)
+      expect(new_user.email).to eq 'ben@ben.com'
+      expect(new_user.identities.count).to eq 1
+      expect(new_user.identities.first.uid).to eq "3i47u29834"
     end
-    
   end
 end

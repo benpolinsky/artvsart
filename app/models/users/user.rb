@@ -1,10 +1,10 @@
 class User < ApplicationRecord
   has_many :judged_competitions, class_name: "Competition"
-
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
+  has_many :identities
+  
   devise :database_authenticatable, :registerable,
-     :recoverable, :rememberable, :trackable, :validatable
+     :recoverable, :rememberable, :trackable, :validatable,
+      :omniauthable, :omniauth_providers => [:facebook]
 
   before_create :generate_auth_token!
 
@@ -18,6 +18,18 @@ class User < ApplicationRecord
     judged_competitions << competition
     competition
   end
+
+  def self.from_omniauth(auth)
+    includes(:identities).where(identities: {provider: auth.provider, uid: auth.uid}).first_or_create do |user|
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0, 20]
+      user.identities.build({
+        provider: auth.provider,
+        uid: auth.uid
+      })
+    end
+  end
+
   
   def self.top_judges
     where(type: nil).or(where(admin: true)).order(judged_competitions_count: :desc)

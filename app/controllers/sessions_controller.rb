@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
       user.save
     end
     
-    render json: current_user, status: 200
+    render json: new_guest_user, status: 200
   end
   
   protected
