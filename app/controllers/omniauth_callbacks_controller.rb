@@ -7,7 +7,11 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       user.save
       session[:pending_token] = user.auth_token
       render json: user, status: 200
-    else
-    end
+    end        
   end
+  
+  def github
+    byebug
+  end
+
 end

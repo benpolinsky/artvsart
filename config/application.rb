@@ -36,9 +36,12 @@ module ArtvsartApi
          resource '*', :headers => :any, :methods => [:get, :post, :options, :put, :patch, :delete], credentials: true
        end
      end
-     config.middleware.use ActionDispatch::Flash
-      config.middleware.use ActionDispatch::Cookies
-      config.middleware.use ActionDispatch::Session::CookieStore
+    
+    config.middleware.use ActionDispatch::Flash
+    
+    config.middleware.use ActionDispatch::Cookies
+    
+    config.middleware.use ActionDispatch::Session::CookieStore
      
 
   end

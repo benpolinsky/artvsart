@@ -12,6 +12,7 @@ gem 'figaro'
 # auth
 gem 'devise'
 gem 'omniauth-facebook'
+gem 'omniauth-github'
 gem 'cancancan', '~> 1.10' # not sure if im using
 
 

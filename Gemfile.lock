@@ -270,7 +270,7 @@ GEM
     fuzzyurl (0.2.2)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
-    hashie (3.4.4)
+    hashie (3.4.6)
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
     hyperclient (0.8.1)
@@ -327,6 +327,9 @@ GEM
       rack (>= 1.0, < 3)
     omniauth-facebook (4.0.0)
       omniauth-oauth2 (~> 1.2)
+    omniauth-github (1.1.2)
+      omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.1)
     omniauth-oauth2 (1.4.0)
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
@@ -429,6 +432,7 @@ DEPENDENCIES
   listen (~> 3.0.5)
   omdbapi
   omniauth-facebook
+  omniauth-github
   pg (~> 0.18)
   puma
   rack-cors
