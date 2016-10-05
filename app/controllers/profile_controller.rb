@@ -1,6 +1,8 @@
 class ProfileController < ApplicationController
+  include ActionController::Serialization
   before_filter :authorize_user!
   
+    
   def index
 
   end

@@ -115,8 +115,8 @@ class Competition < ApplicationRecord
   end
   
   def update_counts(winner, loser)
-    winner.update(win_count: winner.win_count+1)
-    loser.update(loss_count: loser.loss_count+1)
+    winner.update(win_count: winner.number_of_wins+1)
+    loser.update(loss_count: loser.number_of_losses+1)
     # I'd rather not do this, but it's required b/c the winner + art are two difference instances
     art.reload
     challenger.reload
