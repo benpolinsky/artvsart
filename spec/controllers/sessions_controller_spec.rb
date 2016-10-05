@@ -32,15 +32,12 @@ RSpec.describe SessionsController do
       }
     end
     
-    it "retuns the current_user when auth token is specified in the headers" do
-      request.headers['Authorization'] = @user.auth_token
+    it "retuns the current_user when signing in" do
       post :create, params: @credentials
-      
       expect(subject.current_user).to eq @user
     end
     
     it "returns a guest user when no auth token is specified" do
-      post :create, params: @credentials
       expect(subject.current_user.type).to eq "GuestUser"
     end
     

@@ -19,24 +19,12 @@ RSpec.describe "Results" do
       get '/api/v1/results'
     end
 
-    it "returns the overall winner" do      
-      expect(json_response["art_results"]["overall_winner"]['name']).to eq "Art One"
-    end
-
-    it "returns the overall loser" do
-      expect(json_response["art_results"]["overall_loser"]['name']).to eq "Art Two"
-    end
   
     it "returns the top winners" do
       expect(json_response["art_results"]["top_winners"][0]['name']).to eq "Art One"
-      expect(json_response["art_results"]["top_winners"].size).to eq 1
+      expect(json_response["art_results"]["top_winners"].size).to eq 2
     end
   
-    it "returns the top losers" do
-      expect(json_response["art_results"]["top_losers"][0]['name']).to eq "Art Two"
-      expect(json_response["art_results"]["top_losers"].size).to eq 1
-    end
-    
     it "returns an arts win_loss_record" do
       expect(json_response["art_results"]["top_winners"][0]["win_loss_record"]).to eq "1-0"
     end

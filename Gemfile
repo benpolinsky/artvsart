@@ -11,7 +11,8 @@ gem 'figaro'
 
 # auth
 gem 'devise'
-gem 'cancancan', '~> 1.10'
+gem 'omniauth-facebook'
+gem 'cancancan', '~> 1.10' # not sure if im using
 
 
 gem 'rack-cors'
