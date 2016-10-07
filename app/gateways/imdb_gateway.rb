@@ -14,7 +14,7 @@ class IMDBGateway
   def single_listing(id)
     OMDB.id(id)
   end
-  
+
   def search(query, params={})
     results = [OMDB.search(query)].flatten(1)
     if results.first[:response] == "False"
@@ -27,13 +27,22 @@ class IMDBGateway
       end
     end
   end
-  
+
+
+  # all used by ProductImporter to access
+  # an individual piece of art's info
+  # extract_class and delegate_class?
+  # Not sure...
   def art_image(art)
     art[:image]
   end
   
   def art_images(art)
     [art[:image]]
+  end
+  
+  def art_additional_images(art)
+    art_images(art) - [art_image(art)]
   end
   
   def art_creator(art)
@@ -50,6 +59,17 @@ class IMDBGateway
   
   def art_description(art)
     art.plot
+  end
+  
+  def art_source
+    "IMDB.com"
+  end
+  
+  def art_other(art)
+    {
+      'actors' => art.actors,
+      'writer' => art.writer
+    }
   end
   
 

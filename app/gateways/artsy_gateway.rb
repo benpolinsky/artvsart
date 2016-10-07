@@ -90,6 +90,14 @@ class ArtsyGateway
     art.image_versions.map{ |version| art_image(art)}
   end
   
+  def art_additional_images(art)
+    art_images(art) - [art_image(art)]
+  end
+  
+  def art_source
+    "Artsy.com"
+  end
+  
   def links_for_resource(resource)
     resource._links
   end

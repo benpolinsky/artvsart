@@ -19,6 +19,8 @@ class Art < ApplicationRecord
   
   enum status: [:pending_review, :published, :declined]
   delegate :number_to_percentage, to: ActiveSupport::NumberHelper
+  
+  serialize :additional_images, JSON
 
   def wins_as_competitor
     competitions.where(winner: self.id)

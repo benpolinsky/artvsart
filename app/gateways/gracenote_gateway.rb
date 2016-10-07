@@ -25,10 +25,18 @@ class GracenoteGateway
   def art_description(art) 
   end
   
+  def art_additional_images(art)
+    art_images(art) - [art_image(art)]
+  end
+  
   def art_image(art)
   end
   
   def art_images(art)
+  end
+  
+  def art_source
+    "Gracenote"
   end
   
   # good way to get release ids

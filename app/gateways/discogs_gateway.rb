@@ -59,6 +59,23 @@ class DiscogsGateway
     art.images.map(&:uri) if art.images
   end
   
+  def art_additional_images(art)
+    art_images(art) - [art_image(art)] if art.images
+  end
+  
+  def art_source
+    "Discogs.com"
+  end
+  
+  def art_other(art)
+    {
+      'videos' => art.videos.map(&:uri),
+      'genres' => art.videos.genres.join(", "),
+      'extra_artists' => art.extraartists.map(&:name),
+      'source_uri' => art.uri
+    }
+  end
+  
   # good way to get release ids
   def search(query, params={})
     case params[:search_by]
@@ -85,11 +102,13 @@ class DiscogsGateway
   def artist_names(search_result)
     search_result.artists.map(&:name).join
   end
-  
-  
+    
   def wrapper
     @wrapper ||= Discogs::Wrapper.new(ENV['discogs_app_name'], user_token: ENV['discogs_user_token'])
   end
+  
+
+
   private
   
   def guaranteed_items

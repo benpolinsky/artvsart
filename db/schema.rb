@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161005192611) do
+ActiveRecord::Schema.define(version: 20161007224007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,13 +19,17 @@ ActiveRecord::Schema.define(version: 20161005192611) do
     t.string   "name"
     t.string   "creator"
     t.datetime "creation_date"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.text     "description"
-    t.integer  "status",        default: 0
+    t.integer  "status",            default: 0
     t.string   "image"
-    t.integer  "win_count",     default: 0
-    t.integer  "loss_count",    default: 0
+    t.integer  "win_count"
+    t.integer  "loss_count"
+    t.text     "additional_images"
+    t.string   "source"
+    t.string   "type"
+    t.index ["type"], name: "index_arts_on_type", using: :btree
   end
 
   create_table "authorization_tokens", force: :cascade do |t|

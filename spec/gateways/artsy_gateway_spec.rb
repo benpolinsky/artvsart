@@ -50,6 +50,11 @@ RSpec.describe "Artsy Gateway" do
     the_kiss = gateway.single_listing('4d8b92eb4eb68a1b2c000968')
     expect(gateway.art_images(the_kiss).all?{|a| a.match(/\.cloudfront.net/) }).to eq true
   end
+  
+  it "returns #additional_images as all images except the primary" do
+    the_kiss = gateway.single_listing('4d8b92eb4eb68a1b2c000968')
+    expect(gateway.art_additional_images(the_kiss)).to eq gateway.art_images(the_kiss) - [gateway.art_image(the_kiss)]
+  end
 
   it "returns a name for each result" do
     the_kiss = gateway.single_listing('4d8b92eb4eb68a1b2c000968')

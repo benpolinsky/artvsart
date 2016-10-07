@@ -61,7 +61,7 @@ class PhilartGateway
   end
   
   def art_image(art)
-    art_images(art).first
+    art_images(art).find {|image| image.match /images\/large/}
   end
   
   def art_images(art)
@@ -70,6 +70,14 @@ class PhilartGateway
       found_images << value.values.map(&:url)
     end
     found_images.flatten
+  end
+  
+  def art_additional_images(art)
+    art_images(art) - [art_image(art)]
+  end
+  
+  def art_source
+    "www.philart.net"
   end
   
   def link_for(art)

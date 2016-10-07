@@ -10,9 +10,7 @@ RSpec.describe "Discogs Gateway" do
   it "returns general search results" do
     search_results = gateway.search("Earth Rocks Harder", search_by: "Artist")
     expect(search_results.first.resource_url).to match /https\:\/\/api.discogs.com/
-    
   end
-
   
   it 'returns a single listing by id' do
     erh = gateway.single_listing('7028129')
@@ -24,12 +22,9 @@ RSpec.describe "Discogs Gateway" do
     expect{gateway.single_listing(0000000)}.to_not raise_error
   end
   
-  it "returns a response with error if none found", focus: true do
+  it "returns a response with error if none found" do
     search_results = gateway.search("sssadsef34f4a32ss")
     expect(search_results[:error]).to eq "No results found!"
-  end
-  
-  it "returns a response with error if an error occurs" do
   end
   
   it "returns a list of artists for a work" do
@@ -52,6 +47,11 @@ RSpec.describe "Discogs Gateway" do
   it "returns an array of image uris for each result" do
     erh = gateway.single_listing('7028129')
     expect(gateway.art_images(erh).all?{|a| a.match(/https\:\/\/api\-img.discogs.com/) }).to eq true 
+  end
+  
+  it "returns #additional_images as all images except the primary" do
+    erh = gateway.single_listing('7028129')
+    expect(gateway.art_additional_images(erh)).to eq gateway.art_images(erh) - [gateway.art_image(erh)]
   end
   
   it "returns a name for each result" do

@@ -74,10 +74,16 @@ RSpec.describe "Philart Gateway" do
   it "returns an image uri for each result" do
     art_path = "http://www.philart.net/api/art/190.json"
     art = gateway.single_listing(art_path)
-    expect(gateway.art_image(art)).to match /philart.net/
+    expect(gateway.art_image(art)).to match /www.philart.net\/images\/large/
+  end
+  
+  it "returns #additional_images as all images except the primary" do
+    art_path = "http://www.philart.net/api/art/190.json"
+    art = gateway.single_listing(art_path)
+    expect(gateway.art_additional_images(art)).to eq gateway.art_images(art) - [gateway.art_image(art)]
   end
 
-  it "returns an array of image uris for each result" do
+  it "returns an array of image uris for each result"  do
     art_path = "http://www.philart.net/api/art/190.json"
     art = gateway.single_listing(art_path)
     expect(gateway.art_images(art).all?{|img| img.match /philart.net/}).to eq true

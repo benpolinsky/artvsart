@@ -45,6 +45,10 @@ class HarvardArtGateway
     art.images.first.baseimageurl
   end
   
+  def art_additional_images(art)
+    art_images(art) - [art_image(art)]
+  end
+  
   def art_images(art)
     art.images.map(&:baseimageurl)
   end
@@ -66,6 +70,12 @@ class HarvardArtGateway
   def art_release_date(art)
     art.dated
   end
+  
+  def art_source
+    "Harvard Art Gallery"
+  end
+  
+
   
   private
   

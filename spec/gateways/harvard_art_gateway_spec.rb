@@ -53,6 +53,12 @@ RSpec.describe "HarvardArtGateway" do
     orange = search_results.first
     expect(gateway.art_images(orange).all?{|img| img.match /http\:\/\/nrs\.harvard\.edu/}).to eq true
   end
+  
+  it "returns #additional_images as all images except the primary" do
+    search_results = gateway.search("Oranges")
+    orange = search_results.first
+    expect(gateway.art_additional_images(orange)).to eq gateway.art_images(orange) - [gateway.art_image(orange)]
+  end
 
   it "returns a name for each result" do
     listing = gateway.single_listing('299985')

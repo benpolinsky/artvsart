@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe "IMDB Gateway" do
   let(:gateway){IMDBGateway.new}
   
-  it "returns general search results" do
+  it "returns general search results", focus: true do
     search_results = gateway.search("usual suspects")
     expect(search_results.first[:title]).to eq "The Usual Suspects"
   end
@@ -19,7 +19,7 @@ RSpec.describe "IMDB Gateway" do
     expect(search_results[:error]).to eq "Movie not found!"
   end
   
-  it "returns an array even when OMDB returns a single record", focus: true do
+  it "returns an array even when OMDB returns a single record" do
     search_results = gateway.search("Sssss")
     expect(search_results.first[:title]).to eq "Sssss"
   end
@@ -46,6 +46,12 @@ RSpec.describe "IMDB Gateway" do
     search_results = gateway.search("Pulp")
     pulp = search_results.first
     expect(gateway.art_images(pulp).all?{|img| img.match /ia.media-imdb.com/}).to eq true
+  end
+  
+  it "returns #additional_images as all images except the primary" do
+    search_results = gateway.search("Pulp")
+    pulp = search_results.first
+    expect(gateway.art_additional_images(pulp)).to eq gateway.art_images(pulp) - [gateway.art_image(pulp)]
   end
 
   it "returns a name for each result" do
