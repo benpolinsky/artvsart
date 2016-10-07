@@ -14,6 +14,8 @@ class Art < ApplicationRecord
   has_many :challenges, class_name: "Competition", foreign_key: "challenger_id"
   has_many :competitors, through: :challenges, source: :art
 
+  belongs_to :category
+
   validates :name, presence: true
   validates :creator, presence: true
   

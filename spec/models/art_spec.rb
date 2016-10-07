@@ -25,6 +25,13 @@ RSpec.describe Art, type: :model do
     end
   end
   
+  context "category" do
+    it "belongs_to" do
+      art = create(:art)
+      expect{art.category = Category.create(name: 'Music')}.to change{Category.count}.by(1)
+    end
+  end
+  
   context "competitions" do
     before do
       @art = create(:art)
