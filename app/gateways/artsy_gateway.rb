@@ -98,9 +98,31 @@ class ArtsyGateway
     "Artsy.com"
   end
   
+  def art_category(art)
+    "Art"
+  end
+  
   def links_for_resource(resource)
     resource._links
   end
+  
+
+  def token
+    @token ||= AuthorizationToken.artsy
+  end
+  
+  def renew_token
+    response = api(true).tokens.xapp_token._post(client_id: ENV['artsy_client_id'], client_secret: ENV['artsy_client_secret'])
+
+    if token.present?
+      token.update(token: response.token, expires_on: response.expires_at)
+    else
+      AuthorizationToken.create(service: "artsy", token: response.token, expires_on: response.expires_at) 
+    end
+  end
+  
+  
+  private
   
   def api(renewing=false)
       Hyperclient.new(ARTSY_ENDPOINT) do |api|
@@ -121,24 +143,7 @@ class ArtsyGateway
         end
       end
   end
-
-  def token
-    @token ||= AuthorizationToken.artsy
-  end
   
-  def renew_token
-    response = api(true).tokens.xapp_token._post(client_id: ENV['artsy_client_id'], client_secret: ENV['artsy_client_secret'])
-
-    if token.present?
-      token.update(token: response.token, expires_on: response.expires_at)
-    else
-      AuthorizationToken.create(service: "artsy", token: response.token, expires_on: response.expires_at) 
-    end
-  end
-  
-  
-  private
-
   def guaranteed_items
     [listing_id, listing_ids].compact.flatten(1) 
   end

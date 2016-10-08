@@ -63,6 +63,10 @@ class DiscogsGateway
     art_images(art) - [art_image(art)] if art.images
   end
   
+  def art_category(art)
+    "Music"
+  end
+  
   def art_source
     "Discogs.com"
   end

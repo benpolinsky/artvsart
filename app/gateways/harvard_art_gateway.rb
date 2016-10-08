@@ -70,6 +70,10 @@ class HarvardArtGateway
   def art_release_date(art)
     art.dated
   end
+
+  def art_category(art)
+    "Art"
+  end
   
   def art_source
     "Harvard Art Gallery"

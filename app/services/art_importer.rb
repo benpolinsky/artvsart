@@ -35,7 +35,7 @@ class ArtImporter
     end
   end
   
-
+  # And now we have another dependency in Category
   def import_item(item)
     Art.create({
       name: gateway.art_name(item),
@@ -43,7 +43,8 @@ class ArtImporter
       image: gateway.art_image(item),
       description: gateway.art_description(item),
       source: gateway.art_source,
-      additional_images: gateway.art_additional_images(item)
+      additional_images: gateway.art_additional_images(item),
+      category: Category.find_or_create_by(name: gateway.art_category(item))
     })
   end
 end

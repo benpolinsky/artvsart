@@ -61,6 +61,10 @@ class IMDBGateway
     art.plot
   end
   
+  def art_category(art)
+    art.type == "movie" ? "Movie" : "TV Show or Series"
+  end
+  
   def art_source
     "IMDB.com"
   end

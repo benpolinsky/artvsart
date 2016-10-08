@@ -76,6 +76,10 @@ class PhilartGateway
     art_images(art) - [art_image(art)]
   end
   
+  def art_category(art)
+    "Art"
+  end
+  
   def art_source
     "www.philart.net"
   end

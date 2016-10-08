@@ -34,6 +34,10 @@ class GracenoteGateway
   
   def art_images(art)
   end
+
+  def art_category(art)
+    "Music"
+  end
   
   def art_source
     "Gracenote"
