@@ -147,4 +147,10 @@ RSpec.describe Art, type: :model do
     
   end
   
+  context "slugs" do
+    let(:art){ create(:art, name: "Just here for the slugs") }
+    it "attempts to use name initially" do
+      expect(art.slug).to eq "just-here-for-the-slugs"
+    end
+  end
 end

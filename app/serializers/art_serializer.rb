@@ -1,5 +1,5 @@
 class ArtSerializer < ActiveModel::Serializer
-  attributes :id, :name, :creator, :description, :status, :image, 
+  attributes :id, :name, :slug, :creator, :description, :status, :image, 
   :win_loss_record, :win_loss_percentage, :win_loss_rate, :win_count,
   :loss_count
   

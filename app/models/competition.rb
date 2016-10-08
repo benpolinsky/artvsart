@@ -1,4 +1,6 @@
 class Competition < ApplicationRecord
+
+    
   belongs_to :user, counter_cache: :judged_competitions_count
   
   # the defender
@@ -15,6 +17,7 @@ class Competition < ApplicationRecord
     
   validate :winner_is_competitor?, if: Proc.new {|w| w.winner_id.present?}
   validate :different_competitors
+
 
   def self.stage
     return unless Art.count >= 2
@@ -69,6 +72,16 @@ class Competition < ApplicationRecord
       loser_winning_percentage: loser_winning_percentage
     }
   end
+  
+  def art_name
+    art.name
+  end
+  
+  def challenger_name
+    challenger.name
+  end
+  
+
   
   def self.percentage_between(art_one, art_two)
     competitions = competitions_between_competitors(art_one, art_two)

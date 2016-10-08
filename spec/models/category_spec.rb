@@ -24,6 +24,12 @@ RSpec.describe Category, type: :model do
       end
     end
   end
-
+  context "slugs" do
+    let(:category){ Category.create(name: "Just here for the slugs") }
+    
+    it "uses its name" do
+      expect(category.slug).to eq "just-here-for-the-slugs"
+    end
+  end
   
 end

@@ -8,6 +8,7 @@ gem 'pg', '~> 0.18'
 gem 'puma'
 gem 'active_model_serializers', '~> 0.10'
 gem 'figaro'
+gem 'friendly_id', '~> 5.1.0' 
 
 # auth
 gem 'devise'
@@ -15,14 +16,14 @@ gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'cancancan', '~> 1.10' # not sure if im using
 
-
 gem 'rack-cors'
-gem 'hyperclient'
-gem 'hyperresource'
 
 # Gateways
 gem "discogs-wrapper"
 gem 'omdbapi'
+gem 'hyperclient'
+gem 'hyperresource'
+
 gem 'rmagick'
 gem 'carrierwave'
 gem 'fog'

@@ -266,6 +266,8 @@ GEM
       fog-core
       nokogiri (~> 1.5, >= 1.5.11)
     formatador (0.2.5)
+    friendly_id (5.1.0)
+      activerecord (>= 4.0.0)
     futuroscope (0.1.11)
     fuzzyurl (0.2.2)
     globalid (0.3.7)
@@ -427,6 +429,7 @@ DEPENDENCIES
   figaro
   fog
   fog-aws
+  friendly_id (~> 5.1.0)
   hyperclient
   hyperresource
   listen (~> 3.0.5)
@@ -449,3 +452,6 @@ DEPENDENCIES
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
+
+BUNDLED WITH
+   1.12.5

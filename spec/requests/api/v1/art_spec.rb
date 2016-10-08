@@ -37,6 +37,7 @@ RSpec.describe "Art", type: :request do
         
           expect(response.code).to eq "200"
           expect(json_response['art']['id']).to_not be_blank
+          expect(json_response['art']['slug']).to eq 'this-album-i-made-in-my-basement'
           expect(json_response['art']['name']).to eq "This Album I Made in My Basement"
           expect(json_response['art']['creator']).to eq "Me"
           expect(json_response['art']['description']).to eq "Guys, please give this a listen.  I really think it's as good as Drake."
@@ -70,6 +71,7 @@ RSpec.describe "Art", type: :request do
         expect(response.code).to eq "200"
         expect(json_response['art']['id']).to eq 10012
         expect(json_response['art']['name']).to eq "My Fetched Art"
+        expect(json_response['art']['slug']).to eq "my-fetched-art"
       end
     end
     

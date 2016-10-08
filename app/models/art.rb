@@ -6,6 +6,10 @@
 # etc...
 
 class Art < ApplicationRecord
+  
+  extend FriendlyId
+  friendly_id :slug_candidates, use: :slugged
+  
   # when defending
   has_many :competitions
   has_many :challengers, through: :competitions
@@ -23,6 +27,8 @@ class Art < ApplicationRecord
   delegate :number_to_percentage, to: ActiveSupport::NumberHelper
   
   serialize :additional_images, JSON
+  
+
 
   def wins_as_competitor
     competitions.where(winner: self.id)
@@ -94,5 +100,12 @@ class Art < ApplicationRecord
   
   def self.has_battled
     includes(:competitions)
+  end
+  
+  def slug_candidates
+    [
+      :name,
+      [:creator, :name]
+    ]
   end
 end

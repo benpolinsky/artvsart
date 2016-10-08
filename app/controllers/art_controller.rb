@@ -18,7 +18,7 @@ class ArtController < ApplicationController
   def create
     art = Art.new(art_params)
     if art.save
-      render json: {art: art}, status: 200
+      render json: {art: ArtSerializer.new(art)}, status: 200
     else
       render json: {errors: "Still Need to standardize my errors"}, status: 422
     end
@@ -40,7 +40,7 @@ class ArtController < ApplicationController
   def show
     art = Art.find(params[:id])
     if art
-      render json: {art: art}, status: 200
+      render json: {art: ArtSerializer.new(art)}, status: 200
     else
       render json: {errors: "Sorry. No art found."}, status: 404
     end
