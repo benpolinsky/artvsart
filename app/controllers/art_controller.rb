@@ -35,6 +35,12 @@ class ArtController < ApplicationController
   end
 
   def update
+    art = Art.find(params[:id])
+    if art.update_attributes(art_params)
+      render json: {art: ArtSerializer.new(art)}, status: 200
+    else
+      render json: {errors: art.errors}, status: 422
+    end
   end
 
   def show

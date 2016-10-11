@@ -60,6 +60,31 @@ RSpec.describe "Art", type: :request do
         end
       end
     end
+    
+    context "UPDATE /art/:id" do
+      context "if authorized as admin" do
+        before do
+          @art = create(:art, name: "My Fetched Art", id: 10012)
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+      
+        it "updates a piece of art" do
+          put '/api/v1/art/10012', params: {art: {name: "An Awesome Art"}}, headers: @headers
+          expect(json_response['art']['name']).to eq "An Awesome Art"
+        end
+      end
+      context "if unauthorized" do
+        before do
+          @art = create(:art, name: "My Fetched Art", id: 10012)
+        end
+      
+        it "cannot update a piece of art" do
+          put '/api/v1/art/10012', params: {art: {name: "An Awesome Art"}}
+          expect(response.code).to eq '422'
+        end
+      end
+    end
 
     context "GET /art/:id" do
       before do
@@ -74,7 +99,6 @@ RSpec.describe "Art", type: :request do
         expect(json_response['art']['slug']).to eq "my-fetched-art"
       end
     end
-    
     
     context "POST /art/import" do
       context "if authorized as admin" do
