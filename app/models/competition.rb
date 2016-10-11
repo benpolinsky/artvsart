@@ -17,13 +17,6 @@ class Competition < ApplicationRecord
     
   validate :winner_is_competitor?, if: Proc.new {|w| w.winner_id.present?}
   validate :different_competitors
-
-
-  def self.stage
-    return unless Art.count >= 2
-    pair = new_battle_pair
-    create(art: pair[0], challenger: pair[1]) 
-  end
   
   def winning_art
     return nil unless valid?
@@ -80,9 +73,7 @@ class Competition < ApplicationRecord
   def challenger_name
     challenger.name
   end
-  
 
-  
   def self.percentage_between(art_one, art_two)
     competitions = competitions_between_competitors(art_one, art_two)
     number_of_competitons = competitions.size
@@ -95,8 +86,14 @@ class Competition < ApplicationRecord
     [art_one_percentage, art_two_percentage]
   end  
   
-  def self.finished_competitions
+  def self.judged
     where('winner_id IS NOT NULL AND loser_id IS NOT NULL')
+  end
+  
+  def self.stage
+    return unless Art.count >= 2
+    pair = new_battle_pair
+    create(art: pair[0], challenger: pair[1]) 
   end
   
   private
@@ -113,18 +110,10 @@ class Competition < ApplicationRecord
     winner_id.present?
   end
   
-  def self.new_battle_pair    
-    Art.all.sample(2)
-  end
-  
   def opposite_art(given_id)
     ids = [challenger_id, art_id]
     ids.delete(given_id.to_i)
     ids[0]
-  end
-  
-  def self.competitions_between_competitors(art_one, art_two)
-    finished_competitions.where(art: art_one, challenger: art_two).or(finished_competitions.where(art: art_two, challenger: art_one))
   end
   
   def update_counts(winner, loser)
@@ -135,4 +124,13 @@ class Competition < ApplicationRecord
     challenger.reload
   end
   
+  def self.new_battle_pair    
+    Art.all.sample(2)
+  end
+  
+  def self.competitions_between_competitors(art_one, art_two)
+    judged.where(art: art_one, challenger: art_two).or(judged.where(art: art_two, challenger: art_one))
+  end
+  
+ 
 end

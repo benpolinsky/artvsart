@@ -7,7 +7,7 @@ class ArtController < ApplicationController
     render json: {
       total_pieces_of_art_judged: Art.has_battled.size,
       total_pieces_of_art_in_catalog: Art.count,
-      total_competitions: Competition.finished_competitions.size
+      total_competitions: Competition.judged.size
     }
   end
   

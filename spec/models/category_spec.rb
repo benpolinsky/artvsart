@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 CATEGORY_ATTRIBUTES = [:name, :art_count]
-VALID_ATTRIBUTES = [:name]
+VALID_CATEGORY_ATTRIBUTES = [:name]
 
 RSpec.describe Category, type: :model do
   CATEGORY_ATTRIBUTES.each do |attr|
@@ -13,7 +13,7 @@ RSpec.describe Category, type: :model do
   
   
   context "validations" do
-    VALID_ATTRIBUTES.each do |att|
+    VALID_CATEGORY_ATTRIBUTES.each do |att|
       it "is invalid without a #{att}" do
         category = Category.new
         expect(category).to_not be_valid

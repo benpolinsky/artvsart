@@ -1,13 +1,13 @@
 require 'rails_helper'
 
+# I don't want to be forced to use instance variables 
+# just so I can test them using assigns(:foo)
+
+# Aside from that, I'm pretty much testing everything
+# else in my request specs...
+
 RSpec.describe CompetitionsController do
   context "POST create" do
-    it "assigns a @competitor and a @challenger" do
-      create_list(:art, 2)
-      post :create
-      expect(assigns(:competition)).to_not be_nil
-    end
-
     it "returns ok" do
       create_list(:art, 2)
       post :create
@@ -17,11 +17,9 @@ RSpec.describe CompetitionsController do
     it "assings an error message if not enough art are available" do
       post :create
       expect(response.status).to eq 422
-      expect(assigns(:error_message)).to eq "We don't have enough art for you to rank.  Check back soon!"
       create(:art)
       post :create
       expect(response.status).to eq 422
-      expect(assigns(:error_message)).to eq "We don't have enough art for you to rank.  Check back soon!"
       create(:art)
       post :create
       expect(response.status).to eq 200
@@ -34,9 +32,6 @@ RSpec.describe CompetitionsController do
       challenger = create(:art)
       competition = Competition.create(art: art, challenger: challenger, user: create(:user))
       put :update, params: {id: competition.id, competition: {winner_id: challenger.id}}
-      expect(assigns(:competition).winning_art).to eq challenger
-      expect(assigns(:competition).losing_art).to eq art
-      expect(assigns(:competition).persisted?).to be true
       expect(response.status).to eq 200
     end
   end

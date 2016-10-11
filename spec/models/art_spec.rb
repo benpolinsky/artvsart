@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 ART_ATTRIBUTES = [:name, :description, :creator, :created_at]
-VALID_ATTRIBUTES = [:name, :creator]
+VALID_ART_ATTRIBUTES = [:name, :creator]
 
 RSpec.describe Art, type: :model do
   ART_ATTRIBUTES.each do |attr|
@@ -13,7 +13,7 @@ RSpec.describe Art, type: :model do
   
   
   context "validations" do
-    VALID_ATTRIBUTES.each do |att|
+    VALID_ART_ATTRIBUTES.each do |att|
       it "is invalid without a #{att}" do
         art = build(:art, att => nil)
         expect(art).to_not be_valid

@@ -82,5 +82,36 @@ RSpec.describe "Competitions API" do
         expect(json_response["competition"]["errors"]["winner"]).to include "Invalid Winner"
       end
     end
+    
+    context 'GET /competitions/:id', focus: true do
+      before do
+        winning_art = create(:art, id: 99)
+        losing_art = create(:art, id: 100)
+        
+        judged_competition = create(:competition, id: 10, art: winning_art, challenger: losing_art, user: create(:user))
+        judged_competition.select_winner(99)
+        
+        unjudged_competition = create(:competition, id: 11, art: winning_art, challenger: losing_art)
+        
+      end
+      
+      it "can request a judged competition" do
+        get "/api/v1/competitions/#{10}"
+
+        expect(response.code).to eq "200"
+        expect(json_response['competition']['winner_id']).to eq 99
+        expect(json_response['competition']['loser_id']).to eq 100
+      end
+      
+      it "cannot request an unjudged competition" do
+        get "/api/v1/competitions/#{11}"
+        expect(response.code).to eq "404"
+      end
+      
+    end
+    
+    context "GET /competitions/master/:id" do
+      skip "can request a non-judged competition and be directed to a preview/master"
+    end
   end
 end
