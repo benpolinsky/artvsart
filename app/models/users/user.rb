@@ -18,7 +18,7 @@ class User < ApplicationRecord
     judged_competitions << competition
     competition
   end
-
+  
   def self.from_omniauth(auth)
     includes(:identities).where(identities: {provider: auth.provider, uid: auth.uid}).first_or_create do |user|
       user.email = auth.info.email
@@ -38,4 +38,5 @@ class User < ApplicationRecord
   def self.admins
     where(admin: true)
   end
+
 end

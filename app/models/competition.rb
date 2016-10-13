@@ -132,5 +132,9 @@ class Competition < ApplicationRecord
     judged.where(art: art_one, challenger: art_two).or(judged.where(art: art_two, challenger: art_one))
   end
   
+  def self.from_current_user(token)
+    includes(:art, :challenger, :winner, :loser, :user).judged.where(users: {auth_token: token})
+  end
+  
  
 end

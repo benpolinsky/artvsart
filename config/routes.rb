@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
 
-  devise_for :users, controllers: {registrations: 'registrations', omniauth_callbacks: 'omniauth_callbacks'}, defaults: {format: :json}
+
 
   scope path: 'api' do
     scope path: 'v1' do
-      
+      devise_for :users, controllers: {registrations: 'registrations', omniauth_callbacks: 'omniauth_callbacks', sessions: "sessions"}, defaults: {format: :json}
       resources :competitions, :sessions, :categories
       
       resources :art do
