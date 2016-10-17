@@ -2,10 +2,10 @@ class ResultsController < ApplicationController
   include ActionController::Serialization
   
   def index
-    art = Art.all
+    art = Art.leaders
     render json: {
       art_results: {
-        top_winners: ArtResultsSerializer.new(art.by_win_percentage)
+        top_winners: ArtResultsSerializer.new(art)
       }
     }
   end

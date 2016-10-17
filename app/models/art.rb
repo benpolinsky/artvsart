@@ -113,6 +113,9 @@ class Art < ApplicationRecord
     includes(:competitions)
   end
   
+  def self.leaders(n=50)
+    by_win_percentage.limit(n)
+  end
 
   
   def slug_candidates

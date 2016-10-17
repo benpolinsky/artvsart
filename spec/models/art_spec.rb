@@ -140,10 +140,31 @@ RSpec.describe Art, type: :model do
       expect(Art.overall_loser).to eq @second_challenger
     end
     
-    it "orders by win percentage", focus: true do
+    it "orders by win percentage" do
       expect(Art.by_win_percentage).to match [@competitor, @third_challenger, @second_challenger, @first_challenger]
     end
     
+    it "returns ::leaders" do
+      expect(Art.leaders).to match [@competitor, @third_challenger, @second_challenger, @first_challenger]
+    end
+    
+    it "only returns the top n ::leaders" do
+      expect(Art.leaders(1)).to match [@competitor]
+      expect(Art.leaders(0)).to match []
+    end
+    
+    it "leaders defaults to the top 50 arts" do
+      judge = create(:user)
+
+      200.times {create(:art)}
+      100.times do
+        competition = Competition.stage
+        competition.select_winner(competition.art.id, judge)
+      end
+      
+      expect(Art.leaders.size).to eq 50
+      expect(Art.leaders(51).size).to eq 51
+    end
     
   end
   

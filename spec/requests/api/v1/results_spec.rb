@@ -24,7 +24,7 @@ RSpec.describe "Results" do
       expect(json_response["art_results"]["top_winners"][0]['name']).to eq "Art One"
       expect(json_response["art_results"]["top_winners"].size).to eq 2
     end
-  
+    
     it "returns an arts win_loss_record" do
       expect(json_response["art_results"]["top_winners"][0]["win_loss_record"]).to eq "1-0"
     end
@@ -36,6 +36,24 @@ RSpec.describe "Results" do
     it "returns an arts win_loss_percentage" do
       expect(json_response["art_results"]["top_winners"][0]["win_loss_percentage"]).to eq "100.00%"
     end
+  end
+  
+  context "limits" do
+    let(:judge) {create(:user)}
+    
+    before do
+      200.times {create(:art)}
+      100.times do
+        competition = Competition.stage
+        competition.select_winner(competition.art.id, judge)
+      end
+      get '/api/v1/results'
+    end 
+    
+    it "only returns 50 top winners" do
+      expect(json_response["art_results"]["top_winners"].size).to eq 50
+    end
+  
   end
  
   
