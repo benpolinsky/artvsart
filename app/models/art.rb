@@ -7,6 +7,8 @@
 
 class Art < ApplicationRecord
   
+  attr_accessor :category_name
+  
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
   
@@ -27,7 +29,15 @@ class Art < ApplicationRecord
   delegate :number_to_percentage, to: ActiveSupport::NumberHelper
   
   serialize :additional_images, JSON
-  
+
+  def saves?(params)
+    if params[:category_name].present?
+      self.category = Category.find_or_create_by(name: params.delete(:category_name))
+    end
+    
+    assign_attributes(params)
+    save
+  end
 
 
   def wins_as_competitor
@@ -61,6 +71,7 @@ class Art < ApplicationRecord
   def number_of_losses
     loss_count.to_i
   end
+
   
   def win_loss_record
     "#{number_of_wins}-#{number_of_losses}"
@@ -101,6 +112,8 @@ class Art < ApplicationRecord
   def self.has_battled
     includes(:competitions)
   end
+  
+
   
   def slug_candidates
     [

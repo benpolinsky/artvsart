@@ -20,4 +20,10 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  time:
+    formats: 
+      shorty: "%B %d, %Y"
+      amp: "%B %d %I:%M %p"
+      member_since: "%-m/%y"
+      month: "%B"
+      month_year: "%B %Y"

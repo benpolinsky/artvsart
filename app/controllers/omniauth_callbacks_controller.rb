@@ -10,8 +10,5 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end        
   end
   
-  def github
-    byebug
-  end
 
 end

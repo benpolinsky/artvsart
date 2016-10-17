@@ -17,7 +17,7 @@ class ArtController < ApplicationController
 
   def create
     art = Art.new(art_params)
-    if art.save
+    if art.saves?(art_params)
       render json: {art: ArtSerializer.new(art)}, status: 200
     else
       render json: {errors: "Still Need to standardize my errors"}, status: 422
@@ -36,7 +36,7 @@ class ArtController < ApplicationController
 
   def update
     art = Art.find(params[:id])
-    if art.update_attributes(art_params)
+    if art.saves?(art_params)
       render json: {art: ArtSerializer.new(art)}, status: 200
     else
       render json: {errors: art.errors}, status: 422
@@ -55,7 +55,7 @@ class ArtController < ApplicationController
   protected
 
   def art_params
-    params.require(:art).permit(:name, :creator, :description, :image, :creation_date, :source, :category)
+    params.require(:art).permit(:name, :creator, :description, :image, :creation_date, :source, :category, :category_name)
   end
     
 end
