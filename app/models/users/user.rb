@@ -19,6 +19,12 @@ class User < ApplicationRecord
     competition
   end
   
+  def gravatar_hash
+    md5 = Digest::MD5.new
+    md5.update formatted_email
+    md5.hexdigest
+  end
+  
   def self.from_omniauth(auth)
     includes(:identities).where(identities: {provider: auth.provider, uid: auth.uid}).first_or_create do |user|
       user.email = auth.info.email
@@ -38,5 +44,12 @@ class User < ApplicationRecord
   def self.admins
     where(admin: true)
   end
+  
+  private
+  
+  def formatted_email
+    self.email.strip.downcase
+  end
+
 
 end

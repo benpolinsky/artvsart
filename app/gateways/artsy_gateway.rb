@@ -1,7 +1,3 @@
-# obvious we've got some shameless green going on.
-# ideas: 
-# - ask the token if it's expired or expiring soon in initialize?
-
 require 'hyperclient'
 
 class ArtsyGateway

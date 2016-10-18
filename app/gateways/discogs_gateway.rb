@@ -1,7 +1,3 @@
-# I need a better way to fetch a bunch of listings
-# I shouldn't be hitting my rate limits, but yet...
-
-# You could stub, but in the real world....
 class DiscogsGateway
   attr_reader :wrapper, :listing_id, :listing_ids, :artist_id
 

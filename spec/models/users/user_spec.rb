@@ -88,4 +88,21 @@ RSpec.describe User, type: :model do
       expect(new_user.identities.first.uid).to eq "3i47u29834"
     end
   end
+  
+  context "gravatars" do
+    it "computes a md5 hash from its email" do
+      user.email = "ben@ben.com"
+      expect(user.gravatar_hash).to eq 'a8eeb68641395ea82ac1c8783306548e'
+    end
+    
+    it "removes whitespace in emails" do
+      user.email = " ben@ben.com "
+      expect(user.gravatar_hash).to eq 'a8eeb68641395ea82ac1c8783306548e'
+    end
+    
+    it "downcases all characters" do
+      user.email = "BeN@BEN.COm"
+      expect(user.gravatar_hash).to eq 'a8eeb68641395ea82ac1c8783306548e'
+    end
+  end
 end

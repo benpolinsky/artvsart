@@ -87,20 +87,18 @@ class PhilartGateway
   def link_for(art)
     art.links.find{|link| link.rel == 'self'}.href
   end
-
   
   def api(path=PHILART_ENDPOINT)
-      Hyperclient.new(path) do |api|
-        api.headers['Accept'] = 'application/vnd.philart-v2+json'
-        api.connection(default: false) do |conn|
-          conn.use FaradayMiddleware::FollowRedirects
-          conn.use Faraday::Response::RaiseError
-          conn.request :json
-          conn.response :json, content_type: /\bjson$/
-          conn.adapter :net_http
-        end
+    Hyperclient.new(path) do |api|
+      api.headers['Accept'] = 'application/vnd.philart-v2+json'
+      api.connection(default: false) do |conn|
+        conn.use FaradayMiddleware::FollowRedirects
+        conn.use Faraday::Response::RaiseError
+        conn.request :json
+        conn.response :json, content_type: /\bjson$/
+        conn.adapter :net_http
       end
-
+    end
   end
   
 end

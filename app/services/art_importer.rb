@@ -1,14 +1,3 @@
-# while the dependency injection is nice,
-# it would be nice for users to be able
-# to initialize an importer like so:
-
-#    ArtImporter.new(:artsy, listing_id)
-
-# in addition to:
-
-#    ArtImporter.new(artsy_gateway, listing_id)
-
-
 class ArtImporter
   attr_reader :gateway
   
@@ -16,19 +5,7 @@ class ArtImporter
     @gateway = gateway
   end
 
-  # knows a bit too much...
-  # perhaps it should be:
-  
-  # Art.create(gateway.prepared_items([field_list]))
 
-  # then each gateway:
-  # def prepare_item(art)
-  #  {
-  #    name: art_name(art)
-  #  }
-  # end
-  #
-  # That probably makes more sense...
   def import
     gateway.items.each do |item|
       import_item(item)
