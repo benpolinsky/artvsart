@@ -10,6 +10,8 @@ gem 'active_model_serializers', '~> 0.10'
 gem 'figaro'
 gem 'friendly_id', '~> 5.1.0' 
 
+
+
 # auth
 gem 'devise'
 gem 'omniauth-facebook'

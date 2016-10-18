@@ -1,11 +1,11 @@
 class User < ApplicationRecord
   has_many :judged_competitions, class_name: "Competition"
   has_many :identities
-  
+
   devise :database_authenticatable, :registerable,
      :recoverable, :rememberable, :trackable, :validatable,
       :omniauthable, :omniauth_providers => [:facebook]
-
+    
   before_create :generate_auth_token!
 
   # Love to move this into an Authentication service 
@@ -37,12 +37,28 @@ class User < ApplicationRecord
   end
 
   
+  def self.ranked_judges
+    where("rank IS NOT NULL").order(rank: :asc)
+  end
+  
+  def self.judges
+    where("judged_competitions_count > 0")
+  end
+  
   def self.top_judges
-    where(type: nil).or(where(admin: true)).order(judged_competitions_count: :desc)
+    judges.where(type: nil).or(where(admin: true)).order(judged_competitions_count: :desc)
   end
   
   def self.admins
     where(admin: true)
+  end
+  
+
+  
+  def self.rank!
+    top_judges.find_each.with_index do |judge, index| 
+      judge.update(rank: index+1)
+    end
   end
   
   private

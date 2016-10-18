@@ -105,4 +105,6 @@ RSpec.describe User, type: :model do
       expect(user.gravatar_hash).to eq 'a8eeb68641395ea82ac1c8783306548e'
     end
   end
+  
+  pending "rankings"
 end

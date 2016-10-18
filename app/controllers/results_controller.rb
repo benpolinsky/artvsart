@@ -9,4 +9,9 @@ class ResultsController < ApplicationController
       }
     }
   end
+  
+  def ranked_users
+    users = User.ranked_judges.limit(50)
+    render json: users, each_serializer: RankedUserSerializer, status: 200
+  end
 end

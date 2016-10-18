@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       delete 'users/sign_out' => 'sessions#destroy'
       
       get 'user/competitions' => 'profile#competitions'
+      get 'ranked_users' => 'results#ranked_users'
       
       get 'top_judges' => 'judges#top'
       
