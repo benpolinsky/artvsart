@@ -79,4 +79,9 @@ RSpec.describe "HarvardArtGateway" do
     listing = gateway.single_listing('299985')
     expect(gateway.art_release_date(listing)).to eq "1771"
   end
+  
+  it "returns a art_source_link for each result" do
+    listing = gateway.single_listing('299985')
+    expect(gateway.art_source_link(listing)).to eq "http://harvardartmuseums.org/collections/object/299985"
+  end
 end

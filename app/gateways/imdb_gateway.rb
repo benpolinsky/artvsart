@@ -69,6 +69,10 @@ class IMDBGateway
     "IMDB.com"
   end
   
+  def art_source_link(art)
+    "https://www.imdb.com/title/#{art.imdb_id}"
+  end
+  
   def art_other(art)
     {
       'actors' => art.actors,

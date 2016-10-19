@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 # An ArtImporter is the bridge between Gateways and Art in our Application:
-# An ArtImporter takes a Gateway-ish object, and calls it to retrieve art infos
+# An ArtImporter takes a Gateway-ish object, and calls it to retrieve art info
 # After the Gateway fetches and normalizes (standardizes?) data
 # the Importer imports and saves the data as Art object(s).
 

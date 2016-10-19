@@ -67,6 +67,10 @@ class DiscogsGateway
     "Discogs.com"
   end
   
+  def art_source_link(art)
+    art.uri
+  end
+  
   def art_other(art)
     {
       'videos' => art.videos.map(&:uri),

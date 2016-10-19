@@ -20,6 +20,7 @@ class ArtImporter
       image: gateway.art_image(item),
       description: gateway.art_description(item),
       source: gateway.art_source,
+      source_link: gateway.art_source_link(item),
       additional_images: gateway.art_additional_images(item),
       category: Category.find_or_create_by(name: gateway.art_category(item))
     })

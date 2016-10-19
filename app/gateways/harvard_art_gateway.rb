@@ -28,17 +28,6 @@ class HarvardArtGateway
     else
       records.select{|r| r['images'].present?}.map{ |record| record['image'] = "#{record['images'].first.baseimageurl}?width=200&height=200"; record}
     end
-      
-  end
-  
-  def api(path='http://api.harvardartmuseums.org')
-    @api ||= Faraday.new(url: path) do |connection|
-      connection.request :url_encoded
-      connection.response :json, content_type: /\bjson$/
-      connection.adapter Faraday.default_adapter
-      connection.use FaradayMiddleware::FollowRedirects
-      connection.use Faraday::Response::RaiseError
-    end
   end
   
   def art_image(art)
@@ -79,9 +68,21 @@ class HarvardArtGateway
     "Harvard Art Gallery"
   end
   
-
+  def art_source_link(art)
+    art.url
+  end
   
   private
+  
+  def api(path='http://api.harvardartmuseums.org')
+    @api ||= Faraday.new(url: path) do |connection|
+      connection.request :url_encoded
+      connection.response :json, content_type: /\bjson$/
+      connection.adapter Faraday.default_adapter
+      connection.use FaradayMiddleware::FollowRedirects
+      connection.use Faraday::Response::RaiseError
+    end
+  end
   
   def images_present?(records)
     records.map{|r| r['images'] }.present?

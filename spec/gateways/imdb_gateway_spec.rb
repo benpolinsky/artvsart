@@ -73,6 +73,11 @@ RSpec.describe "IMDB Gateway" do
     listing = gateway.single_listing('tt0114814')
     expect(gateway.art_release_date(listing)).to eq "1995"
   end
+  
+  it "returns a source link for each result" do
+    listing = gateway.single_listing('tt0114814')
+    expect(gateway.art_source_link(listing)).to eq "https://www.imdb.com/title/tt0114814"
+  end
 
 
 end

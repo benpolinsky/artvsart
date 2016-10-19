@@ -73,4 +73,9 @@ RSpec.describe "Discogs Gateway" do
    erh = gateway.single_listing('7028129') 
    expect(gateway.art_release_date(erh)).to eq "2015-04-28"
   end
+  
+  it "returns a source_link", focus: true do
+   erh = gateway.single_listing('7028129') 
+   expect(gateway.art_source_link(erh)).to eq "https://www.discogs.com/Philadelphia-Slick-Earth-Rocks-Harder/release/7028129"
+  end
 end

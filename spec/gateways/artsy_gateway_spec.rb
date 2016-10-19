@@ -51,6 +51,11 @@ RSpec.describe "Artsy Gateway" do
     expect(gateway.art_images(the_kiss).all?{|a| a.match(/\.cloudfront.net/) }).to eq true
   end
   
+  it "returns a source link for each result" do
+    the_kiss = gateway.single_listing('4d8b92eb4eb68a1b2c000968')
+    expect(gateway.art_source_link(the_kiss)).to eq "http://www.artsy.net/artwork/gustav-klimt-der-kuss-the-kiss"
+  end
+  
   it "returns #additional_images as all images except the primary" do
     the_kiss = gateway.single_listing('4d8b92eb4eb68a1b2c000968')
     expect(gateway.art_additional_images(the_kiss)).to eq gateway.art_images(the_kiss) - [gateway.art_image(the_kiss)]
@@ -80,6 +85,9 @@ RSpec.describe "Artsy Gateway" do
     warhol_collection = gateway.artist_works('andy-warhol')
     expect(warhol_collection.size).to eq 0 # i need to find an artist with collections...
   end
+
+
+
 
   # this is assuiming allworks.first will always return the earlier artwork...
   it "returns all works" do

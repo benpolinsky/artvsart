@@ -1,6 +1,4 @@
-class Competition < ApplicationRecord
-
-    
+class Competition < ApplicationRecord    
   belongs_to :user, counter_cache: :judged_competitions_count
   
   # the defender
@@ -37,6 +35,9 @@ class Competition < ApplicationRecord
     end
   end 
  
+  # TODO: extract_class?  
+  # clearly the next 6 methods are all dealing w/ statistics
+  
   def percentage_between_arts
     self.class.percentage_between(art, challenger)
   end

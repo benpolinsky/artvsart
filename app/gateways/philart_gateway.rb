@@ -1,5 +1,6 @@
 class PhilartGateway
   PHILART_ENDPOINT = "http://www.philart.net/api.json"
+  BASE_URL = 'http://www.philart.net/art'
 
   attr_reader :api, :path, :paths
   
@@ -82,6 +83,20 @@ class PhilartGateway
   
   def art_source
     "www.philart.net"
+  end
+
+  def art_source_link(art)
+    "#{BASE_URL}/#{slugged_name(art)}/#{id_for(art)}.html"
+  end
+
+  private
+  
+  def slugged_name(art)
+    art_name(art).gsub(/[', '']/, "_")
+  end
+  
+  def id_for(art)
+    link_for(art).split('/')[-1].split('.')[0]
   end
   
   def link_for(art)

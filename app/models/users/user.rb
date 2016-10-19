@@ -42,7 +42,7 @@ class User < ApplicationRecord
   end
   
   def self.judges
-    where("judged_competitions_count > 0")
+    where("judged_competitions_count > 0 AND judged_competitions_count IS NOT NULL")
   end
   
   def self.top_judges
@@ -54,9 +54,10 @@ class User < ApplicationRecord
   end
   
 
-  
-  def self.rank!
-    top_judges.find_each.with_index do |judge, index| 
+  # https://github.com/telent/ar-as-batches eventually
+  def self.rank!(reset=false)
+    update_all(rank: nil) if reset
+    top_judges.each_with_index do |judge, index| 
       judge.update(rank: index+1)
     end
   end

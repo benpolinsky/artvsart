@@ -41,7 +41,12 @@ class GracenoteGateway
   
   def art_source
     "Gracenote"
+  end  
+  
+  def art_source_link(art)
+
   end
+  
   
   # good way to get release ids
   def search(query, params={})

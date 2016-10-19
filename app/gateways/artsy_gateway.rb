@@ -94,6 +94,10 @@ class ArtsyGateway
     "Artsy.com"
   end
   
+  def art_source_link(art)
+    art.permalink.to_s
+  end
+  
   def art_category(art)
     "Art"
   end

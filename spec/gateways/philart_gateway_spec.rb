@@ -22,7 +22,6 @@ RSpec.describe "Philart Gateway" do
   end
   
   it "finds a single listing by path" do
-    # find like this: gateway.search("zoo").first.links.find{|link| link.rel == 'self'}.href
     art_path = "http://www.philart.net/api/art/590.json"
     expect(gateway.single_listing(art_path).body.title['display']).to eq "Zoo Mural"
   end
@@ -69,7 +68,6 @@ RSpec.describe "Philart Gateway" do
     art = gateway.single_listing(art_path)
     expect(gateway.art_release_date(art)).to eq '2002'
   end
-  
 
   it "returns an image uri for each result" do
     art_path = "http://www.philart.net/api/art/190.json"
@@ -89,6 +87,11 @@ RSpec.describe "Philart Gateway" do
     expect(gateway.art_images(art).all?{|img| img.match /philart.net/}).to eq true
   end
 
+  it "returns an art_source_link" do
+    art_path = "http://www.philart.net/api/art/190.json"
+    art = gateway.single_listing(art_path)
+    expect(gateway.art_source_link(art)).to eq 'http://www.philart.net/art/The_Immigrant/190.html'
+  end
 
 
 
