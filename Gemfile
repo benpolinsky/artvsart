@@ -19,6 +19,7 @@ gem 'omniauth-github'
 gem 'cancancan', '~> 1.10' # not sure if im using
 
 gem 'rack-cors'
+gem 'whenever', :require => false
 
 # Gateways
 gem "discogs-wrapper"
@@ -36,7 +37,7 @@ group :development, :test do
   gem 'byebug'
   gem "factory_girl_rails", "~> 4.0"
   gem 'faker'
-  
+  gem 'fantaskspec', git: "https://github.com/benpolinsky/fantaskspec.git"
 end
 
 group :test do
@@ -46,6 +47,7 @@ group :test do
   gem "rspec-expectations", git: "https://github.com/rspec/rspec-expectations.git", branch: "master"
   gem "rspec-mocks", git: "https://github.com/rspec/rspec-mocks.git", branch: "master"
   gem 'rails-controller-testing'
+  gem 'whenever-test'
 end
 
 group :development do
