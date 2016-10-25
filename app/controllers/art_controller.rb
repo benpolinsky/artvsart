@@ -55,7 +55,8 @@ class ArtController < ApplicationController
   protected
 
   def art_params
-    params.require(:art).permit(:name, :creator, :description, :image, :creation_date, :source, :category, :category_name)
+    params.require(:art).permit(:name, :creator, :description, :image, :creation_date, 
+                                :source, :category, :category_name, :source_link)
   end
     
 end

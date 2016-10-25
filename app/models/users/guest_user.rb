@@ -5,7 +5,7 @@ class GuestUser < User
     if judged_competitions.size < 10
       super(competition, winner: winner)
     else
-      competition.errors.add(:base, 'Guest Users can only Judge 10 times.  Please Sign Up!')
+      competition.errors.add(:base, 'Please Sign Up to Continue Judging')
       competition
     end
   end
