@@ -13,7 +13,9 @@ Rails.application.routes.draw do
       
       post 'users/sign_in' => 'sessions#create'
       delete 'users/sign_out' => 'sessions#destroy'
-      
+      resource :user do
+        put :change_password
+      end
       get 'user/competitions' => 'profile#competitions'
       get 'ranked_users' => 'results#ranked_users'
       

@@ -1,6 +1,6 @@
 class CompetitionsController < ApplicationController
   include ActionController::Serialization
-  before_action :authorize_user!, except: [:index, :show]
+  before_action :authorize_user_or_create_guest!, except: [:index, :show]
   
   def show
     competition = Competition.judged.find_by(id: params[:id])

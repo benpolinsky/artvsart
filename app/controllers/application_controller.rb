@@ -32,6 +32,10 @@ class ApplicationController < ActionController::API
   end
   
   def authorize_user!
+    render(json: {errors: "Unauthorized!"}, status: 422) unless user_present?
+  end
+  
+  def authorize_user_or_create_guest!
     render(json: {errors: "Unauthorized!"}, status: 422) unless current_user
   end
   
@@ -42,7 +46,6 @@ class ApplicationController < ActionController::API
   private
   
   def serializer_for_current_user
-
     if current_user.is_a? GuestUser
       GuestUserSerializer.new(current_user)
     else
@@ -50,9 +53,17 @@ class ApplicationController < ActionController::API
     end
   end
   
+  # Clearly these user_* and user_token_* methods should be extracted to...
+  # a) Token class?
+  # b) Auth module/class?
+  
+  
+  def user_present?
+    user_token_present? && User.find_by(auth_token: user_token)
+  end
+  
   def user_token_present?
-    (request.headers['Authorization'].present? && 
-    request.headers['Authorization'] != 'undefined') ||
+    (request.headers['Authorization'].present? && request.headers['Authorization'] != 'undefined') ||
     user_token_just_issued?
   end
   

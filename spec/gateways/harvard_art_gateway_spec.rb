@@ -17,7 +17,7 @@ RSpec.describe "HarvardArtGateway" do
   it "does not return results for an exact match" do
     search_results = gateway.search("Untitled (Mr. and Mrs. Leicester Faust)")
     expect(search_results.first.title).to_not eq "Untitled (Mr. and Mrs. Leicester Faust)"
-    expect(search_results.first.title).to  eq "Untitled (broken pipe against white backdrop)"
+    expect(search_results.first.title).to  eq "Untitled (Emma Eastman memorial cabinet card, Emporia, Kansas)"
   end
   
   it "returns a response with error if none found" do

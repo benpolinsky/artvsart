@@ -1,6 +1,6 @@
 class ProfileController < ApplicationController
   include ActionController::Serialization
-  before_action :authorize_user!
+  before_action :authorize_user_or_create_guest!
   
     
   def index
