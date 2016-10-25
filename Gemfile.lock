@@ -34,7 +34,7 @@ GIT
 
 GIT
   remote: https://github.com/rspec/rspec-rails.git
-  revision: 063f035cb9559e227646fe244bf8b8b2961a8c32
+  revision: 3caa42e5d4c677315ca2ca230faa0723118ef828
   branch: master
   specs:
     rspec-rails (3.6.0.beta1)
@@ -48,7 +48,7 @@ GIT
 
 GIT
   remote: https://github.com/rspec/rspec-support.git
-  revision: 5cc75bd37b1bcfb1b9c6c4835d1f1b74fb695fe3
+  revision: 52858b626baae90cf58d539790f6e6a6892334af
   branch: master
   specs:
     rspec-support (3.6.0.beta1)
@@ -218,7 +218,7 @@ GEM
     fog-json (1.0.2)
       fog-core (~> 1.0)
       multi_json (~> 1.10)
-    fog-local (0.3.0)
+    fog-local (0.3.1)
       fog-core (~> 1.27)
     fog-openstack (0.1.15)
       fog-core (>= 1.40)
@@ -301,10 +301,10 @@ GEM
     inflecto (0.0.2)
     ipaddress (0.8.3)
     json (2.0.2)
-    jsonapi (0.1.1.beta5)
-      jsonapi-parser (= 0.1.1.beta2)
+    jsonapi (0.1.1.beta6)
+      jsonapi-parser (= 0.1.1.beta3)
       jsonapi-renderer (= 0.1.1.beta1)
-    jsonapi-parser (0.1.1.beta2)
+    jsonapi-parser (0.1.1.beta3)
     jsonapi-renderer (0.1.1.beta1)
     jwt (1.5.6)
     listen (3.0.8)
@@ -383,7 +383,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (11.3.0)
-    rb-fsevent (0.9.7)
+    rb-fsevent (0.9.8)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
     rbvmomi (1.9.4)
@@ -429,7 +429,7 @@ GEM
     websocket-driver (0.6.4)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
-    whenever (0.9.4)
+    whenever (0.9.7)
       chronic (>= 0.6.3)
     whenever-test (1.0.1)
       whenever
@@ -483,4 +483,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.12.5
+   1.13.6
