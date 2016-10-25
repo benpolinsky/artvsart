@@ -455,6 +455,7 @@ DEPENDENCIES
   friendly_id (~> 5.1.0)
   hyperclient
   hyperresource
+  jsonapi-parser (~> 0.1.1.beta2)
   listen (~> 3.0.5)
   omdbapi
   omniauth-facebook
@@ -477,3 +478,9 @@ DEPENDENCIES
   tzinfo-data
   whenever
   whenever-test
+
+RUBY VERSION
+   ruby 2.3.1p112
+
+BUNDLED WITH
+   1.12.5
