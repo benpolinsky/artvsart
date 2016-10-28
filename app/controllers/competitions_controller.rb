@@ -25,7 +25,7 @@ class CompetitionsController < ApplicationController
       render json: {competition: CompetitionSerializer.new(competition), user: UserSerializer.new(current_user)}
     else
       error_message = "We don't have enough art for you to rank.  Check back soon!"
-      render json: {message: error_message}, status: 422
+      render json: {error: error_message} , status: 422
     end
   end
 

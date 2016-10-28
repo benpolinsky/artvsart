@@ -19,6 +19,7 @@ gem 'omniauth-github'
 gem 'cancancan', '~> 1.10' # not sure if im using
 
 gem 'rack-cors'
+
 gem 'whenever', :require => false
 
 # Gateways
@@ -39,6 +40,10 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.0"
   gem 'faker'
   gem 'fantaskspec', git: "https://github.com/benpolinsky/fantaskspec.git"
+  gem "selenium-webdriver"
+  gem 'capybara'
+  gem "capybara-webkit"
+  gem 'launchy'
 end
 
 group :test do
@@ -58,6 +63,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'spring-commands-rspec', group: :development
   gem 'bullet'
+  gem "rack-timeout"
 end
 
 gem 'simplecov', :require => false, :group => :test
