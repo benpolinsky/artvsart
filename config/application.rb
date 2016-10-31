@@ -32,7 +32,7 @@ module ArtvsartApi
     
     config.middleware.insert_before 0, Rack::Cors do
        allow do
-         origins 'localhost:3333', 'localhost:3000', 'http://artvsart.io', 'http://www.artvsart.io' 
+         origins 'localhost:3333', 'localhost:3000', 'http://artvsart.io', 'http://www.artvsart.io', 'api.artvsart.io', 'artvsart.io' 
          resource '*', :headers => :any, :methods => [:get, :post, :options, :put, :patch, :delete], credentials: true
        end
      end
