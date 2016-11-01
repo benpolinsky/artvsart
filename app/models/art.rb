@@ -122,6 +122,10 @@ class Art < ApplicationRecord
       ).order("arts_percentage DESC")
   end
   
+  def self.by_elo_ranking
+    where("elo_rating IS NOT NULL").order(elo_rating: :desc)
+  end
+  
   def self.overall_winner
     by_wins.first
   end
@@ -135,7 +139,7 @@ class Art < ApplicationRecord
   end
   
   def self.leaders(n=50)
-    by_win_percentage.limit(n)
+    by_elo_ranking.limit(n)
   end
   
 

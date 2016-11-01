@@ -46,7 +46,7 @@ class User < ApplicationRecord
   end
   
   def self.top_judges
-    judges.where(type: nil).or(where(admin: true)).order(judged_competitions_count: :desc)
+    judges.where(type: nil).or(admins).order(judged_competitions_count: :desc)
   end
   
   def self.admins

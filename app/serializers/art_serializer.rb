@@ -2,7 +2,7 @@ class ArtSerializer < ActiveModel::Serializer
   attributes :id, :name, :slug, :creator, :description, :source, :source_link, 
   :category_name, :image, :additional_images, :creation_date,
   :win_loss_record, :win_loss_percentage, :win_loss_rate, :win_count,
-  :loss_count, :category, :status
+  :loss_count, :category, :status, :ranking
   
   def image
     object.image || 'http://placehold.it/250x250'
@@ -22,5 +22,9 @@ class ArtSerializer < ActiveModel::Serializer
   
   def creation_date
     object.creation_date.present? ? object.creation_date.strftime('%c') : Time.zone.now.strftime('%c')
+  end
+  
+  def ranking
+    object.elo_ranking
   end
 end

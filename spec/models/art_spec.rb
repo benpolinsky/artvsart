@@ -145,7 +145,7 @@ RSpec.describe Art, type: :model do
     end
     
     it "returns ::leaders" do
-      expect(Art.leaders).to match [@competitor, @third_challenger, @second_challenger, @first_challenger]
+      expect(Art.leaders).to match [@competitor, @third_challenger, @second_challenger]
     end
     
     it "only returns the top n ::leaders" do
