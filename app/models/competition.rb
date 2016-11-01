@@ -29,7 +29,8 @@ class Competition < ApplicationRecord
   def select_winner(new_winner_id, user=self.user)
     return if winner_already_selected? || user.nil?
     if update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id), user: user)
-      update_counts(winner, loser)
+      update_rankings(winner, loser)
+      
     else
       false
     end
@@ -74,6 +75,43 @@ class Competition < ApplicationRecord
   def challenger_name
     challenger.name
   end
+  
+  def update_rankings(winner, loser)
+    assign_elo(winner, loser)
+    assign_counts(winner, loser)
+    winner.save
+    loser.save
+    
+    art.reload
+    challenger.reload
+  end
+  
+  def assign_elo(winner, loser)
+    winning_player = winner.as_elo
+    losing_player = loser.as_elo
+    
+    winning_player.wins_from(losing_player)
+    
+    winner.assign_attributes(elo_rating: winning_player.rating)
+    loser.assign_attributes(elo_rating: losing_player.rating)
+  end
+  
+  def assign_counts(winner, loser)
+    winner.assign_attributes(win_count: winner.number_of_wins+1)
+    loser.assign_attributes(loss_count: loser.number_of_losses+1)
+  end
+
+  def self.calculate_elo_rankings!
+    judged.all.each do |current_competition|
+      winner = current_competition.winner
+      loser = current_competition.loser
+
+      current_competition.assign_elo(winner, loser)
+      winner.save
+      loser.save
+    end
+  end
+  
 
   def self.percentage_between(art_one, art_two)
     competitions = competitions_between_competitors(art_one, art_two)
@@ -117,14 +155,12 @@ class Competition < ApplicationRecord
     ids[0]
   end
   
-  def update_counts(winner, loser)
-    winner.update(win_count: winner.number_of_wins+1)
-    loser.update(loss_count: loser.number_of_losses+1)
-    # I'd rather not do this, but it's required b/c the winner + art are two difference instances
-    art.reload
-    challenger.reload
-  end
   
+  # note the same method signature with 
+  # these next methods (also ::percentage_between,
+  # and #opposite_art (kinda))
+  
+ 
   def self.new_battle_pair    
     Art.all.sample(2)
   end

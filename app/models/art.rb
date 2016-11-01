@@ -19,7 +19,6 @@ class Art < ApplicationRecord
   # when challenging
   has_many :challenges, class_name: "Competition", foreign_key: "challenger_id"
   has_many :competitors, through: :challenges, source: :art
-
   belongs_to :category
 
   validates :name, presence: true
@@ -39,7 +38,18 @@ class Art < ApplicationRecord
     save
   end
 
-
+  def finished_competitions
+    wins.or losses
+  end
+  
+  def wins
+    wins_as_competitor.or wins_as_challenger
+  end
+  
+  def losses
+    losses_as_competitor.or losses_as_challenger
+  end
+  
   def wins_as_competitor
     competitions.where(winner: self.id)
   end
@@ -56,14 +66,7 @@ class Art < ApplicationRecord
     challenges.where(loser: self.id)
   end
   
-  def wins
-    wins_as_competitor + wins_as_challenger
-  end
-  
-  def losses
-    losses_as_competitor + losses_as_challenger
-  end
-  
+ 
   def number_of_wins
     win_count.to_i
   end
@@ -89,6 +92,21 @@ class Art < ApplicationRecord
     number_of_wins + number_of_losses
   end
   
+  
+  def elo_ranking
+    elo_rating || Elo.config.default_rating
+  end
+  
+  # credit where credit is due:
+  # https://github.com/elovation/elovation
+  def as_elo
+    Elo::Player.new({
+      rating: elo_ranking,
+      games: finished_competitions.to_a
+    })
+  end
+
+  
   def self.by_wins    
     order(win_count: :desc)
   end
@@ -98,7 +116,10 @@ class Art < ApplicationRecord
   end
   
   def self.by_win_percentage
-    select("arts.*, COALESCE(arts.win_count::float / NULLIF((arts.win_count::float + arts.loss_count::float), 0), 0) as arts_percentage").order("arts_percentage DESC")
+    select(
+      "arts.*, COALESCE(arts.win_count::float / NULLIF((arts.win_count::float + 
+      arts.loss_count::float), 0), 0) as arts_percentage"
+      ).order("arts_percentage DESC")
   end
   
   def self.overall_winner
@@ -116,6 +137,7 @@ class Art < ApplicationRecord
   def self.leaders(n=50)
     by_win_percentage.limit(n)
   end
+  
 
   
   def slug_candidates
@@ -123,5 +145,13 @@ class Art < ApplicationRecord
       :name,
       [:creator, :name]
     ]
+  end
+  
+  # doing this so I can give competitions ids or records,
+  # but maybe not a great idea?
+  # happened when I accidentally used an instance rather than its id
+  
+  def to_i
+    id
   end
 end

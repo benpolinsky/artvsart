@@ -104,7 +104,7 @@ RSpec.describe Competition, type: :model do
     expect(competitor.loss_count).to eq 1
   end
   
-  it "can tell if it has been judged by a GuestUser or User"
+
   
   context "statistics" do
     let(:competitor) {create(:art, name: "Art Competitor")}
@@ -151,7 +151,7 @@ RSpec.describe Competition, type: :model do
       expect(Competition.percentage_between(competitor, challenger)).to eq ['75.00%', '25.00%']
     end
     
-    it "calculates the ::percentage_between given competitors (39.45%/60.55%)", long_running: true do
+    it "calculates the ::percentage_between given competitors (39.45%/60.55%)", skip: true do
       
       # 5121 battles
       # 2020 competitor wins 
@@ -201,7 +201,18 @@ RSpec.describe Competition, type: :model do
       new_competition = Competition.create(art: arts[0], challenger: arts[1], user: judge)
       expect(new_competition.art_winning_percentage).to eq '75.00%'
       expect(new_competition.challenger_winning_percentage).to eq '25.00%'
+    end
+    
+    it "::calculate_elo_rankings! for all art" do
+      arts = [competitor, challenger]
+      10.times do 
+        Competition.create(art: arts[0], challenger: arts[1], winner: arts[0], loser: arts[1], user: judge)
+      end
       
+      competitor.update(elo_rating: 0)
+      Competition.calculate_elo_rankings!
+      competitor.reload
+      expect(competitor.elo_rating).to_not eq 0
     end
   end
   

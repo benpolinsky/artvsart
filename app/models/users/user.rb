@@ -24,6 +24,7 @@ class User < ApplicationRecord
     md5.update formatted_email
     md5.hexdigest
   end
+
   
   def self.from_omniauth(auth)
     includes(:identities).where(identities: {provider: auth.provider, uid: auth.uid}).first_or_create do |user|
@@ -36,7 +37,6 @@ class User < ApplicationRecord
     end
   end
 
-  
   def self.ranked_judges
     where("rank IS NOT NULL").order(rank: :asc)
   end
@@ -53,7 +53,6 @@ class User < ApplicationRecord
     where(admin: true)
   end
   
-
   # https://github.com/telent/ar-as-batches eventually
   def self.rank!(reset=false)
     update_all(rank: nil) if reset

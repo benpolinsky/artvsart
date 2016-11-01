@@ -22,6 +22,8 @@ gem 'rack-cors'
 
 gem 'whenever', :require => false
 
+gem 'elo'
+
 # Gateways
 gem "discogs-wrapper"
 gem 'omdbapi'
