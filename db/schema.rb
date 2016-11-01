@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161019145700) do
+ActiveRecord::Schema.define(version: 20161101162954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,7 +31,9 @@ ActiveRecord::Schema.define(version: 20161019145700) do
     t.integer  "category_id"
     t.string   "slug"
     t.string   "source_link"
+    t.integer  "elo_rating"
     t.index ["category_id"], name: "index_arts_on_category_id", using: :btree
+    t.index ["elo_rating"], name: "index_arts_on_elo_rating", using: :btree
   end
 
   create_table "authorization_tokens", force: :cascade do |t|

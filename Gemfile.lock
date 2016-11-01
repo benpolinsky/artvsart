@@ -139,6 +139,7 @@ GEM
       hashie (~> 3.0)
       oauth (~> 0.4.7)
     docile (1.1.5)
+    elo (0.1.0)
     erubis (2.7.0)
     excon (0.54.0)
     factory_girl (4.7.0)
@@ -472,6 +473,7 @@ DEPENDENCIES
   carrierwave
   devise
   discogs-wrapper
+  elo
   factory_girl_rails (~> 4.0)
   faker
   fantaskspec!
