@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  require 'browser'
   # include CanCan::ControllerAdditions
   include ActionController::Serialization
   VALID_GATEWAYS = ['Artsy', 'Discogs', 'Gracenote', "Philart", 'IMDB', "HarvardArt"]
@@ -14,8 +15,6 @@ class ApplicationController < ActionController::API
     end
   end
   
-  
-
   def current_user
     if user_token_present?
       user = User.find_by(auth_token: user_token)
@@ -26,10 +25,14 @@ class ApplicationController < ActionController::API
   end
   
   def new_guest_user
-    guest_user = GuestUser.new
-    guest_user.skip_confirmation!
-    session[:pending_token] = guest_user.auth_token
-    guest_user.save
+    if bot_user_present?
+      guest_user = BotUser.new
+    else      
+      guest_user = GuestUser.new
+      guest_user.skip_confirmation!
+      session[:pending_token] = guest_user.auth_token
+      guest_user.save
+    end
     guest_user
   end
   
@@ -44,6 +47,7 @@ class ApplicationController < ActionController::API
   def authorize_admin!
     render(json: {errors: "Unauthorized!"}, status: 422) unless current_user.try(:admin?)
   end
+
   
   private
   
@@ -81,4 +85,9 @@ class ApplicationController < ActionController::API
     end
   end
   
+  
+  def bot_user_present?
+    browser = Browser.new(request.user_agent)
+    browser.bot? && !browser.bot.search_engine?
+  end
 end

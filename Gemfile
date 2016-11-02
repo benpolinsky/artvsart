@@ -34,6 +34,7 @@ gem 'carrierwave'
 gem 'fog'
 gem 'fog-aws'
 gem 'jsonapi-parser', '~> 0.1.1.beta2'
+gem 'browser', require: 'browser/browser'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
