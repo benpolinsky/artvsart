@@ -3,10 +3,14 @@ class RegistrationsController < Devise::RegistrationsController
   respond_to :json
   
   def create
-    user = User.new(user_params)
+    user = current_user.elevate_to({
+      type: "UnconfirmedUser",
+      email: user_params[:email],
+      password: user_params[:password]
+    })
+
     if user.save
-      sign_in user, store: false
-      render json: user, status: 201
+      render json: {user: UserSerializer.new(user), notice: "We've sent you a confirmation email.  Click the link to finish the sign up process."}
     else
       render json: {errors: user.errors}, status: 422
     end

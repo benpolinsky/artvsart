@@ -10,8 +10,12 @@ class GuestUser < User
     end
   end
   
-  def elevate_to_user(params={})
-    update(email: params[:email], password: params[:password], password_confirmation: params[:password], type: nil)
+  # I'm never using this method...
+  # Get rid of it
+  def elevate_to(params={})
+    user_type = params[:type] ? params[:type] : 'UnconfirmedUser'
+    update(email: params[:email], password: params[:password], password_confirmation: params[:password], type: user_type)
+    send_confirmation_instructions if params[:type] == 'UnconfirmedUser'
     self
   end
   

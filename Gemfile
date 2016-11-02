@@ -11,7 +11,6 @@ gem 'figaro'
 gem 'friendly_id', '~> 5.1.0' 
 
 
-
 # auth
 gem 'devise'
 gem 'omniauth-facebook'

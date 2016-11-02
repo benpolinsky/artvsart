@@ -26,8 +26,10 @@ class ApplicationController < ActionController::API
   end
   
   def new_guest_user
-    guest_user = GuestUser.create
+    guest_user = GuestUser.new
+    guest_user.skip_confirmation!
     session[:pending_token] = guest_user.auth_token
+    guest_user.save
     guest_user
   end
   
