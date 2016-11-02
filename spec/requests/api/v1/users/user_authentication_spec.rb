@@ -70,6 +70,7 @@ RSpec.describe "User Authentication" do
   context "signing up" do
     context "successfully" do
       before do
+        User.delete_all
         @user_params = {
           email: "validuser@email.com",
           password: "password"
@@ -78,15 +79,18 @@ RSpec.describe "User Authentication" do
       
       it "returns a message waiting confirmation" do
         post '/api/v1/users', params: {user: @user_params}
+
         expect(json_response["notice"]).to eq "We've sent you a confirmation email.  Click the link to finish the sign up process."
 
         # simulate confirmation:
         # the email will send a link to the user that
         # sends them to the react app.
         # the react app then sends the confirmation code here:
-        user = User.find_by(email: "validuser@email.com")
-        token = user.confirmation_token        
+        user = UnconfirmedUser.find_by(email: "validuser@email.com")
+        token = user.confirmation_token
+
         get "/api/v1/users/confirmation?confirmation_token=#{token}"
+
         expect(json_response['confirmed']).to eq 'true'
         expect(json_response["user"]["auth_token"]).to_not eq ""
         expect(json_response["user"]["email"]).to eq "validuser@email.com"

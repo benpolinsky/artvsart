@@ -9,7 +9,6 @@ class User < ApplicationRecord
     
   before_create :generate_auth_token!
 
-  # Love to move this into an Authentication service 
   def generate_auth_token!
     self.auth_token =  Devise.friendly_token
   end

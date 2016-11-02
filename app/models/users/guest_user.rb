@@ -10,13 +10,16 @@ class GuestUser < User
     end
   end
   
-  # I'm never using this method...
-  # Get rid of it
   def elevate_to(params={})
-    user_type = params[:type] ? params[:type] : 'UnconfirmedUser'
-    update(email: params[:email], password: params[:password], password_confirmation: params[:password], type: user_type)
-    send_confirmation_instructions if params[:type] == 'UnconfirmedUser'
-    self
+    user_type = params[:type]
+    assign_attributes(email: params[:email], password: params[:password], password_confirmation: params[:password], type: user_type, confirmed_at: nil)
+    if valid?
+      save
+      send_confirmation_instructions if params[:type] == 'UnconfirmedUser'
+      self
+    else
+      self
+    end
   end
   
   private

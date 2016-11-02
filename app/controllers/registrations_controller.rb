@@ -8,7 +8,6 @@ class RegistrationsController < Devise::RegistrationsController
       email: user_params[:email],
       password: user_params[:password]
     })
-
     if user.save
       render json: {user: UserSerializer.new(user), notice: "We've sent you a confirmation email.  Click the link to finish the sign up process."}
     else

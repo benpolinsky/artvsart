@@ -17,7 +17,7 @@ class ArtController < ApplicationController
 
   def create
     art = Art.new(art_params)
-    if art.saves?(art_params)
+    if art.saves_with_category_name?(art_params)
       render json: {art: ArtSerializer.new(art)}, status: 200
     else
       render json: {errors: "Still Need to standardize my errors"}, status: 422
@@ -36,7 +36,7 @@ class ArtController < ApplicationController
 
   def update
     art = Art.find(params[:id])
-    if art.saves?(art_params)
+    if art.saves_with_category_name?(art_params)
       render json: {art: ArtSerializer.new(art)}, status: 200
     else
       render json: {errors: art.errors}, status: 422

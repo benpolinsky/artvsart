@@ -29,7 +29,7 @@ class Art < ApplicationRecord
   
   serialize :additional_images, JSON
 
-  def saves?(params)
+  def saves_with_category_name?(params)
     if params[:category_name].present?
       self.category = Category.find_or_create_by(name: params.delete(:category_name))
     end
