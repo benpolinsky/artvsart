@@ -17,7 +17,7 @@ class ArtSerializer < ActiveModel::Serializer
   end
   
   def category
-    object.category ? object.category : NullCategory.new
+    object.category ? CategorySerializer.new(object.category) : NullCategory.new
   end
   
   def creation_date

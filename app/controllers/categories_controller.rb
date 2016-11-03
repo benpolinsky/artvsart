@@ -14,7 +14,7 @@ class CategoriesController < ApplicationController
   
   def update
     category = Category.find(params[:id])
-    if category.update_attributes(category_params)
+    if category.saves_with_parent_category?(category_params)
       render json: {category: CategorySerializer.new(category)}, status: 200
     else
       render json: {category: CategorySerializer.new(category), errors: category.errors}, status: 200      
@@ -22,8 +22,8 @@ class CategoriesController < ApplicationController
   end
   
   def create
-    category = Category.new(category_params)
-    if category.save
+    category = Category.new
+    if category.saves_with_parent_category?(category_params)
       render json: {category: CategorySerializer.new(category)}, status: 200
     else
       render json: {category: CategorySerializer.new(category), errors: category.errors}, status: 200      
@@ -32,6 +32,6 @@ class CategoriesController < ApplicationController
   
   private
   def category_params
-    params.require(:category).permit(:name, :color)
+    params.require(:category).permit(:name, :color, :parent_category)
   end
 end
