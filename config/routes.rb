@@ -6,7 +6,8 @@ Rails.application.routes.draw do
           registrations:      'registrations', 
           omniauth_callbacks: 'omniauth_callbacks', 
           sessions:           'sessions',
-          confirmations: 'confirmations'
+          confirmations: 'confirmations',
+          passwords: 'passwords'
         }, 
         defaults: {format: :json}
       

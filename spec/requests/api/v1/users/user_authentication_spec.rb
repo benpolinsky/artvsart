@@ -138,4 +138,15 @@ RSpec.describe "User Authentication" do
     end
     
   end
+  
+  context "request new password" do
+    before do
+      @user = create(:user, email: "soontobechanged@changem.com")
+    end
+    
+    it "successfully" do
+      get '/api/v1/users/password/new', params: {user: {email: 'soontobechanged@changem.com'}}
+      expect(json_response["notice"]).to eq "We've sent password instructions to that email if it was found!"
+    end
+  end
 end
