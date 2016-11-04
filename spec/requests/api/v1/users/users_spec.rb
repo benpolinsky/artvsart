@@ -7,8 +7,10 @@ RSpec.describe "Users" do
       context 'PUT /user' do
         before do
           user = create(:user, email: "bob@foo.com", password: "batterystaple", password_confirmation: "batterystaple")
+          user.confirm
           @user_token = user.auth_token
           carol = create(:user, email: "carol@foo.com")
+          carol.confirm
           @carol_token = carol.auth_token
         end
         

@@ -21,16 +21,20 @@ class CompetitionsController < ApplicationController
   end
   
   def create
-    if competition = Competition.stage
+    # typecheck - refactor Competition staging.
+    if competition = Competition.stage(current_user.type == "BotUser")
       render json: {competition: CompetitionSerializer.new(competition), user: UserSerializer.new(current_user)}
     else
       error_message = "We don't have enough art for you to rank.  Check back soon!"
-      render json: {message: error_message}, status: 422
+      render json: {error: error_message} , status: 422
     end
   end
 
   # TODO: refactor 
   def update
+    if current_user.type == "BotUser"
+      render(json: {hi: "bot"} ) and return
+    end
     competition = Competition.includes(:art).find_by(id: params[:id])
     if competition 
       result = current_user.judge(competition, winner: params[:competition][:winner_id])

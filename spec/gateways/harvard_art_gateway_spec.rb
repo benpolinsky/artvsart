@@ -5,19 +5,18 @@ RSpec.describe "HarvardArtGateway" do
   
   it "returns general search results" do
     search_results = gateway.search("Faust")
-    expect(search_results.first.title).to eq "Untitled (Mr. and Mrs. Leicester Faust)"
+    expect(search_results.first.title).to eq "Drew Gilpin Faust (b. 1947)"
   end
   
 
   it "returns results for a different search" do
     search_results = gateway.search("Oranges")
-    expect(search_results.first.title).to eq "Milan photograph: Wilmarth with \"Passing Blue,\" \"Alba Sweeps,\" and \"Orange Delta for A.P.S.\" in progress at factory, 1973"
+    expect(search_results.first.title).to eq "Oranges in our kitchen"
   end
   
-  it "does not return results for an exact match" do
+  it "does return results for an exact match" do
     search_results = gateway.search("Untitled (Mr. and Mrs. Leicester Faust)")
-    expect(search_results.first.title).to_not eq "Untitled (Mr. and Mrs. Leicester Faust)"
-    expect(search_results.first.title).to  eq "Untitled (Emma Eastman memorial cabinet card, Emporia, Kansas)"
+    expect(search_results.first.title).to eq "Untitled (Mr. and Mrs. Leicester Faust)"
   end
   
   it "returns a response with error if none found" do

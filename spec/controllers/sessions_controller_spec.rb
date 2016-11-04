@@ -4,6 +4,7 @@ RSpec.describe SessionsController do
   describe 'POST #create' do
     before do
       @user = User.create(email: "avaliduser@me.com", password: 'password')
+      @user.confirm
     end
     
     it "returns a valid user with auth token when signing in with valid credentials" do
@@ -30,6 +31,7 @@ RSpec.describe SessionsController do
         email: @user.email,
         password: "password"
       }
+      @user.confirm
     end
     
     it "retuns the current_user when signing in" do

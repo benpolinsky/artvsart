@@ -25,6 +25,10 @@ RSpec.describe "Results" do
       expect(json_response["art_results"]["top_winners"].size).to eq 2
     end
     
+    it "returns the top winners ELO ranking" do
+      expect(json_response["art_results"]["top_winners"][0]["ranking"]).to_not be_blank
+    end
+    
     it "returns an arts win_loss_record" do
       expect(json_response["art_results"]["top_winners"][0]["win_loss_record"]).to eq "1-0"
     end

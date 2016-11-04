@@ -2,14 +2,18 @@ class UsersController < ApplicationController
   before_action :authorize_user!
 
   def show
-    current_user
-    render json: current_user
+    user = current_user
+    render json: user
   end
 
 
   def update
-    current_user.update(user_params)
-    render json: current_user
+      user = current_user
+    if user.update(user_params)
+      render json: user
+    else
+      render json: {errors: user.errors}
+    end
   end
   
   def change_password

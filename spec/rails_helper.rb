@@ -3,10 +3,12 @@
 
 ENV["RAILS_ENV"] ||= 'test'
 require 'simplecov'
-SimpleCov.start 'rails'
+# SimpleCov.start 'rails'
 require 'spec_helper'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'capybara/rails'
+require 'capybara/rspec'
 Rails.application.load_tasks
 require 'support/factory_girl'
 require 'support/json_response_helper'
@@ -32,7 +34,8 @@ require "fantaskspec"
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
-
+Capybara.javascript_driver = :webkit
+OmniAuth.config.test_mode = true
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -47,7 +50,7 @@ RSpec.configure do |config|
   end
 
   config.infer_rake_task_specs_from_file_location!
-
+  
 
 
   # RSpec Rails can automatically mix in different behaviours to your tests
@@ -70,3 +73,4 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :requests
 end
+

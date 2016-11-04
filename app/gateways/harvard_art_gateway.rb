@@ -19,7 +19,7 @@ class HarvardArtGateway
   
 
   def search(query, query_params={})
-    query_params.reverse_merge!({title: query, apikey: ENV['harvard_token']})
+    query_params.reverse_merge!({q: query, apikey: ENV['harvard_token']})
     records = api.get("/object?#{query_params.to_param}").body.records
     if records.none?
       {error: "No results found!"}

@@ -11,6 +11,32 @@ RSpec.describe Art, type: :model do
     end
   end
   
+  context '#saves_with_category_name?' do
+    before do
+      @category = Category.create(name: "Film")
+    end
+    
+    it "assigns a category by name if one that matches" do
+      art = Art.new(name: "My Art", creator: "Me")
+      art.saves_with_category_name?(category_name: 'Film', name: "New Art Name")
+      expect(art.category).to eq @category
+    end
+    
+    it "creates a new category if one does not exist" do
+      expect(Category.find_by(name: 'Pastiche')).to eq nil
+      art = Art.new(name: "My Art", creator: "Me")
+      art.saves_with_category_name?(category_name: 'Pastiche', name: "New Art Name")
+      expect(art.category.name).to eq 'Pastiche'
+      expect(Category.find_by(name: 'Pastiche')).to_not eq nil
+    end
+    
+    it 'updates other parameters given' do
+      art = Art.new(name: "My Art", creator: "Me")
+      art.saves_with_category_name?(category_name: 'Film', name: "New Art Name", creator: "You")
+      expect(art.name).to eq "New Art Name"
+      expect(art.creator).to eq "You"
+    end
+  end
   
   context "validations" do
     VALID_ART_ATTRIBUTES.each do |att|
@@ -145,7 +171,7 @@ RSpec.describe Art, type: :model do
     end
     
     it "returns ::leaders" do
-      expect(Art.leaders).to match [@competitor, @third_challenger, @second_challenger, @first_challenger]
+      expect(Art.leaders).to match [@competitor, @third_challenger, @second_challenger]
     end
     
     it "only returns the top n ::leaders" do

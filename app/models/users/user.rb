@@ -4,11 +4,11 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
      :recoverable, :rememberable, :trackable, :validatable,
-      :omniauthable, :omniauth_providers => [:facebook]
+     :confirmable, :omniauthable, 
+     :omniauth_providers => [:facebook]
     
   before_create :generate_auth_token!
 
-  # Love to move this into an Authentication service 
   def generate_auth_token!
     self.auth_token =  Devise.friendly_token
   end
@@ -24,6 +24,7 @@ class User < ApplicationRecord
     md5.update formatted_email
     md5.hexdigest
   end
+
   
   def self.from_omniauth(auth)
     includes(:identities).where(identities: {provider: auth.provider, uid: auth.uid}).first_or_create do |user|
@@ -36,7 +37,6 @@ class User < ApplicationRecord
     end
   end
 
-  
   def self.ranked_judges
     where("rank IS NOT NULL").order(rank: :asc)
   end
@@ -46,14 +46,13 @@ class User < ApplicationRecord
   end
   
   def self.top_judges
-    judges.where(type: nil).or(where(admin: true)).order(judged_competitions_count: :desc)
+    judges.where(type: nil).or(admins).order(judged_competitions_count: :desc)
   end
   
   def self.admins
     where(admin: true)
   end
   
-
   # https://github.com/telent/ar-as-batches eventually
   def self.rank!(reset=false)
     update_all(rank: nil) if reset

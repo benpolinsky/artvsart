@@ -40,17 +40,17 @@ RSpec.describe GuestUser, type: :model do
       to change{user.judged_competitions.size}.from(10).to(11)
   end
   
-  it "can #elevate_to_user, transferring competitions" do
+  it "can #elevate_to, transferring competitions" do
     guest_user = GuestUser.create(email: 'guest_user@user.com', password: "password")
     guest_user.judged_competitions << create_list(:competition, 5)
-    user = guest_user.elevate_to_user(email: "my_real_email", password: "my_real_password")
+    user = guest_user.elevate_to(type: nil, email: "my_real_email", password: "my_real_password")
     expect(user.type).to eq nil # again, base class types are nil in Rails STI
   end
   
-  it "does not exist after #transform to User" do
+  it "does not exist after #elevate_to to User" do
     guest_user = GuestUser.create(email: 'guest_user@user.com', password: "password")
     guest_user.judged_competitions << create_list(:competition, 5)
-    user = guest_user.elevate_to_user(email: "my_real_email@email.com", password: "my_real_password")
+    user = guest_user.elevate_to(type: nil, email: "my_real_email@email.com", password: "my_real_password")
 
     expect(GuestUser.find_by(email: 'my_real_email@email.com')).to eq nil
     expect(GuestUser.find_by(email: 'guest_user@user.com')).to eq nil
