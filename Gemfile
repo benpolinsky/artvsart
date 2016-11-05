@@ -28,6 +28,7 @@ gem "discogs-wrapper"
 gem 'omdbapi'
 gem 'hyperclient'
 gem 'hyperresource'
+gem 'google-api-client', '~> 0.9'
 
 gem 'rmagick'
 gem 'carrierwave'

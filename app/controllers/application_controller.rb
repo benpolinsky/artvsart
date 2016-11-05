@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   require 'browser'
   # include CanCan::ControllerAdditions
   include ActionController::Serialization
-  VALID_GATEWAYS = ['Artsy', 'Discogs', 'Gracenote', "Philart", 'IMDB', "HarvardArt"]
+  VALID_GATEWAYS = ['Artsy', 'Discogs', 'GoogleBooks', "Philart", 'IMDB', "HarvardArt"]
 
   
   def hi
