@@ -57,7 +57,7 @@ RSpec.describe "Accessing Ranked Users" do
         context "1" do
           before do
             visitor = create(:user, email: "neverthat@judge.com")
-            other_user = create(:user)
+            other_user = create(:user, username: "ME")
           
             10.times {create(:art)}
 
@@ -78,7 +78,7 @@ RSpec.describe "Accessing Ranked Users" do
             expect(json_response['users'][0]['email']).to be_blank
           end
           
-          it "returns users' usernames and gravatar hashes" do
+          it "returns users' usernames if present, and gravatar hashes" do
             get '/api/v1/ranked_users', headers: @headers
             expect(json_response['users'][0]['username']).to_not be_blank
             expect(json_response['users'][0]['gravatar_hash']).to_not be_blank

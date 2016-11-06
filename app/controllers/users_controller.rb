@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
 
   def update
-      user = current_user
+    user = current_user
     if user.update(user_params)
       render json: user
     else
@@ -28,6 +28,6 @@ class UsersController < ApplicationController
   protected
   
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :current_password)
+    params.require(:user).permit(:email, :username, :password, :password_confirmation, :current_password)
   end
 end

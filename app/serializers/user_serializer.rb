@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :email, :auth_token, :type, :gravatar_hash, :identities
+  attributes :email, :auth_token, :type, :gravatar_hash, :identities, :username
   
   def type
     object.admin? ? 'admin' : object.type
