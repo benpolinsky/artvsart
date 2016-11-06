@@ -34,20 +34,17 @@ RSpec.describe "Google Books Gateway" do
   end
 
   it "returns an image uri for each result" do
-    search_results = gateway.search("Fahrenheit 451")
-    farenheight = search_results.first
+    farenheight = gateway.single_listing('5PlBDAAAQBAJ')
     expect(gateway.art_image(farenheight)).to match /books\/content/
   end
 
   it "returns an array of image uris for each result" do
-    search_results = gateway.search("Fahrenheit 451")
-    farenheight = search_results.first
+    farenheight = gateway.single_listing('5PlBDAAAQBAJ')
     expect(gateway.art_images(farenheight).all?{|img| img.match /books\/content/}).to eq true
   end
   
   it "returns #additional_images as all images except the primary" do
-    search_results = gateway.search("Fahrenheit 451")
-    farenheight = search_results.first
+    farenheight = gateway.single_listing('5PlBDAAAQBAJ')
     expect(gateway.art_additional_images(farenheight)).to eq gateway.art_images(farenheight) - [gateway.art_image(farenheight)]
   end
 
