@@ -25,8 +25,6 @@ Rails.application.routes.draw do
       get 'user/competitions' => 'profile#competitions'
       get 'ranked_users' => 'results#ranked_users'
       
-      get 'top_judges' => 'judges#top'
-      
       get 'results' => 'results#index' 
 
       get 'search_source' => 'search#index'
