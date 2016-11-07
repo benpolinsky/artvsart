@@ -12,8 +12,8 @@ class GuestUser < User
 
   # TODO: pull up method, rename method to transition_to 
   #  that way it'll make sense and be useful for all types, hopefully
-  def elevate_to(params={})
-    assign_attributes(email: params[:email], password: params[:password], password_confirmation: params[:password], type: params[:user_type], confirmed_at: nil)
+  def elevate_to(params={})    
+    assign_attributes(email: params[:email], password: params[:password], password_confirmation: params[:password], type: params[:type], confirmed_at: nil)
     if valid?
       save
       send_confirmation_instructions if params[:type] == 'UnconfirmedUser'

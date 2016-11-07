@@ -71,6 +71,7 @@ RSpec.describe "User Authentication" do
     context "successfully" do
       before do
         User.delete_all
+
         @user_params = {
           email: "validuser@email.com",
           password: "password"
@@ -86,7 +87,9 @@ RSpec.describe "User Authentication" do
         # the email will send a link to the user that
         # sends them to the react app.
         # the react app then sends the confirmation code here:
+
         user = UnconfirmedUser.find_by(email: "validuser@email.com")
+
         token = user.confirmation_token
 
         get "/api/v1/users/confirmation?confirmation_token=#{token}"
