@@ -7,6 +7,8 @@ class User < ApplicationRecord
      :confirmable, :omniauthable, 
      :omniauth_providers => [:facebook, :github]
     
+  acts_as_paranoid
+  
   before_create :generate_auth_token!
 
   def generate_auth_token!
@@ -66,6 +68,4 @@ class User < ApplicationRecord
   def formatted_email
     self.email.strip.downcase
   end
-
-
 end

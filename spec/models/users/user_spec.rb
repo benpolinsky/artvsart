@@ -106,5 +106,15 @@ RSpec.describe User, type: :model do
     end
   end
   
+  context "deletion" do
+    it "only soft deletes a user" do
+      ben = create(:user)
+      ben.destroy
+      expect(ben.deleted?).to eq true
+      expect(User.find_by(id: ben.id)).to eq nil
+      expect(User.with_deleted.find(ben.id)).to eq ben
+    end
+  end 
+  
 
 end

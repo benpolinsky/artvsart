@@ -54,7 +54,6 @@ RSpec.describe GuestUser, type: :model do
 
     expect(GuestUser.find_by(email: 'my_real_email@email.com')).to eq nil
     expect(GuestUser.find_by(email: 'guest_user@user.com')).to eq nil
-    
     expect(User.find_by(email: 'my_real_email@email.com').class).to eq User
   end
   

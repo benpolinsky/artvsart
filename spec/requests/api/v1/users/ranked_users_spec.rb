@@ -97,7 +97,26 @@ RSpec.describe "Accessing Ranked Users" do
             expect(json_response['users']).to eq []
           end
         end
-      
+        
+        context "deleted users" do
+          before do
+            judge = create(:user, email: "easycome@easygo.com", username: "imoutyo")
+            visitor = create(:user)
+            2.times {create(:art)}
+
+            competition = Competition.stage
+            competition.select_winner(competition.art.id, judge)
+            
+            User.rank!
+            judge.destroy
+            @headers = {'Authorization' => visitor.auth_token}
+          end
+          
+          it 'are not included' do
+            get '/api/v1/ranked_users', headers: @headers
+            expect(json_response['users'].map{|u| u['username']}).to_not include("imoutyo")
+          end
+        end
       end
     end
   end
