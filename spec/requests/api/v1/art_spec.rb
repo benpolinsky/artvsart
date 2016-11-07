@@ -4,14 +4,29 @@ RSpec.describe "Art", type: :request do
   context "/v1" do
     
     context 'GET /art' do
-      it "retrieves general information" do
-        get '/api/v1/art'
+      context "if authorized as admin" do
+        before do
+          @art = create(:art, name: "My Fetched Art", id: 10012)
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+      
+        it "retrieves all art" do
+          get '/api/v1/art', headers: @headers
         
-        expect(response.code).to eq '200'
-        expect(json_response['total_pieces_of_art_in_catalog']).to eq 0
-        expect(json_response['total_pieces_of_art_judged']).to eq 0
-        expect(json_response['total_competitions']).to eq 0
+          expect(response.code).to eq '200'
+          expect(json_response['art'][0]['name']).to eq "My Fetched Art"
+        end
       end
+      
+      context "if unauthorized" do
+        it "does not allow access" do
+          get '/api/v1/art'
+        
+          expect(response.code).to eq '422'
+        end
+      end
+      
     end
     
     context 'POST /art' do

@@ -26,8 +26,8 @@ RSpec.describe "Art Importer" do
     gateway = ArtsyGateway.new(listing_ids: ['4d8b92eb4eb68a1b2c000968', '4d8b93394eb68a1b2c0010fa'])
     importer = ArtImporter.new(gateway)
     expect{importer.import}.to change{Art.count}.from(0).to(2)
-    expect(Art.all.map(&:name)).to match ["Der Kuss (The Kiss)", "The Company of Frans Banning Cocq and Willem van Ruytenburch (The Night Watch)"]
-    expect(Art.all.map(&:creator)).to match ["Gustav Klimt", "Rembrandt Harmensz. van Rijn"]
+    expect(Art.all.map(&:name)).to match_array ["Der Kuss (The Kiss)", "The Company of Frans Banning Cocq and Willem van Ruytenburch (The Night Watch)"]
+    expect(Art.all.map(&:creator)).to match_array ["Gustav Klimt", "Rembrandt Harmensz. van Rijn"]
   end
   
   it "creates an Art for the album Earth Rocks Harder by the band Philadelphia Slick" do
