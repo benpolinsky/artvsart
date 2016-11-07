@@ -1,14 +1,10 @@
 class ArtController < ApplicationController
-  before_action :authorize_admin!, except: [:index, :show]
+  before_action :authorize_admin!, except: [:show]
   
   include ActionController::Serialization
   
   def index
-    render json: {
-      total_pieces_of_art_judged: Art.has_battled.size,
-      total_pieces_of_art_in_catalog: Art.count,
-      total_competitions: Competition.judged.size
-    }
+    render json: {art: Art.ordered}
   end
   
   

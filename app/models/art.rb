@@ -144,7 +144,10 @@ class Art < ApplicationRecord
   def self.leaders(n=50)
     by_elo_ranking.limit(n)
   end
-  
+    
+  def self.ordered
+    order(id: :asc)
+  end
 
   
   def slug_candidates
