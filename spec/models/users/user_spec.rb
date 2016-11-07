@@ -115,6 +115,7 @@ RSpec.describe User, type: :model do
       expect(User.with_deleted.find(ben.id)).to eq ben
     end
   end 
+
   
 
 end

@@ -10,8 +10,8 @@ RSpec.describe Competition, type: :model do
   end
   
   context "validations" do
-    let(:winner) {create(:art, name: "Art One")}
-    let(:loser) {create(:art, name: "Art Two")}
+    let(:winner) {create(:art, name: "Art One", status: 1)}
+    let(:loser) {create(:art, name: "Art Two", status: 1)}
     let(:judge) {create(:user)}
     
     it "doesn't set winning or losing arts if an invalid winner is selected" do
@@ -62,7 +62,7 @@ RSpec.describe Competition, type: :model do
   end
   
   it "can ::stage an instance of itself" do
-    create_list(:art, 2)
+    create_list(:art, 2, status: 1)
     expect{Competition.stage}.to change {Competition.count}.from(0).to(1)
   end
   
@@ -70,11 +70,23 @@ RSpec.describe Competition, type: :model do
   it "doesn't ::stage an instance of itself without 2 arts" do
     Art.delete_all
     expect{Competition.stage}.to_not change {Competition.count}
-    create(:art)
+    create(:art, status: 1)
     expect{Competition.stage}.to_not change {Competition.count}
-    create(:art)
+    create(:art, status: 1)
     expect{Competition.stage}.to change {Competition.count}.from(0).to(1)
   end 
+  
+  it "doesn't ::stage Art which is pending_review" do
+    Art.delete_all
+    art = create_list(:art, 2, status: 0)
+    expect{Competition.stage}.to_not change {Competition.count}
+  end
+  
+  it "doesn't ::stage Art which is declined" do
+    Art.delete_all
+    art = create_list(:art, 2, status: 2)
+    expect{Competition.stage}.to_not change {Competition.count}
+  end
   
   it "cannot be judged twice" do
     user = create(:user)
@@ -238,10 +250,6 @@ RSpec.describe Competition, type: :model do
   
   end
   
-  skip "competition state" do
-    pending "begins as fresh"
-    pending "transitions to winner_picked once a winner is picked"
-  end
   
   skip "assigns a uid to the @competition"
 end

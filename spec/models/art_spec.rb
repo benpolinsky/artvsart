@@ -88,10 +88,10 @@ RSpec.describe Art, type: :model do
   
   context "stats" do
     before do
-      @competitor = create(:art, name: "Art One")
-      @first_challenger = create(:art, name: "Art Two")
-      @second_challenger = create(:art, name: "Art Three")
-      @third_challenger = create(:art, name: "Art Four")
+      @competitor = create(:art, name: "Art One", status: 1)
+      @first_challenger = create(:art, name: "Art Two", status: 1)
+      @second_challenger = create(:art, name: "Art Three", status: 1)
+      @third_challenger = create(:art, name: "Art Four", status: 1)
       judge = create(:user)
     
       
@@ -152,14 +152,34 @@ RSpec.describe Art, type: :model do
       expect(Art.by_wins).to match [@competitor, @third_challenger, @second_challenger, @first_challenger]
     end
     
+    it "does not include art#pending_review in ::most_wins" do
+      art_pending_review = create(:art, status: 0)
+      published_art = create(:art, status: 1)
+      judge = create(:user)
+      
+      expect(art_pending_review.status).to eq 'pending_review'
+      competition = Competition.create(user: judge, art: art_pending_review, challenger: published_art)
+      competition.select_winner(art_pending_review.id)
+      expect(Art.by_wins).to_not include art_pending_review
+    end
+    
     it "returns the ::overall_winner" do
       expect(Art.overall_winner).to eq @competitor
     end
     
-    skip "::overall_winner with ties..."
-    
     it "orders losers by ::most_losses" do
       expect(Art.by_losses).to match ([@second_challenger, @third_challenger, @competitor, @first_challenger])
+    end
+    
+    it "does not include art#pending_review in ::most_losses" do
+      art_pending_review = create(:art, status: 0)
+      published_art = create(:art, status: 1)
+      judge = create(:user)
+      
+      expect(art_pending_review.status).to eq 'pending_review'
+      competition = Competition.create(user: judge, art: art_pending_review, challenger: published_art)
+      competition.select_winner(published_art.id)
+      expect(Art.by_losses).to_not include art_pending_review
     end
     
     it "returns the overall loser" do
@@ -168,6 +188,17 @@ RSpec.describe Art, type: :model do
     
     it "orders by win percentage" do
       expect(Art.by_win_percentage).to match [@competitor, @third_challenger, @second_challenger, @first_challenger]
+    end
+    
+    it "does not include art#pending_review in ::by_win_percentage" do
+      art_pending_review = create(:art, status: 0)
+      published_art = create(:art, status: 1)
+      judge = create(:user)
+      
+      expect(art_pending_review.status).to eq 'pending_review'
+      competition = Competition.create(user: judge, art: art_pending_review, challenger: published_art)
+      competition.select_winner(art_pending_review.id)
+      expect(Art.by_win_percentage).to_not include art_pending_review
     end
     
     it "returns ::leaders" do
@@ -199,5 +230,47 @@ RSpec.describe Art, type: :model do
     it "attempts to use name initially" do
       expect(art.slug).to eq "just-here-for-the-slugs"
     end
+  end
+  
+  context "Status", focus: true do
+    it "begins as pending_review" do
+      expect(Art.new.status).to eq "pending_review"
+    end
+    
+    it "transitions from pending_review to published" do
+      art = create(:art)
+      expect{art.published!}.to change{art.status}.from('pending_review').to('published')
+    end
+    
+    it "transitions from published to pending_review" do
+      art = create(:art)
+      art.published!
+      expect{art.pending_review!}.to change{art.status}.from('published').to('pending_review')
+    end
+    
+    it "transitions from published to declined" do
+      art = create(:art)
+      art.published!
+      expect{art.declined!}.to change{art.status}.from('published').to('declined')
+    end
+
+    it "transitions from pending_review to declined" do
+      art = create(:art)
+      expect{art.declined!}.to change{art.status}.from('pending_review').to('declined')
+    end
+    
+    it "Art::PendingReview" do
+      art = create_list(:art, 3)
+      expect(Art.pending_review.to_a).to match_array art
+    end    
+    
+    it "Art::Published" do
+      art = create_list(:art, 3, status: 1)
+      expect(Art.published.to_a).to match_array art
+    end
+    
+  
+   
+
   end
 end

@@ -108,22 +108,25 @@ class Art < ApplicationRecord
 
   
   def self.by_wins    
-    order(win_count: :desc)
+    published.order(win_count: :desc)
   end
   
   def self.by_losses
-    order(loss_count: :desc)
+    published.order(loss_count: :desc)
   end
   
+  # Divide win count by total competition count (both as floats)
+  # ensuring the divisor is never 0 (psql will deal with NULL values nicely)
+  # and that the percent itself is never null
   def self.by_win_percentage
-    select(
+    published.select(
       "arts.*, COALESCE(arts.win_count::float / NULLIF((arts.win_count::float + 
       arts.loss_count::float), 0), 0) as arts_percentage"
       ).order("arts_percentage DESC")
   end
   
   def self.by_elo_ranking
-    where("elo_rating IS NOT NULL").order(elo_rating: :desc)
+    published.where("elo_rating IS NOT NULL").order(elo_rating: :desc)
   end
   
   def self.overall_winner
