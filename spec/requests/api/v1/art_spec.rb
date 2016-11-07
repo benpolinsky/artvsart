@@ -43,6 +43,19 @@ RSpec.describe "Art", type: :request do
           expect(json_response['art']['description']).to eq "Guys, please give this a listen.  I really think it's as good as Drake."
           expect(json_response['art']['status']).to eq "pending_review"
         end
+        
+        it "can be created and published at the same time" do
+          @art_params[:art][:status] = 'published'
+          post '/api/v1/art', params: @art_params, headers: @headers
+        
+          expect(response.code).to eq "200"
+          expect(json_response['art']['id']).to_not be_blank
+          expect(json_response['art']['slug']).to eq 'this-album-i-made-in-my-basement'
+          expect(json_response['art']['name']).to eq "This Album I Made in My Basement"
+          expect(json_response['art']['creator']).to eq "Me"
+          expect(json_response['art']['description']).to eq "Guys, please give this a listen.  I really think it's as good as Drake."
+          expect(json_response['art']['status']).to eq "published"
+        end 
       end
       
       context "if not authorized", focus: true do
@@ -72,6 +85,11 @@ RSpec.describe "Art", type: :request do
         it "updates a piece of art" do
           put '/api/v1/art/10012', params: {art: {name: "An Awesome Art"}}, headers: @headers
           expect(json_response['art']['name']).to eq "An Awesome Art"
+        end
+        
+        it "updates the status of a piece of art" do
+          put '/api/v1/art/10012', params: {art: {status: 'declined'}}, headers: @headers
+          expect(json_response['art']['status']).to eq 'declined'
         end
       end
       context "if unauthorized" do
