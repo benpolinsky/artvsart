@@ -238,29 +238,27 @@ RSpec.describe Art, type: :model do
     end
     
     it "transitions from pending_review to published" do
-      art = create(:art)
+      art = create(:art, status: 0)
       expect{art.published!}.to change{art.status}.from('pending_review').to('published')
     end
     
     it "transitions from published to pending_review" do
       art = create(:art)
-      art.published!
       expect{art.pending_review!}.to change{art.status}.from('published').to('pending_review')
     end
     
     it "transitions from published to declined" do
       art = create(:art)
-      art.published!
       expect{art.declined!}.to change{art.status}.from('published').to('declined')
     end
 
     it "transitions from pending_review to declined" do
-      art = create(:art)
+      art = create(:art, status: 0)
       expect{art.declined!}.to change{art.status}.from('pending_review').to('declined')
     end
     
     it "Art::PendingReview" do
-      art = create_list(:art, 3)
+      art = create_list(:art, 3, status: 0)
       expect(Art.pending_review.to_a).to match_array art
     end    
     
