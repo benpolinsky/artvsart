@@ -26,8 +26,25 @@ class User < ApplicationRecord
     md5.update formatted_email
     md5.hexdigest
   end
-
   
+  def elevate_to(params={})    
+    
+    assign_attributes({
+      email: params[:email], 
+      password: params[:password], 
+      password_confirmation: params[:password], 
+      type: params[:type], 
+      confirmed_at: nil
+    })
+    if valid?
+      save
+      send_confirmation_instructions if params[:type] == 'UnconfirmedUser'
+      self
+    else
+      self
+    end
+  end
+
   def self.from_omniauth(auth)
     includes(:identities).where(identities: {provider: auth.provider, uid: auth.uid}).first_or_create do |user|
       user.email = auth.info.email

@@ -1,17 +1,22 @@
 class SessionsController < ApplicationController
   include ActionController::Serialization
-  
+
   def create
-    user = session_params[:email].present? && User.find_by(email: session_params[:email])
+    user = User.only_deleted.find_by(email: session_params[:email])
     if user && user.valid_password?(session_params[:password])
-      sign_in user, store: false
-      user.generate_auth_token!
-      user.save
-      session[:pending_token] = user.auth_token
-      render json: user, status: 200
+      render json: {user: user, message: "Looks like you've previously signed up but deleted your account.  Re-enter your email and password below to restore it."}
     else
-      render json: {errors: "Invalid email or password!"}, status: 422
-    end 
+      user = session_params[:email].present? && User.find_by(email: session_params[:email])
+      if user && user.valid_password?(session_params[:password])
+        sign_in user, store: false
+        user.generate_auth_token!
+        user.save
+        session[:pending_token] = user.auth_token
+        render json: user, status: 200
+      else
+        render json: {errors: "Invalid email or password!"}, status: 422
+      end 
+    end
   end
   
   

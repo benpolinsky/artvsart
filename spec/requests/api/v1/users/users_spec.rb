@@ -90,6 +90,27 @@ RSpec.describe "Users" do
         end
       end
       
+      context 'DELETE /user' do
+        before do
+          user = create(:user, email: "bob@foo.com")
+          user.confirm
+          @user_token = user.auth_token
+        end
+        
+        it "can delete itself" do
+           get '/api/v1/user', headers: {'Authorization' => @user_token}
+           expect(response.code).to eq '200'
+           expect(json_response['user']['email']).to eq "bob@foo.com"
+           
+           delete '/api/v1/user', headers: {'Authorization' => @user_token}
+           expect(json_response['notice']).to eq "Sorry to see you go... Take care!"
+           
+           get '/api/v1/user', headers: {'Authorization' => @user_token}
+           expect(response.code).to eq '422'
+        end
+        
+      end
+      
     end
   end
   

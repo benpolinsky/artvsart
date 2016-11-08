@@ -24,13 +24,13 @@ RSpec.describe "User Authentication" do
       before do
         @user = User.create(email: "validuser@email.com", password: "password")
       end
+      
 
       it "it returns an error message if an email isn't provided" do      
         post '/api/v1/users/sign_in', params: {
           email: "",
           password: "password"
         }
-      
         expect(json_response["errors"]).to eq "Invalid email or password!"
       end 
     
@@ -50,6 +50,16 @@ RSpec.describe "User Authentication" do
         }
       
         expect(json_response["errors"]).to eq "Invalid email or password!"
+      end
+      
+      
+      it "signing in with a deleted user prompts for restoration" do
+        @user = create(:user, email: "notsure@signup.com", password: 'password')
+        @user.destroy
+        post '/api/v1/users/sign_in', params: {email: "notsure@signup.com", password: 'password'}
+        
+        expect(json_response["user"]["email"]).to eq "notsure@signup.com"
+        expect(json_response["message"]).to eq "Looks like you've previously signed up but deleted your account.  Re-enter your email and password below to restore it."
       end 
     end
   end
@@ -118,6 +128,15 @@ RSpec.describe "User Authentication" do
         post '/api/v1/users', params: {user: @user_params}
         expect(json_response["errors"]["email"].first).to eq "has already been taken"
       end
+      
+      it 'with a deleted user prompts for restoration' do
+         user = create(:user, email: "notsure@signup.com", password: 'password')
+         user.destroy
+         post '/api/v1/users', params: {user: {email: "notsure@signup.com", password: 'password', password_confirmation: 'password'}}
+         expect(json_response["user"]["email"]).to eq "notsure@signup.com"
+         expect(json_response["message"]).to eq "Looks like you've previously signed up but deleted your account.  Re-enter your email and password below to restore it."
+      end
+      
     end
     
     context "through facebook" do
@@ -138,8 +157,52 @@ RSpec.describe "User Authentication" do
         post '/api/v1/users/auth/facebook/callback'
         expect(json_response["errors"]["email"].first).to eq "has already been taken"
       end
+      
+       it 'signing in with a deleted user prompts for restoration' do
+         post '/api/v1/users/auth/facebook/callback'
+         user = User.find_by(email: 'ben@ben.com')
+         user.destroy
+         post '/api/v1/users/auth/facebook/callback'
+         expect(json_response["message"]).to eq "Looks like you've previously signed up but deleted your account.  Re-enter your email and password below to restore it."
+       end
     end
     
+  end
+  
+  context "user restoration" do
+    context "'normal' user" do
+      before do
+        User.delete_all
+        @user = create(:user, email: "notsure@signup.com", password: 'password')
+        @user.destroy
+      end
+      
+      it "succeeds with valid email and password for a deleted user" do
+        put '/api/v1/user/restore', params: {user: {email: "notsure@signup.com", password: 'password'}}
+        expect(json_response["user"]["email"]).to eq "notsure@signup.com"
+        expect(json_response["notice"]).to eq "Excellent!  You're back up and running."
+      end 
+      
+      it "fails with invalid email" do
+        put '/api/v1/user/restore', params: {user: {email: "doesntexist@signup.com", password: 'password'}}
+        expect(json_response["user"]).to eq nil
+        expect(json_response["errors"]).to eq "Sorry! Please check the email and password you've entered."
+      end 
+      
+      it "fails with valid email but invalid password for a deleted user" do
+        put '/api/v1/user/restore', params: {user: {email: "notsure@signup.com", password: 'amswhatiams'}}
+        expect(json_response["user"]).to eq nil
+        expect(json_response["errors"]).to eq "Sorry! Please check the email and password you've entered."
+      end
+      
+      it "fails with valid email and password for a non deleted user" do
+        confirmed_user = create(:user, confirmed_at: Time.zone.now, email: "confimedson@email.com", password: "password")
+        put '/api/v1/user/restore', params: {user: {email: "confirmedson@email.com", password: 'password'}}
+        expect(json_response["user"]).to eq nil
+        expect(json_response["errors"]).to eq "Sorry! Please check the email and password you've entered."
+      end
+    end
+  
   end
   
   context "request new password" do
