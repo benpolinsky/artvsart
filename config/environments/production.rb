@@ -48,6 +48,19 @@ Rails.application.configure do
     config.logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
   end
 
+  ActionMailer::Base.smtp_settings = {
+    :user_name => ENV['sendgrid_username'],
+    :password => ENV['sendgrid_password'],
+    :domain => 'artvsart.io',
+    :address => 'smtp.sendgrid.net',
+    :port => 587,
+    :authentication => :plain,
+    :enable_starttls_auto => true
+  }
+  config.action_mailer.delivery_method = :smtp  
+  config.action_mailer.default_url_options = { host: 'artvsart.io' }
+
+  
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
