@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :set_current_user, except: [:show, :restore]
   before_action :authorize_user!, except: [:restore]
 
   def show
@@ -7,26 +8,26 @@ class UsersController < ApplicationController
 
 
   def update
-    if current_user.update(user_params)
-      render json: user
+    if @user.update(user_params)
+      render json: @user
     else
-      render json: {errors: user.errors}
+      render json: {errors: @user.errors}
     end
   end
   
   def change_password
-    if current_user.update_with_password(user_params)
-      render json: user
+    if @user.update_with_password(user_params)
+      render json: @user
     else
       render json: {errors: "Your original password is incorrect."}
     end
   end
   
   def destroy
-    if current_user.destroy
+    if @user.destroy
       render json: {user: GuestUserSerializer.new(new_guest_user), notice: "Sorry to see you go... Take care!"}
     else
-      render json: {errors: user.errors}
+      render json: {errors: @user.errors}
     end
   end
   
@@ -45,5 +46,9 @@ class UsersController < ApplicationController
   
   def user_params
     params.require(:user).permit(:email, :username, :password, :password_confirmation, :current_password)
+  end
+  
+  def set_current_user
+    @user = current_user
   end
 end

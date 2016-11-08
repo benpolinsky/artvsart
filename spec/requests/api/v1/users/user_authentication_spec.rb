@@ -163,7 +163,7 @@ RSpec.describe "User Authentication" do
          user = User.find_by(email: 'ben@ben.com')
          user.destroy
          post '/api/v1/users/auth/facebook/callback'
-         expect(json_response["message"]).to eq "Looks like you've previously signed up but deleted your account.  Re-enter your email and password below to restore it."
+         expect(json_response["message"]).to eq "Looks like you've previously signed up but deleted your account.  Reauthorize with Facebook to restore it."
        end
     end
     
@@ -202,7 +202,23 @@ RSpec.describe "User Authentication" do
         expect(json_response["errors"]).to eq "Sorry! Please check the email and password you've entered."
       end
     end
-  
+    
+    context "facebook-authed user", focus: true do
+      before do
+        OmniAuth.config.add_mock(:facebook, {uid: "3i47u29834", info: {email: 'ben@ben.com'}})
+        Rails.application.env_config["devise.mapping"] = Devise.mappings[:user] 
+        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
+      end
+      
+      it "succeeds with after reauthing from the restore point" do
+        post '/api/v1/users/auth/facebook/callback'
+        user = User.find_by(email: 'ben@ben.com')
+        user.destroy
+        post '/api/v1/users/auth/facebook/callback', params: {restoring: true}
+        expect(json_response["user"]["email"]).to eq "ben@ben.com"
+        expect(json_response["notice"]).to eq "Excellent!  You're back up and running."
+      end 
+    end
   end
   
   context "request new password" do

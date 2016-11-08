@@ -1,8 +1,14 @@
+# Yeah, getting outta control... time to refactor to an AuthService
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def facebook
     user = User.only_deleted.find_by(email: request.env['omniauth.auth'].info.email)
     if user
-      render json: {user: user, message: "Looks like you've previously signed up but deleted your account.  Re-enter your email and password below to restore it."}
+      if params[:restoring] == 'true'
+        user.restore
+        render json: {user: UserSerializer.new(user), notice: "Excellent!  You're back up and running."}
+      else
+        render json: {user: UserSerializer.new(user), deleted_user: true, message: "Looks like you've previously signed up but deleted your account.  Reauthorize with Facebook to restore it."}
+      end
     else
       user = User.from_omniauth(request.env["omniauth.auth"])
       if user.persisted?

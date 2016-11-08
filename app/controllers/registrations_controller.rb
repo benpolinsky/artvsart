@@ -1,3 +1,4 @@
+# refactor into AuthService
 class RegistrationsController < Devise::RegistrationsController
   include ActionController::Serialization
   respond_to :json
@@ -5,7 +6,7 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     user = User.only_deleted.find_by(email: user_params[:email])
     if user && user.valid_password?(user_params[:password])
-      render json: {user: user, message: "Looks like you've previously signed up but deleted your account.  Re-enter your email and password below to restore it."}
+      render json: {user: UserSerializer.new(user), deleted_user: true, message: "Looks like you've previously signed up but deleted your account.  Re-enter your email and password below to restore it."}
     else
       user = current_user.elevate_to({
         type: "UnconfirmedUser",

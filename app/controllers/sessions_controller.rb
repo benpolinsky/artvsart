@@ -1,10 +1,11 @@
+# Refactor into AuthService
 class SessionsController < ApplicationController
   include ActionController::Serialization
 
   def create
     user = User.only_deleted.find_by(email: session_params[:email])
     if user && user.valid_password?(session_params[:password])
-      render json: {user: user, message: "Looks like you've previously signed up but deleted your account.  Re-enter your email and password below to restore it."}
+      render json: {user: user, deleted_user: true, message: "Looks like you've previously signed up but deleted your account.  Re-enter your email and password below to restore it."}
     else
       user = session_params[:email].present? && User.find_by(email: session_params[:email])
       if user && user.valid_password?(session_params[:password])

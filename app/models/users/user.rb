@@ -28,7 +28,6 @@ class User < ApplicationRecord
   end
   
   def elevate_to(params={})    
-    
     assign_attributes({
       email: params[:email], 
       password: params[:password], 
@@ -44,7 +43,9 @@ class User < ApplicationRecord
       self
     end
   end
-
+  
+  
+  # Refactor into AuthService.
   def self.from_omniauth(auth)
     includes(:identities).where(identities: {provider: auth.provider, uid: auth.uid}).first_or_create do |user|
       user.email = auth.info.email
