@@ -24,6 +24,7 @@ class ArtController < ApplicationController
     source_gateway = gateway(params[:source], {listing_id: params[:id]})
     importer = ArtImporter.new(source_gateway)
     importer.import
+    byebug
     render json: {result: 'imported!', listing_id: params[:id]}, status: 200
   end
 

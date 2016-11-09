@@ -2,12 +2,12 @@ require 'google/apis/books_v1'
 require 'nokogiri'
 
 class GoogleBooksGateway
-  attr_accessor :id, :ids, :guaranteed_ids
+  attr_accessor :listing_id, :listing_ids, :guaranteed_ids
   
   def initialize(params={})
-    @id             = params[:id]
-    @ids            = params[:ids]
-    @guaranteed_ids = ([id]+[ids]).flatten(1).compact
+    @listing_id             = params[:listing_id]
+    @listing_ids            = params[:listing_ids]
+    @guaranteed_ids = ([listing_id]+[listing_ids]).flatten(1).compact
   end
   
   def items

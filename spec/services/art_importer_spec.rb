@@ -88,5 +88,13 @@ RSpec.describe "Art Importer" do
     expect(Art.all.first.name).to eq "Blacksmith's Shop"
   end
   
+  it "imports art from Google Books" do
+    damn = 'OwM4PcKvcYMC'
+    gateway = GoogleBooksGateway.new(id: damn)
+    importer = ArtImporter.new(gateway)
+    expect{importer.import}.to change{Art.count}.from(0).to(1)
+    expect(Art.all.first.name).to eq "Damn!"
+  end
+  
 
 end
