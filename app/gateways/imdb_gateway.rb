@@ -34,11 +34,11 @@ class IMDBGateway
   # extract_class and delegate_class?
   # Not sure...
   def art_image(art)
-    art[:image]
+    art[:poster]
   end
   
   def art_images(art)
-    [art[:image]]
+    [art[:poster]]
   end
   
   def art_additional_images(art)

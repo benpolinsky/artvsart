@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe "IMDB Gateway" do
   let(:gateway){IMDBGateway.new}
   
-  it "returns general search results", focus: true do
+  it "returns general search results" do
     search_results = gateway.search("usual suspects")
     expect(search_results.first[:title]).to eq "The Usual Suspects"
   end
@@ -39,19 +39,12 @@ RSpec.describe "IMDB Gateway" do
   it "returns an image uri for each result" do
     search_results = gateway.search("Pulp")
     pulp = search_results.first
-    expect(gateway.art_image(pulp)).to match /.jpg/
+    expect(pulp.image).to match /.jpg/
   end
 
-  it "returns an array of image uris for each result" do
-    search_results = gateway.search("Pulp")
-    pulp = search_results.first
-    expect(gateway.art_images(pulp).all?{|img| img.match /.jpg/}).to eq true
-  end
-  
   it "returns #additional_images as all images except the primary" do
-    search_results = gateway.search("Pulp")
-    pulp = search_results.first
-    expect(gateway.art_additional_images(pulp)).to eq gateway.art_images(pulp) - [gateway.art_image(pulp)]
+    listing = gateway.single_listing('tt0114814')
+    expect(gateway.art_additional_images(listing)).to eq gateway.art_images(listing) - [gateway.art_image(listing)]
   end
 
   it "returns a name for each result" do
@@ -78,6 +71,15 @@ RSpec.describe "IMDB Gateway" do
     listing = gateway.single_listing('tt0114814')
     expect(gateway.art_source_link(listing)).to eq "https://www.imdb.com/title/tt0114814"
   end
-
+  
+  it "returns an image for each singline_listing", focus: true do
+    listing = gateway.single_listing('tt0114814')
+    expect(gateway.art_image(listing)).to match /.jpg/
+  end
+  
+  it "returns an array of image uris for each listing", focus: true do
+    listing = gateway.single_listing('tt0114814')
+    expect(gateway.art_images(listing).all?{|img| img.match /.jpg/}).to eq true
+  end
 
 end

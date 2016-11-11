@@ -20,11 +20,11 @@ RSpec.describe "Google Books Gateway" do
   end
   
   it "can be initialized with an id" do
-    expect(GoogleBooksGateway.new(id: '5PlBDAAAQBAJ').items.first.title).to eq "Fahrenheit 451"
+    expect(GoogleBooksGateway.new(listing_id: '5PlBDAAAQBAJ').items.first.title).to eq "Fahrenheit 451"
   end
   
   it "can be initialized with an array of ids" do
-    expect(GoogleBooksGateway.new(ids: ['5PlBDAAAQBAJ', 'Nhe2yvx6hP8C']).items.map(&:title)).to eq ["Fahrenheit 451", "Infinite Jest"]
+    expect(GoogleBooksGateway.new(listing_ids: ['5PlBDAAAQBAJ', 'Nhe2yvx6hP8C']).items.map(&:title)).to eq ["Fahrenheit 451", "Infinite Jest"]
   end
 
   
