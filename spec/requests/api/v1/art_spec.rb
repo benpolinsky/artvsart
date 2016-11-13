@@ -73,7 +73,7 @@ RSpec.describe "Art", type: :request do
         end 
       end
       
-      context "if not authorized", focus: true do
+      context "if not authorized" do
         it "returns 422 unauthorized" do
            post '/api/v1/art', params: @art_params
            expect(response.code).to eq "422"
@@ -152,5 +152,21 @@ RSpec.describe "Art", type: :request do
       end
     end
     
+    context "DELETE /art/:id", focus: true do 
+      context 'if authorized as admin' do
+        before do
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+          @art = create(:art, id: 502)
+        end
+        
+        it "can delete a piece of art" do
+          expect(Art.count).to eq 1
+          delete "/api/v1/art/502", headers: @headers
+          expect(Art.count).to eq 0
+        end
+        
+      end
+    end
   end
 end

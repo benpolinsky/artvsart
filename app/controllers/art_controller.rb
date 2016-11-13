@@ -48,6 +48,15 @@ class ArtController < ApplicationController
     end
   end
   
+  def destroy
+    art = Art.find(params[:id])
+    if art && art.destroy
+      render json: {art: ArtSerializer.new(art)}, status: 200
+    else
+      render json: {errors: "Sorry. No art found."}, status: 404
+    end
+  end
+  
   protected
 
   def art_params
