@@ -140,7 +140,7 @@ RSpec.describe Art, type: :model do
       expect(@competitor.win_loss_record).to eq "4-1"
     end
     
-    it "displays its #win_loss_percentage", focus: true do
+    it "displays its #win_loss_percentage" do
       expect(@competitor.win_loss_percentage).to eq "80.00%"
     end
     
@@ -148,7 +148,7 @@ RSpec.describe Art, type: :model do
       expect(@competitor.win_loss_rate).to eq 0.8
     end
     
-    it "orders winners by ::most_wins" do
+    it "orders winners by ::most_wins", focus: true do
       expect(Art.by_wins).to match [@competitor, @third_challenger, @second_challenger, @first_challenger]
     end
     
@@ -232,7 +232,7 @@ RSpec.describe Art, type: :model do
     end
   end
   
-  context "Status", focus: true do
+  context "Status" do
     it "begins as pending_review" do
       expect(Art.new.status).to eq "pending_review"
     end

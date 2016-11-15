@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161111221529) do
+ActiveRecord::Schema.define(version: 20161115013656) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,8 +24,8 @@ ActiveRecord::Schema.define(version: 20161111221529) do
     t.text     "description"
     t.integer  "status",            default: 0
     t.string   "image"
-    t.integer  "win_count"
-    t.integer  "loss_count"
+    t.integer  "win_count",         default: 0
+    t.integer  "loss_count",        default: 0
     t.text     "additional_images"
     t.string   "source"
     t.integer  "category_id"

@@ -107,7 +107,7 @@ class Art < ApplicationRecord
   end
 
   
-  def self.by_wins    
+  def self.by_wins  
     published.order(win_count: :desc)
   end
   
