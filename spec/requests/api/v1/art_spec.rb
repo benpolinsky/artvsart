@@ -27,7 +27,7 @@ RSpec.describe "Art", type: :request do
         end
       end
       
-      context "pagination", focus: true do
+      context "pagination" do
         before do
           @art = create_list(:art, 100)
           @user = User.create(email: "what@what.com", password: "password", admin: true)
@@ -51,6 +51,57 @@ RSpec.describe "Art", type: :request do
           expect(json_response['pages']['total_pages']).to eq 2
           expect(json_response['pages']['offset_value']).to eq 50
           expect(json_response['pages']['limit_value']).to eq 50
+        end
+      end
+      
+      context "searching" do
+        before do
+          create_list(:art, 10)
+          create(:art, name: "Electric Boogalo")
+          create(:art, name: "Electric City")
+          create(:art, name: "City of God")
+          create(:art, name: "Do The Boogalo!")
+                  
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+        
+        it "returns search results" do
+          get '/api/v1/art?search=Boogalo', headers: @headers
+          expect(json_response['art'].map {|art| art["name"]}).to match ['Electric Boogalo', 'Do The Boogalo!']
+        end
+        
+        it "doesn't care about case" do
+          get '/api/v1/art?search=boogalo', headers: @headers
+          expect(json_response['art'].map {|art| art["name"]}).to match ['Electric Boogalo', 'Do The Boogalo!']
+        end
+      end
+      
+      context "searching has precedence over pagination" do
+        before do
+          create_list(:art, 100, name: "See you on the second page")
+          create(:art, name: "Electric Boogalo")
+          create(:art, name: "Electric City")
+          create(:art, name: "City of God")
+          create(:art, name: "Do The Boogalo!")
+                  
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+        
+        it "returns search results" do
+          get '/api/v1/art?search=boogalo&page=1', headers: @headers
+          expect(json_response['art'].map {|art| art["name"]}).to match ['Electric Boogalo', 'Do The Boogalo!']
+        end
+        
+        it "returns no results if there aren't enough to spread to page 2" do
+          get '/api/v1/art?page=2&search=Boogalo', headers: @headers
+          expect(json_response['art'].map {|art| art["name"]}).to match []
+        end
+        
+        it "returns search results from the second page if asked" do
+          get '/api/v1/art?page=2&search=second+page', headers: @headers
+          expect(json_response['art'].size).to eq 50
         end
       end
       

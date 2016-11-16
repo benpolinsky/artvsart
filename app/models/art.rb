@@ -98,7 +98,7 @@ class Art < ApplicationRecord
     elo_rating || Elo.config.default_rating
   end
   
-  # credit where credit is due:
+  # credit to:
   # https://github.com/elovation/elovation
   def as_elo
     Elo::Player.new({
@@ -106,7 +106,10 @@ class Art < ApplicationRecord
       games: finished_competitions.to_a
     })
   end
-
+  
+  def self.search(query)
+    where('name ILIKE ? OR creator ILIKE ?', "%#{query}%", "%#{query}%")
+  end
   
   def self.by_wins  
     published.order(win_count: :desc)

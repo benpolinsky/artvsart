@@ -4,7 +4,11 @@ class ArtController < ApplicationController
   include ActionController::Serialization
   
   def index
-    art = Art.ordered.page(params[:page])
+    if params[:search]
+      art = Art.ordered.search(params[:search]).page(params[:page])
+    else
+      art = Art.ordered.page(params[:page])
+    end
     render json: {art: art, pages: pagination_for(art)}
   end
   
@@ -69,7 +73,7 @@ class ArtController < ApplicationController
     {
       current_page:  collection.current_page,
       next_page:     collection.next_page,
-      prev_page: collection.prev_page,
+      prev_page:     collection.prev_page,
       total_pages:   collection.total_pages,
       limit_value:   collection.limit_value,
       offset_value:  collection.offset_value,
