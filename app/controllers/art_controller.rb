@@ -73,8 +73,8 @@ class ArtController < ApplicationController
       total_pages:   collection.total_pages,
       limit_value:   collection.limit_value,
       offset_value:  collection.offset_value,
-      first_page?:    collection.first_page?,
-      last_page?:     collection.last_page?
+      first_page:    collection.first_page?,
+      last_page:     collection.last_page?
     }
   end
     

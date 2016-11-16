@@ -44,8 +44,8 @@ RSpec.describe "Art", type: :request do
         it "can return a page given in parameters" do
           get '/api/v1/art?page=2', headers: @headers
           expect(json_response['pages']['current_page']).to eq 2
-          expect(json_response['pages']['last_page?']).to eq true
-          expect(json_response['pages']['first_page?']).to eq false
+          expect(json_response['pages']['last_page']).to eq true
+          expect(json_response['pages']['first_page']).to eq false
           expect(json_response['pages']['next_page']).to eq nil
           expect(json_response['pages']['prev_page']).to eq 1
           expect(json_response['pages']['total_pages']).to eq 2
