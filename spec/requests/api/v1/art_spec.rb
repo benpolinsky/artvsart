@@ -27,6 +27,33 @@ RSpec.describe "Art", type: :request do
         end
       end
       
+      context "pagination", focus: true do
+        before do
+          @art = create_list(:art, 100)
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+        
+        it "returns pagination for art" do
+          get '/api/v1/art', headers: @headers
+        
+          expect(response.code).to eq '200'
+          expect(json_response['pages']).to_not be_blank
+        end
+        
+        it "can return a page given in parameters" do
+          get '/api/v1/art?page=2', headers: @headers
+          expect(json_response['pages']['current_page']).to eq 2
+          expect(json_response['pages']['last_page?']).to eq true
+          expect(json_response['pages']['first_page?']).to eq false
+          expect(json_response['pages']['next_page']).to eq nil
+          expect(json_response['pages']['prev_page']).to eq 1
+          expect(json_response['pages']['total_pages']).to eq 2
+          expect(json_response['pages']['offset_value']).to eq 50
+          expect(json_response['pages']['limit_value']).to eq 50
+        end
+      end
+      
     end
     
     context 'POST /art' do
@@ -152,7 +179,7 @@ RSpec.describe "Art", type: :request do
       end
     end
     
-    context "DELETE /art/:id", focus: true do 
+    context "DELETE /art/:id" do 
       context 'if authorized as admin' do
         before do
           @user = User.create(email: "what@what.com", password: "password", admin: true)

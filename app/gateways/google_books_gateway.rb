@@ -67,7 +67,7 @@ class GoogleBooksGateway
   end
   
   def art_source
-    "https://books.google.com"
+    "books.google.com"
   end
   
   def art_source_link(art)

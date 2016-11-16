@@ -341,6 +341,9 @@ GEM
     jsonapi-parser (0.1.1.beta3)
     jsonapi-renderer (0.1.1.beta1)
     jwt (1.5.6)
+    kaminari (0.17.0)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     launchy (2.4.3)
       addressable (~> 2.3)
     listen (3.0.8)
@@ -523,6 +526,7 @@ DEPENDENCIES
   hyperclient
   hyperresource
   jsonapi-parser (~> 0.1.1.beta2)
+  kaminari
   launchy
   listen (~> 3.0.5)
   omdbapi

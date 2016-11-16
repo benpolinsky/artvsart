@@ -28,6 +28,7 @@ class Art < ApplicationRecord
   delegate :number_to_percentage, to: ActiveSupport::NumberHelper
   
   serialize :additional_images, JSON
+  paginates_per 50
 
   def saves_with_category_name?(params)
     if params[:category_name].present?

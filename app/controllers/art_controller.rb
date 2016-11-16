@@ -4,7 +4,8 @@ class ArtController < ApplicationController
   include ActionController::Serialization
   
   def index
-    render json: {art: Art.ordered}
+    art = Art.ordered.page(params[:page])
+    render json: {art: art, pages: pagination_for(art)}
   end
   
   
@@ -62,6 +63,19 @@ class ArtController < ApplicationController
   def art_params
     params.require(:art).permit(:name, :creator, :description, :image, :creation_date, 
                                 :source, :category, :category_name, :source_link, :status)
+  end
+  
+  def pagination_for(collection)
+    {
+      current_page:  collection.current_page,
+      next_page:     collection.next_page,
+      prev_page: collection.prev_page,
+      total_pages:   collection.total_pages,
+      limit_value:   collection.limit_value,
+      offset_value:  collection.offset_value,
+      first_page?:    collection.first_page?,
+      last_page?:     collection.last_page?
+    }
   end
     
 end
