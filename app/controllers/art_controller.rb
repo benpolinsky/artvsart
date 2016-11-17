@@ -52,6 +52,20 @@ class ArtController < ApplicationController
        render json: {errors: art.errors}, status: 422
     end
   end
+  
+  def toggle_many
+    ids = params[:art_ids]
+    status = params[:status]
+    art = Art.where(id: ids) 
+    
+    
+    if art.update_all(status: status)
+      render json: {art: art}
+    else
+      render json: {errors: art.errors}
+    end
+    
+  end
 
   def show
     art = Art.find(params[:id])

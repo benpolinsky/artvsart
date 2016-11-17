@@ -14,7 +14,10 @@ Rails.application.routes.draw do
       resources :competitions, :sessions, :categories
       
       resources :art do
-        post 'import', on: :collection
+        collection do
+          post 'import'
+          put 'toggle_many'
+        end
         put 'update_status', on: :member
       end
       

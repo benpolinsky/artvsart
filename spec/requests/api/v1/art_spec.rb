@@ -167,7 +167,7 @@ RSpec.describe "Art", type: :request do
       end
     end
     
-    context "UPDATE /art/:id" do
+    context "PUT /art/:id" do
       context "if authorized as admin" do
         before do
           @art = create(:art, name: "My Fetched Art", id: 10012)
@@ -180,10 +180,7 @@ RSpec.describe "Art", type: :request do
           expect(json_response['art']['name']).to eq "An Awesome Art"
         end
         
-        it "updates the status of a piece of art" do
-          put '/api/v1/art/10012/update_status', params: {status: 'declined'}, headers: @headers
-          expect(json_response['art']['status']).to eq 'declined'
-        end
+      
       end
       context "if unauthorized" do
         before do
@@ -196,6 +193,65 @@ RSpec.describe "Art", type: :request do
         end
       end
     end
+    
+    context "PUT /api/v1/art/10012/update_status" do
+      context "if authorized as admin" do
+        before do
+          @art = create(:art, name: "My Fetched Art", id: 10012)
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+      
+        it "updates the status of a piece of art" do
+          put '/api/v1/art/10012/update_status', params: {status: 'declined'}, headers: @headers
+          expect(json_response['art']['status']).to eq 'declined'
+        end
+        
+      
+      end
+      context "if unauthorized" do
+        before do
+          @art = create(:art, name: "My Fetched Art", id: 10012)
+        end
+      
+        it "doesn't update the status of a piece of art" do
+          put '/api/v1/art/10012/update_status', params: {status: 'declined'}
+          expect(response.code).to eq '422'
+        end
+      end
+     
+    end
+    
+    context "PUT /api/v1/art/toggle_many" do
+      context "if authorized as admin" do
+        before do
+          arts = create_list(:art, 10, status: 'pending_review')
+          @ids = arts.map(&:id)
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+      
+        it "updates the status of many pieces of art" do
+          put '/api/v1/art/toggle_many', params: {status: 'published', art_ids: @ids}, headers: @headers
+          expect(json_response['art'].map{|a| a.id}).to match @ids
+          expect(json_response['art'].all?{|a| a['status'] == 'published'}).to eq true
+        end
+        
+      
+      end
+      skip "if unauthorized" do
+        before do
+          @art = create(:art, name: "My Fetched Art", id: 10012)
+        end
+      
+        skip "doesn't update the status of a piece of art" do
+          put '/api/v1/art/10012/update_status', params: {status: 'declined'}
+          expect(response.code).to eq '422'
+        end
+      end
+    end
+
+
 
     context "GET /art/:id" do
       before do
