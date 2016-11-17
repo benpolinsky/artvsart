@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       
       resources :art do
         post 'import', on: :collection
+        put 'update_status', on: :member
       end
       
       post 'users/sign_in' => 'sessions#create'

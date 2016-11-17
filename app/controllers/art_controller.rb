@@ -9,7 +9,7 @@ class ArtController < ApplicationController
     else
       art = Art.ordered.page(params[:page])
     end
-    render json: {art: art, pages: pagination_for(art)}
+    render json: {art: art, pages: pagination_for(art), search: params[:search]}
   end
   
   
@@ -41,6 +41,15 @@ class ArtController < ApplicationController
       render json: {art: ArtSerializer.new(art)}, status: 200
     else
       render json: {errors: art.errors}, status: 422
+    end
+  end
+  
+  def update_status
+    art = Art.find(params[:id])
+    if art.update_attribute(:status, params[:status])
+       render json: {art: ArtSerializer.new(art)}, status: 200
+    else
+       render json: {errors: art.errors}, status: 422
     end
   end
 

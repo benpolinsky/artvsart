@@ -181,7 +181,7 @@ RSpec.describe "Art", type: :request do
         end
         
         it "updates the status of a piece of art" do
-          put '/api/v1/art/10012', params: {art: {status: 'declined'}}, headers: @headers
+          put '/api/v1/art/10012/update_status', params: {status: 'declined'}, headers: @headers
           expect(json_response['art']['status']).to eq 'declined'
         end
       end
