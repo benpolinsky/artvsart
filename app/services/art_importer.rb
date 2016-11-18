@@ -7,7 +7,7 @@ class ArtImporter
 
 
   def import
-    gateway.items.each do |item|
+    gateway.items.map do |item|
       import_item(item)
     end
   end

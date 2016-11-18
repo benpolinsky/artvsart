@@ -64,7 +64,7 @@ RSpec.describe "Art Importer" do
     expect(Art.all.map(&:name)).to include "Bazooka Tooth"
   end 
   
-  it "imports movies from IMDB via OMDB", focus: true do
+  it "imports movies from IMDB via OMDB" do
     usual_suspects_id = 'tt0114814'
     gateway = IMDBGateway.new(listing_id: usual_suspects_id)
     importer = ArtImporter.new(gateway)
@@ -96,5 +96,12 @@ RSpec.describe "Art Importer" do
     expect(Art.all.first.name).to eq "Damn!"
   end
   
+  
+  it "returns an array of imported ids on import", focus: true do
+    damn = 'OwM4PcKvcYMC'
+    gateway = GoogleBooksGateway.new(listing_id: damn)
+    importer = ArtImporter.new(gateway)
+    expect(importer.import.first).to be_a Art
+  end
 
 end
