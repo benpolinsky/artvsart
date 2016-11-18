@@ -2,11 +2,12 @@ class PhilartGateway
   PHILART_ENDPOINT = "http://www.philart.net/api.json"
   BASE_URL = 'http://www.philart.net/art'
 
-  attr_reader :api, :path, :paths
+  attr_reader :api, :path, :paths, :errors
   
   def initialize(params={})
     @path = params[:path] || params[:listing_id]
     @paths = params[:paths] || params[:listing_ids]
+    @errors = []
   end
   
   def search(query, params={})
@@ -19,11 +20,21 @@ class PhilartGateway
       art['id'] = link_for(art)
       art
     end
-    results.any? ? results : {error: "No results found!"}
+    if results.any? 
+      results
+    else
+      error_response
+    end
   end
   
   def single_listing(path)
-    api(path)
+    response = api(path)
+    begin
+      response.body
+      response
+    rescue Faraday::Error::ResourceNotFound => e
+      error_response
+    end
   end
   
   def items
@@ -89,6 +100,10 @@ class PhilartGateway
     "#{BASE_URL}/#{slugged_name(art)}/#{id_for(art)}.html"
   end
 
+  def valid?
+    !items.any?{|item| item == false} 
+  end
+
   private
   
   def slugged_name(art)
@@ -114,6 +129,11 @@ class PhilartGateway
         conn.adapter :net_http
       end
     end
+  end
+  
+  def error_response(message="No Results Found!")
+    @errors << message
+    false 
   end
   
 end

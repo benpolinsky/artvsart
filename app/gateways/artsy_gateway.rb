@@ -3,11 +3,12 @@ require 'hyperclient'
 class ArtsyGateway
   ARTSY_ENDPOINT = 'https://api.artsy.net/api'
   
-  attr_accessor :listing_id, :listing_ids, :api
+  attr_accessor :listing_id, :listing_ids, :api, :errors
   
   def initialize(params={})
     @listing_id  = params[:listing_id]
     @listing_ids = params[:listing_ids]
+    @errors = []
     renew_token if !token || token.expiring_soon?
   end
   
@@ -27,7 +28,7 @@ class ArtsyGateway
       results = parse_results(whole.self)
       if results.any? || whole.self.total_count <= offset+10
         if results.empty?
-          {error: "No results found!"}
+          error_response
         else 
           results
         end
@@ -35,9 +36,10 @@ class ArtsyGateway
         offset = offset+10
         self.search(query, {size: 10, offset: offset, total_count: 1}.reverse_merge(params))
       end
+    rescue Faraday::Error::ResourceNotFound => e
+      error_response(e.message)
     rescue Faraday::ClientError => e
-      puts e
-      {error: "Sorry, something went wrong."}
+      error_response
     end
   end
   
@@ -49,7 +51,13 @@ class ArtsyGateway
 
   #  #find is a better name or find_artwork
   def single_listing(listing_id)
-     api.artwork(id: listing_id)
+    begin
+     artwork = api.artwork(id: listing_id)
+     artwork.title # to see if we've found anything
+     artwork
+    rescue Faraday::Error::ResourceNotFound => e
+      error_response
+    end
   end
   
   def artist_works(artist_id)
@@ -120,7 +128,10 @@ class ArtsyGateway
       AuthorizationToken.create(service: "artsy", token: response.token, expires_on: response.expires_at) 
     end
   end
-  
+
+  def valid?
+    !items.any?{|item| item == false} 
+  end
   
   private
   
@@ -161,6 +172,11 @@ class ArtsyGateway
      rescue Faraday::ResourceNotFound => e
      end
    end.compact
+  end
+  
+  def error_response(message="No Results Found!")
+    @errors << message
+    false 
   end
   
 end

@@ -81,5 +81,16 @@ RSpec.describe "IMDB Gateway" do
     listing = gateway.single_listing('tt0114814')
     expect(gateway.art_images(listing).all?{|img| img.match /.jpg/}).to eq true
   end
+  
+  
+  it "checks if it is #valid?" do
+    new_gateway = IMDBGateway.new(listing_id: 'sdfh9834')
+    expect(new_gateway.valid?).to eq false
+  end
+  
+  it "sets errors if an id is not found or invalid" do
+    expect(gateway.single_listing('bogasdh083d2')).to eq false
+    expect(gateway.errors).to eq ["Incorrect IMDb ID."]
+  end
 
 end

@@ -14,11 +14,6 @@ RSpec.describe "Google Books Gateway" do
     expect(search_results.first.title).to eq "Infinite Jest"
   end
   
-  skip "returns an response with error if none found" do
-    search_results = gateway.search("ssssdn29873hd38")
-    expect(search_results).to eq "Book not found!"
-  end
-  
   it "can be initialized with an id" do
     expect(GoogleBooksGateway.new(listing_id: '5PlBDAAAQBAJ').items.first.title).to eq "Fahrenheit 451"
   end
@@ -73,5 +68,15 @@ RSpec.describe "Google Books Gateway" do
     expect(gateway.art_source_link(listing)).to match /books.google.com/
   end
 
+  
+  it "checks if it is #valid?" do
+    new_gateway = GoogleBooksGateway.new(listing_id: 'sdfh9834')
+    expect(new_gateway.valid?).to eq false
+  end
+  
+  it "sets errors if an id is not found or invalid" do
+    expect(gateway.single_listing('bogasdh083d2')).to eq false
+    expect(gateway.errors).to eq ["notFound: The volume ID could not be found."]
+  end
 
 end

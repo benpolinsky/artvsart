@@ -74,8 +74,19 @@ RSpec.describe "Discogs Gateway" do
    expect(gateway.art_release_date(erh)).to eq "2015-04-28"
   end
   
-  it "returns a source_link", focus: true do
+  it "returns a source_link" do
    erh = gateway.single_listing('7028129') 
    expect(gateway.art_source_link(erh)).to eq "https://www.discogs.com/Philadelphia-Slick-Earth-Rocks-Harder/release/7028129"
   end
+  
+  it "checks if it is #valid?" do
+    new_gateway = DiscogsGateway.new(listing_id: 'sdfh9834')
+    expect(new_gateway.valid?).to eq false
+  end
+  
+  it "sets errors if an id is not found or invalid" do
+    expect(gateway.single_listing('bogasdh083d2')).to eq false
+    expect(gateway.errors).to eq ["No Results Found!"]
+  end
+  
 end

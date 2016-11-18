@@ -18,15 +18,10 @@ RSpec.describe "Search Source" do
             expect(json_response['results'].first['id']).to_not eq nil
           end
       
-          it "returns an empty array of results if none found" do
+          it "returns an empty array of results if none found", focus: true do
             get '/api/v1/search_source', params: {source: 'Artsy', query: 'Benjamin David Polinsky'}, headers: @headers
-            expect(json_response['results']['error']).to eq "No results found!"
-          end
-      
-          it "retuns a 500 error if something goes wrong" do
-            allow_any_instance_of(ArtsyGateway).to receive(:search).and_raise(Faraday::Error::ResourceNotFound.new(nil))
-            get '/api/v1/search_source', params: {source: 'Artsy', query: 'Benjamin David Polinsky'}, headers: @headers
-            expect(json_response['error']).to eq "Not Found"
+            pp json_response
+            expect(json_response['errors'][0]).to eq "No Results Found!"
           end
         end
       

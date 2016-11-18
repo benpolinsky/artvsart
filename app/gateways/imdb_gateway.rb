@@ -1,10 +1,11 @@
 class IMDBGateway
-  attr_accessor :id, :ids, :guaranteed_ids
+  attr_accessor :id, :ids, :guaranteed_ids, :errors
   
   def initialize(params={})
     @id             = params[:listing_id]
     @ids            = params[:listing_ids]
     @guaranteed_ids = ([id]+[ids]).flatten(1).compact
+    @errors = []
   end
   
   def items
@@ -12,7 +13,13 @@ class IMDBGateway
   end
   
   def single_listing(id)
-    OMDB.id(id)
+    result = OMDB.id(id) 
+    if result[:error]
+      @errors = ["Incorrect IMDb ID."]
+      false
+    else
+      result
+    end
   end
 
   def search(query, params={})
@@ -80,5 +87,8 @@ class IMDBGateway
     }
   end
   
+  def valid?
+    !items.any?{|item| item == false} 
+  end
 
 end

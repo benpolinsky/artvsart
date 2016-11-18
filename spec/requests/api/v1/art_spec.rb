@@ -283,6 +283,24 @@ RSpec.describe "Art", type: :request do
           expect(json_response['result']).to eq 'imported!'
           expect(Art.count).to eq 1
         end
+        
+        it "returns an array of errors if something goes wrong", focus: true do
+          expect(Art.count).to eq 0
+          art_params = {
+            id: 'sjdvgf',
+            source: "Discogs"
+          }
+          post '/api/v1/art/import', params: art_params, headers: @headers
+          expect(json_response['errors']).to eq ["No Results Found!"]
+          
+          expect(Art.count).to eq 0
+          art_params = {
+            id: 'sjdvgf',
+            source: "GoogleBooks"
+          }
+          post '/api/v1/art/import', params: art_params, headers: @headers
+          expect(json_response['errors']).to eq ["No Results Found!"]
+        end
       end
     end
     

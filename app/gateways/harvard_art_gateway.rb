@@ -1,11 +1,14 @@
 # TODO: LIMIT FIELDS BEING RETURNED FROM API
+# TODO: Change id/ids to listing_id/listing_ids
+
 class HarvardArtGateway
-  attr_reader :api, :id, :ids, :guaranteed_ids
+  attr_reader :api, :id, :ids, :guaranteed_ids, :errors
 
   def initialize(params={})
     @id = params[:id]
     @ids = params[:ids]
     @guaranteed_ids = ([id]+[ids]).flatten(1).compact
+    @errors = []
   end
   
   def items
@@ -14,7 +17,12 @@ class HarvardArtGateway
   
   def single_listing(listing_id, fields=[])
     # fields + ['title']
-    api.get("/object/#{listing_id}?apikey=#{ENV['harvard_token']}").body      
+    response = api.get("/object/#{listing_id}?apikey=#{ENV['harvard_token']}")   
+    if response.body['error']
+      error_response(response.body['error'])
+    else
+      response.body
+    end
   end
   
 
@@ -22,9 +30,11 @@ class HarvardArtGateway
     query_params.reverse_merge!({q: query, apikey: ENV['harvard_token']})
     records = api.get("/object?#{query_params.to_param}").body.records
     if records.none?
-      {error: "No results found!"}
+      @errors << "No results found!"
+      false
     elsif !images_present?(records)
-      {error: "No images present!"}
+      @errors << "Results found, but no images present..."
+      false
     else
       records.select{|r| r['images'].present?}.map{ |record| record['image'] = "#{record['images'].first.baseimageurl}?width=200&height=200"; record}
     end
@@ -72,6 +82,10 @@ class HarvardArtGateway
     art.url
   end
   
+  def valid?
+    !items.any?{|item| item == false} 
+  end
+  
   private
   
   def api(path='http://api.harvardartmuseums.org')
@@ -88,5 +102,8 @@ class HarvardArtGateway
     records.map{|r| r['images'] }.present?
   end
   
-  
+  def error_response(message="No Results Found!")
+    @errors << message
+    false 
+  end
 end

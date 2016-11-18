@@ -31,14 +31,9 @@ RSpec.describe "Artsy Gateway" do
     expect(search_results.first[:type]).to eq "Artwork"
   end
   
-  it "returns results for a different search" do
-    search_results = gateway.search("oranges")
-    expect(search_results.first[:type]).to eq "Artwork"
-  end
-  
-  it "returns a response with error if none found" do
-    search_results = gateway.search("sssadsa32ss")
-    expect(search_results[:error]).to eq "No results found!"
+  it "returns false and populates errors if no listing found" do
+    expect(gateway.search("sssadsa32ss")).to eq false
+    expect(gateway.errors).to eq ["No Results Found!"]
   end
 
   it "returns an image uri for each result" do
@@ -86,12 +81,19 @@ RSpec.describe "Artsy Gateway" do
     expect(warhol_collection.size).to eq 0 # i need to find an artist with collections...
   end
 
-
-
-
   # this is assuiming allworks.first will always return the earlier artwork...
   it "returns all works" do
     expect(gateway.all_works.first._attributes.title).to eq "Der Kuss (The Kiss)"
+  end
+  
+  it "checks if it is #valid?" do
+    new_gateway = ArtsyGateway.new(listing_id: 'sdfh9834')
+    expect(new_gateway.valid?).to eq false
+  end
+  
+  it "sets errors if an id is not found or invalid" do
+    expect(gateway.single_listing('bogasdh083d2')).to eq false
+    expect(gateway.errors).to eq ["No Results Found!"]
   end
 
 

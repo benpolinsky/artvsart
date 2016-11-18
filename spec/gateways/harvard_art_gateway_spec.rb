@@ -23,14 +23,6 @@ RSpec.describe "HarvardArtGateway" do
     expect(search_results.first.title).to eq "Untitled (Mr. and Mrs. Leicester Faust)"
   end
   
-  it "returns a response with error if none found" do
-    search_results = gateway.search("sssadsa32ss")
-    expect(search_results[:error]).to eq "No results found!"
-  end
-  
-  it "returns a response with error if an error occurs" do
-  end
-  
   it "can be initialized with an id" do
     new_gateway = HarvardArtGateway.new(id: '299985')
     expect(new_gateway.items.first.title).to eq "Blacksmith's Shop"
@@ -87,4 +79,14 @@ RSpec.describe "HarvardArtGateway" do
     listing = gateway.single_listing('299985')
     expect(gateway.art_source_link(listing)).to eq "http://harvardartmuseums.org/collections/object/299985"
   end
+  it "checks if it is #valid?", focus: true do
+    new_gateway = HarvardArtGateway.new(id: 'sdfh9834')
+    expect(new_gateway.valid?).to eq false
+  end
+  
+  it "sets errors if an id is not found or invalid" do
+    expect(gateway.single_listing('bogasdh083d2')).to eq false
+    expect(gateway.errors).to eq ["Not Found"]
+  end
+  
 end

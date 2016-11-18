@@ -1,10 +1,11 @@
 class DiscogsGateway
   attr_reader :wrapper, :listing_id, :listing_ids, :artist_id
-
+  attr_accessor :errors
   def initialize(params={})
     @listing_id = params[:listing_id]
     @listing_ids = params[:listing_ids]
     @artist_id = params[:artist_id]
+    @errors = []
   end
   
   def items
@@ -22,7 +23,8 @@ class DiscogsGateway
     begin
       wrapper.get_release(release_id)
     rescue Discogs::UnknownResource
-      {error: "No results found!"}
+      @errors = ["No Results Found!"]
+      false
     end
     
   end
@@ -107,10 +109,17 @@ class DiscogsGateway
     search_result.artists.map(&:name).join
   end
     
+  # renamed to api in other Gateways
   def wrapper
     @wrapper ||= Discogs::Wrapper.new(ENV['discogs_app_name'], user_token: ENV['discogs_user_token'])
   end
   
+  
+  # if any items have return false, 
+  # the gateway is not valid
+  def valid?
+    !items.any?{|item| item == false}
+  end
 
 
   private

@@ -2,12 +2,13 @@ require 'google/apis/books_v1'
 require 'nokogiri'
 
 class GoogleBooksGateway
-  attr_accessor :listing_id, :listing_ids, :guaranteed_ids
+  attr_accessor :listing_id, :listing_ids, :guaranteed_ids, :errors
   
   def initialize(params={})
     @listing_id             = params[:listing_id]
     @listing_ids            = params[:listing_ids]
     @guaranteed_ids = ([listing_id]+[listing_ids]).flatten(1).compact
+    @errors = []
   end
   
   def items
@@ -15,7 +16,15 @@ class GoogleBooksGateway
   end
   
   def single_listing(id)
-    api.get_volume(id).volume_info
+    begin
+      api.get_volume(id).volume_info
+    rescue Google::Apis::ClientError => e
+      @errors = [e.message]
+      return false
+    rescue Google::Apis::ServerError
+      @errors = ["No Results Found!"]
+      return false
+    end
   end
 
   def search(query, params={})
@@ -72,6 +81,10 @@ class GoogleBooksGateway
   
   def art_source_link(art)
     art.preview_link
+  end
+  
+  def valid?
+    !items.any?{|item| item == false} 
   end
   
   private

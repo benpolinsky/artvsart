@@ -12,14 +12,7 @@ RSpec.describe "Philart Gateway" do
     search_results = gateway.search("Chestnut")
     expect(search_results.first["title"]).to eq "1822 Chestnut"
   end
-  
-  it "returns a response with error if none found" do
-    search_results = gateway.search("sssadsa32ss")
-    expect(search_results[:error]).to eq "No results found!"
-  end
-  
-  it "returns a response with error if an error occurs" do
-  end
+
   
   it "finds a single listing by path" do
     art_path = "http://www.philart.net/api/art/590.json"
@@ -92,7 +85,17 @@ RSpec.describe "Philart Gateway" do
     art = gateway.single_listing(art_path)
     expect(gateway.art_source_link(art)).to eq 'http://www.philart.net/art/The_Immigrant/190.html'
   end
-
+  
+  
+  it "checks if it is #valid?" do
+    new_gateway = PhilartGateway.new(path: 'http://www.philart.net/api/art/1935345320.json')
+    expect(new_gateway.valid?).to eq false
+  end
+  
+  it "sets errors if an id is not found or invalid" do
+    expect(gateway.single_listing("http://www.philart.net/api/art/1935345320.json")).to eq false
+    expect(gateway.errors).to eq ["No Results Found!"]
+  end
 
 
 end
