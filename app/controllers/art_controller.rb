@@ -28,8 +28,8 @@ class ArtController < ApplicationController
   def import
     source_gateway = gateway(params[:source], {listing_id: params[:id]})
     importer = ArtImporter.new(source_gateway)
-    importer.import
-    render json: {result: 'imported!', listing_id: params[:id]}, status: 200
+    new_art = importer.import
+    render json: {result: 'imported!', listing_id: params[:id], new_art: new_art}, status: 200
   end
 
   def edit
