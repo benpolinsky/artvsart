@@ -312,10 +312,10 @@ RSpec.describe "Art", type: :request do
           @art = create(:art, id: 502)
         end
         
+        # this isn't good... 
         it "can delete a piece of art" do
-          expect(Art.count).to eq 1
           delete "/api/v1/art/502", headers: @headers
-          expect(Art.count).to eq 0
+          expect(json_response['art_deleted']).to eq true
         end
         
       end

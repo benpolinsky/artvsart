@@ -53,27 +53,46 @@ RSpec.describe "Categories" do
         )
       end
       
-      context "POST /categories" do
-        it "creates a category" do
-          post '/api/v1/categories', 
-          params: {category: {name: "Statues", color: "Green"}}, 
-          headers: @headers
-        
-          expect(response.code).to eq "200"
-          expect(json_response['category']['name']).to eq "Statues"
-          expect(json_response['category']['slug']).to eq "statues"
-          expect(json_response['category']['color']).to eq "Green"
-        end
-        
-        it "doesn't create a category if no name is specified" do
-          post '/api/v1/categories', 
-          params: {category: {name: "", color: "Green"}}, 
-          headers: @headers
-
-          expect(json_response['errors']['name'][0]).to eq "can't be blank"
-        end
+    end
+    context "POST /categories" do
+      it "creates a category" do
+        post '/api/v1/categories', 
+        params: {category: {name: "Statues", color: "Green"}}, 
+        headers: @headers
+      
+        expect(response.code).to eq "200"
+        expect(json_response['category']['name']).to eq "Statues"
+        expect(json_response['category']['slug']).to eq "statues"
+        expect(json_response['category']['color']).to eq "Green"
       end
       
+      it "doesn't create a category if no name is specified" do
+        post '/api/v1/categories', 
+        params: {category: {name: "", color: "Green"}}, 
+        headers: @headers
+
+        expect(json_response['errors']['name'][0]).to eq "can't be blank"
+      end
+    end
+    
+    context "DELETE /categories/:id" do
+      before do
+        art = Category.find(2)
+        art.arts << create(:art)
+      end
+      it "deletes a category" do
+        delete '/api/v1/categories/1', headers: @headers
+        
+        expect(response.code).to eq "200"
+        expect(json_response['category_deleted']).to eq true
+      end
+      
+      it "cannot delete a category if referenced by art" do
+        delete '/api/v1/categories/2', headers: @headers
+        
+        expect(response.code).to eq "422"
+        expect(json_response['errors'][0]).to eq "Sorry, you can't delete a category that's still referenced by art."
+      end
     end
   end
 end

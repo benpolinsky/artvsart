@@ -30,6 +30,17 @@ class CategoriesController < ApplicationController
     end
   end
   
+  def destroy
+    category = Category.find(params[:id])
+    if category.arts.any?
+      render json: {errors: ["Sorry, you can't delete a category that's still referenced by art."]}, status: 422
+    elsif category.destroy
+      render json: {category: CategorySerializer.new(category), category_deleted: true}, status: 200
+    else
+      render json: {errors: ["Sorry. Not found."]}, status: 404
+    end
+  end
+  
   private
   def category_params
     params.require(:category).permit(:name, :color, :parent_category)
