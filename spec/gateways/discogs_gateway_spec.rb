@@ -22,11 +22,6 @@ RSpec.describe "Discogs Gateway" do
     expect{gateway.single_listing(0000000)}.to_not raise_error
   end
   
-  it "returns a response with error if none found" do
-    search_results = gateway.search("sssadsef34f4a32ss")
-    expect(search_results[:error]).to eq "No results found!"
-  end
-  
   it "returns a list of artists for a work" do
     erh = gateway.single_listing('7028129')
     expect(gateway.artist_names(erh)).to eq "Philadelphia Slick"
@@ -84,7 +79,7 @@ RSpec.describe "Discogs Gateway" do
     expect(new_gateway.valid?).to eq false
   end
   
-  it "sets errors if an id is not found or invalid" do
+  it "sets errors if an id is not found or invalid", focus: true do
     expect(gateway.single_listing('bogasdh083d2')).to eq false
     expect(gateway.errors).to eq ["No Results Found!"]
   end

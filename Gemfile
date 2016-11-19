@@ -66,7 +66,6 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'spring-commands-rspec', group: :development
   gem 'bullet'
-  gem "rack-timeout"
 end
 
 gem 'simplecov', :require => false, :group => :test

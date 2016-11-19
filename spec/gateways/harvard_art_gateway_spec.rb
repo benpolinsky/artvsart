@@ -24,12 +24,12 @@ RSpec.describe "HarvardArtGateway" do
   end
   
   it "can be initialized with an id" do
-    new_gateway = HarvardArtGateway.new(id: '299985')
+    new_gateway = HarvardArtGateway.new(listing_id: '299985')
     expect(new_gateway.items.first.title).to eq "Blacksmith's Shop"
   end
   
   it "can be initialized with an array of ids" do
-    new_gateway = HarvardArtGateway.new(ids: ['299985', '304069'])
+    new_gateway = HarvardArtGateway.new(listing_ids: ['299985', '304069'])
     expect(new_gateway.items.map(&:title)).to match ["Blacksmith's Shop", "Hydria (water jar) with Siren Attachment"]
   end
   
@@ -79,8 +79,8 @@ RSpec.describe "HarvardArtGateway" do
     listing = gateway.single_listing('299985')
     expect(gateway.art_source_link(listing)).to eq "http://harvardartmuseums.org/collections/object/299985"
   end
-  it "checks if it is #valid?", focus: true do
-    new_gateway = HarvardArtGateway.new(id: 'sdfh9834')
+  it "checks if it is #valid?" do
+    new_gateway = HarvardArtGateway.new(listing_id: 'sdfh9834')
     expect(new_gateway.valid?).to eq false
   end
   

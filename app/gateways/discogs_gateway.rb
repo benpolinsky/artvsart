@@ -23,8 +23,7 @@ class DiscogsGateway
     begin
       wrapper.get_release(release_id)
     rescue Discogs::UnknownResource
-      @errors = ["No Results Found!"]
-      false
+      error_response
     end
     
   end
@@ -96,7 +95,7 @@ class DiscogsGateway
     end
     params.delete(:search_type)
     results = wrapper.search(query, {type: search_type}.reverse_merge(params)).results.map {|r| r.image = r.delete(:thumb); r}
-    results.empty? ? {error: 'No results found!'} : results
+    results.empty? ? error_response : results
   end
   
   # good way to get release_ids
@@ -118,7 +117,7 @@ class DiscogsGateway
   # if any items have return false, 
   # the gateway is not valid
   def valid?
-    !items.any?{|item| item == false}
+    !items.empty? && !items.any?{|item| item == false}
   end
 
 
@@ -128,5 +127,10 @@ class DiscogsGateway
     [listing_id, listing_ids].compact.flatten(1)
   end
   
+  def error_response(message="No Results Found!")
+    @errors << message
+    @errors.uniq!
+    false
+  end
   
 end

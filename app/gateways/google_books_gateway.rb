@@ -28,16 +28,21 @@ class GoogleBooksGateway
   end
 
   def search(query, params={})
-    api.list_volumes(query, params).items.select do |b| 
-      b.volume_info.image_links.present? && b.volume_info.description.present?
-    end.map do |b|
-      {
-        title: art_name(b.volume_info),
-        year: art_release_date(b.volume_info),
-        type: art_category(b.volume_info),
-        image: art_image(b.volume_info),
-        id: b.id
-      }
+    results = api.list_volumes(query, params).items
+    if results
+      results.select do |b| 
+        b.volume_info.image_links.present? && b.volume_info.description.present?
+      end.map do |b|
+        {
+          title: art_name(b.volume_info),
+          year: art_release_date(b.volume_info),
+          type: art_category(b.volume_info),
+          image: art_image(b.volume_info),
+          id: b.id
+        }
+      end
+    else
+      error_response
     end
 
   end
@@ -95,6 +100,12 @@ class GoogleBooksGateway
 
     @api.key = ENV['google_books_key']
     @api
+  end
+  
+  
+  def error_response(message="No Results Found!")
+    @errors << message
+    false
   end
 
 end

@@ -15,8 +15,7 @@ class IMDBGateway
   def single_listing(id)
     result = OMDB.id(id) 
     if result[:error]
-      @errors = ["Incorrect IMDb ID."]
-      false
+      error_response
     else
       result
     end
@@ -25,7 +24,7 @@ class IMDBGateway
   def search(query, params={})
     results = [OMDB.search(query)].flatten(1)
     if results.first[:response] == "False"
-      {error: results.first[:error]}
+      error_response
     else
       results.map do |art|
         art[:image] = art.delete(:poster)
@@ -89,6 +88,11 @@ class IMDBGateway
   
   def valid?
     !items.any?{|item| item == false} 
+  end
+  
+  def error_response(message="Incorrect IMDb ID.")
+    @errors << message
+    false
   end
 
 end

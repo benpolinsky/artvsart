@@ -11,7 +11,6 @@ class ArtImporter
   # otherwise we'll store errors and return false
   
   def import
-
     if gateway.valid?
       gateway.items.map do |item|
         import_item(item)

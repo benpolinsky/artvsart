@@ -2,12 +2,12 @@
 # TODO: Change id/ids to listing_id/listing_ids
 
 class HarvardArtGateway
-  attr_reader :api, :id, :ids, :guaranteed_ids, :errors
+  attr_reader :api, :listing_id, :listing_ids, :guaranteed_ids, :errors
 
   def initialize(params={})
-    @id = params[:id]
-    @ids = params[:ids]
-    @guaranteed_ids = ([id]+[ids]).flatten(1).compact
+    @listing_id = params[:listing_id]
+    @listing_ids = params[:listing_ids]
+    @guaranteed_ids = ([listing_id]+[listing_ids]).flatten(1).compact
     @errors = []
   end
   

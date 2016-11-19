@@ -14,11 +14,6 @@ RSpec.describe "IMDB Gateway" do
     expect(search_results.first[:title]).to eq "Pulp Fiction"
   end
   
-  it "returns an response with error if none found" do
-    search_results = gateway.search("ssss")
-    expect(search_results[:error]).to eq "Movie not found!"
-  end
-  
   it "returns an array even when OMDB returns a single record" do
     search_results = gateway.search("Sssss")
     expect(search_results.first[:title]).to eq "Sssss"
