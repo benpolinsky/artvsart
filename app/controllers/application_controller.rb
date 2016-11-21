@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   require 'browser'
   # include CanCan::ControllerAdditions
   include ActionController::Serialization
-  VALID_GATEWAYS = ['Artsy', 'Discogs', 'GoogleBooks', "Philart", 'IMDB', "HarvardArt"]
+  
 
   
   def hi
@@ -10,9 +10,8 @@ class ApplicationController < ActionController::API
   end
   
   def gateway(source, atts={})
-    if source.in? VALID_GATEWAYS
-      @gateway ||= "#{source}Gateway".safe_constantize.new(atts)
-    end
+    source_gateway = VALID_GATEWAYS[source]
+    @gateway ||= source_gateway.safe_constantize.new(atts)
   end
   
   def current_user

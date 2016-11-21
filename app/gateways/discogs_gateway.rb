@@ -65,7 +65,7 @@ class DiscogsGateway
   end
   
   def art_source
-    "Discogs.com"
+    DISCOGS_GATEWAY
   end
   
   def art_source_link(art)

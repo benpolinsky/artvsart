@@ -93,7 +93,7 @@ class PhilartGateway
   end
   
   def art_source
-    "www.philart.net"
+    PHILART_GATEWAY
   end
 
   def art_source_link(art)

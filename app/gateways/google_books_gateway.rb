@@ -1,3 +1,7 @@
+# Only searches titles for now...
+# There's also no pagintaion yet implemented
+
+
 require 'google/apis/books_v1'
 require 'nokogiri'
 
@@ -81,7 +85,7 @@ class GoogleBooksGateway
   end
   
   def art_source
-    "books.google.com"
+    GOOGLE_BOOKS_GATEWAY
   end
   
   def art_source_link(art)

@@ -75,7 +75,7 @@ class HarvardArtGateway
   end
   
   def art_source
-    "Harvard Art Gallery"
+    IMDB_GATEWAY
   end
   
   def art_source_link(art)
