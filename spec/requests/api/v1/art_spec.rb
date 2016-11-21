@@ -253,9 +253,11 @@ RSpec.describe "Art", type: :request do
 
 
 
-    context "GET /art/:id" do
+    context "GET /art/:id", focus: true do
       before do
+        @art_previous = create(:art, name: "My First Fetched Art", id: 999)
         @art = create(:art, name: "My Fetched Art", id: 10012)
+        @art_last = create(:art, name: "My Last Fetched Art", id: 11999)
       end
       
       it "can fetch a piece of art" do
@@ -264,6 +266,15 @@ RSpec.describe "Art", type: :request do
         expect(json_response['art']['id']).to eq 10012
         expect(json_response['art']['name']).to eq "My Fetched Art"
         expect(json_response['art']['slug']).to eq "my-fetched-art"
+      end
+      
+      it "returns both the previous and next art id and name" do
+        get '/api/v1/art/10012'
+        expect(response.code).to eq "200"
+        expect(json_response['art']['next']['id']).to eq 11999
+        expect(json_response['art']['next']['name']).to eq "My Last Fetched Art"
+        expect(json_response['art']['previous']['id']).to eq 999
+        expect(json_response['art']['previous']['name']).to eq "My First Fetched Art"
       end
     end
     
@@ -284,7 +295,7 @@ RSpec.describe "Art", type: :request do
           expect(Art.count).to eq 1
         end
         
-        it "returns an array of errors if something goes wrong", focus: true do
+        it "returns an array of errors if something goes wrong" do
           expect(Art.count).to eq 0
           art_params = {
             id: 'sjdvgf',

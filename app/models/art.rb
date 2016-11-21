@@ -29,6 +29,9 @@ class Art < ApplicationRecord
   
   serialize :additional_images, JSON
   paginates_per 50
+  
+  scope :next, -> id {where("id > ?", id).order("id ASC")}
+  scope :previous, -> id {where("id < ?", id).order("id DESC")}
 
   def saves_with_category_name?(params)
     if params[:category_name].present?
@@ -96,6 +99,14 @@ class Art < ApplicationRecord
   
   def elo_ranking
     elo_rating || Elo.config.default_rating
+  end
+  
+  def next
+    self.class.next(self.id).first
+  end
+  
+  def previous
+    self.class.previous(self.id).first
   end
   
   # credit to:
