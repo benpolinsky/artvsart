@@ -307,7 +307,7 @@ RSpec.describe "Art", type: :request do
           expect(Art.count).to eq 0
           art_params = {
             id: 'sjdvgf',
-            source: "GoogleBooks"
+            source: "Google Books"
           }
           post '/api/v1/art/import', params: art_params, headers: @headers
           expect(json_response['errors']).to eq ["No Results Found!"]

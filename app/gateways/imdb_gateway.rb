@@ -24,7 +24,7 @@ class IMDBGateway
   def search(query, params={})
     results = [OMDB.search(query)].flatten(1)
     if results.first[:response] == "False"
-      error_response
+      error_response('No Results!')
     else
       results.map do |art|
         art[:image] = art.delete(:poster)
