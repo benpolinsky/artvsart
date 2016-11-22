@@ -21,11 +21,10 @@ RSpec.describe "Categories" do
         
         expect(response.code).to eq "200"
         expect(json_response['categories']).to match [
-          {'id' => 1, 'name' => "Music", "color" => nil, "slug" => "music", 'parent_category' => nil, "parent_id" => nil},
-          {'id' => 2, 'name' => "Art", "color" => nil, "slug" => "art", 'parent_category' => nil, "parent_id" => nil},
-          {'id' => 3, 'name' => "Film", "color" => nil, "slug" => "film", 'parent_category' => nil, "parent_id" => nil}
+          {'id' => 1, 'name' => "Music", "color" => nil, "slug" => "music", 'parent_category' => nil, "parent_id" => nil, "root" => true},
+          {'id' => 2, 'name' => "Art", "color" => nil, "slug" => "art", 'parent_category' => nil, "parent_id" => nil, "root" => true},
+          {'id' => 3, 'name' => "Film", "color" => nil, "slug" => "film", 'parent_category' => nil, "parent_id" => nil, "root" => true}
         ]
-        
       end
     end
     
@@ -35,7 +34,7 @@ RSpec.describe "Categories" do
         
         expect(response.code).to eq "200"
         expect(json_response['category']).to match(
-          {'id' => 1, 'name' => "Music", "color" => nil, "slug" => "music", 'parent_category' => nil, "parent_id" => nil}
+          {'id' => 1, 'name' => "Music", "color" => nil, "slug" => "music", 'parent_category' => nil, "parent_id" => nil, 'root' => true }
         )
         
       end
@@ -49,7 +48,7 @@ RSpec.describe "Categories" do
         
         expect(response.code).to eq "200"
         expect(json_response['category']).to match(
-          {'id' => 1, 'name' => "Musical Works", "color" => "Blue", "slug" => "music", 'parent_category' => nil, "parent_id" => nil}
+          {'id' => 1, 'name' => "Musical Works", "color" => "Blue", "slug" => "music", 'parent_category' => nil, "parent_id" => nil, 'root' => true}
         )
       end
       

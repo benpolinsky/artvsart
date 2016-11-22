@@ -24,7 +24,12 @@ class Category < ApplicationRecord
   
   def saves_with_parent_category?(params)
     if params[:parent_category].present?
-      self.parent = Category.find_by(name: params.delete(:parent_category))
+      category = if params[:parent_category] == "none" 
+        nil
+      else
+        Category.find_by(name: params.delete(:parent_category))
+      end
+      self.parent = category
     end
     assign_attributes(params)
     save
