@@ -20,10 +20,6 @@ class ArtSerializer < ActiveModel::Serializer
     object.category ? CategorySerializer.new(object.category) : NullCategory.new
   end
   
-  def creation_date
-    object.creation_date.present? ? object.creation_date.strftime('%m/%d/%Y') : ''
-  end
-  
   def ranking
     object.elo_ranking
   end
