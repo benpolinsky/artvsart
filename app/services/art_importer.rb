@@ -33,7 +33,8 @@ class ArtImporter
       source: gateway.art_source,
       source_link: gateway.art_source_link(item),
       additional_images: gateway.art_additional_images(item),
-      category: Category.find_or_create_by(name: gateway.art_category(item))
+      category: Category.find_or_create_by(name: gateway.art_category(item)),
+      creation_date: gateway.art_release_date(item)
     })
   end
   

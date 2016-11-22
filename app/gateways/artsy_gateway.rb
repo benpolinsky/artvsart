@@ -108,9 +108,6 @@ class ArtsyGateway
   end
   
   def art_release_date(art)
-    # date is a range or a year...
-    # we could keep everything as a string and pass it on to views
-    # but then we lack any query ability
     art.date
   end
   

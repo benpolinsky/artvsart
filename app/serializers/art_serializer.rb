@@ -21,7 +21,7 @@ class ArtSerializer < ActiveModel::Serializer
   end
   
   def creation_date
-    object.creation_date.present? ? object.creation_date.strftime('%m/%d/%Y') : Time.zone.now.strftime('%m/%d/%Y')
+    object.creation_date.present? ? object.creation_date.strftime('%m/%d/%Y') : ''
   end
   
   def ranking
