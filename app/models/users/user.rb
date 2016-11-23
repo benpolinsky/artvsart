@@ -67,7 +67,7 @@ class User < ApplicationRecord
   end
 
   def self.ranked_judges
-    where("rank IS NOT NULL").order(rank: :asc)
+    judges.where("rank > 0 AND rank IS NOT NULL").order(rank: :asc)
   end
   
   def self.judges
@@ -81,6 +81,7 @@ class User < ApplicationRecord
   def self.admins
     where(admin: true)
   end
+  
   
   # https://github.com/telent/ar-as-batches eventually
   def self.rank!(reset=false)
