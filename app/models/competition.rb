@@ -129,7 +129,8 @@ class Competition < ApplicationRecord
     where('winner_id IS NOT NULL AND loser_id IS NOT NULL')
   end
   
-  # this bot=false sucks
+  # this bot dependency stinks
+  # Art dependency meh
   def self.stage(bot=false)
     return unless Art.published.count >= 2
     pair = new_battle_pair

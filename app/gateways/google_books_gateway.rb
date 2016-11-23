@@ -85,7 +85,7 @@ class GoogleBooksGateway
   end
   
   def art_source
-    GOOGLE_BOOKS_GATEWAY
+    VALID_GATEWAYS.key("GoogleBooksGateway")
   end
   
   def art_source_link(art)

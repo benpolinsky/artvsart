@@ -124,7 +124,7 @@ class ArtsyGateway
   end
   
   def art_source
-    ARTSY_GATEWAY
+    VALID_GATEWAYS.key("ArtsyGateway")
   end
   
   def art_source_link(art)
@@ -132,7 +132,7 @@ class ArtsyGateway
   end
   
   def art_category(art)
-    "Art"
+    "Visual Arts"
   end
   
   def links_for_resource(resource)

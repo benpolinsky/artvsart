@@ -65,7 +65,7 @@ class DiscogsGateway
   end
   
   def art_source
-    DISCOGS_GATEWAY
+    VALID_GATEWAYS.key("DiscogsGateway")
   end
   
   def art_source_link(art)

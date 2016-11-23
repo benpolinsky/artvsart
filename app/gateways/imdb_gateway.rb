@@ -72,7 +72,7 @@ class IMDBGateway
   end
   
   def art_source
-    IMDB_GATEWAY
+    VALID_GATEWAYS.key("IMDBGateway")
   end
   
   def art_source_link(art)

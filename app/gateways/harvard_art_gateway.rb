@@ -57,7 +57,7 @@ class HarvardArtGateway
   end
   
   def art_creator(art)
-    art.people.map(&:name).to_sentence
+    art['people'] ? art.people.map(&:name).to_sentence : "N/A"
   end
   
   def art_description(art)
@@ -71,11 +71,11 @@ class HarvardArtGateway
   end
 
   def art_category(art)
-    "Art"
+    "Visual Arts"
   end
   
   def art_source
-    IMDB_GATEWAY
+    VALID_GATEWAYS.key("HarvardArtGateway")
   end
   
   def art_source_link(art)

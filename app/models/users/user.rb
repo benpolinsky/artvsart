@@ -21,11 +21,6 @@ class User < ApplicationRecord
     competition
   end
   
-  def gravatar_hash
-    md5 = Digest::MD5.new
-    md5.update formatted_email
-    md5.hexdigest
-  end
   
   def elevate_to(params={})    
     assign_attributes({
@@ -44,6 +39,11 @@ class User < ApplicationRecord
     end
   end
   
+  def gravatar_hash
+    md5 = Digest::MD5.new
+    md5.update formatted_email
+    md5.hexdigest
+  end
   
   # Refactor into AuthService.
   def self.from_omniauth(auth)
