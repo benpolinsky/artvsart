@@ -3,6 +3,7 @@ class ConfirmationsController < Devise::ConfirmationsController
     user = User.confirm_by_token(params[:confirmation_token])
     yield user if block_given?
       if user.errors.empty?
+        user.update(type: nil)
         sign_in user, store: false
         render json: {user: UserSerializer.new(user), confirmed: "true"}
       else
