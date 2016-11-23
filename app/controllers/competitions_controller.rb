@@ -21,8 +21,7 @@ class CompetitionsController < ApplicationController
   end
   
   def create
-    # typecheck - refactor Competition staging.
-    if competition = Competition.stage(current_user.type == "BotUser")
+    if competition = Competition.stage(current_user)
       render json: {competition: CompetitionSerializer.new(competition), user: UserSerializer.new(current_user)}
     else
       error_message = "We don't have enough art for you to rank.  Check back soon!"

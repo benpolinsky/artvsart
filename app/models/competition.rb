@@ -26,11 +26,10 @@ class Competition < ApplicationRecord
     loser
   end
   
-  def select_winner(new_winner_id, user=self.user)
-    return if winner_already_selected? || user.nil?
-    if update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id), user: user)
+  def select_winner(new_winner_id)
+    return if winner_already_selected?
+    if update(winner_id: new_winner_id, loser_id: opposite_art(new_winner_id))
       update_rankings(winner, loser)
-      
     else
       false
     end
@@ -129,15 +128,19 @@ class Competition < ApplicationRecord
     where('winner_id IS NOT NULL AND loser_id IS NOT NULL')
   end
   
+  def self.unjudged
+    where('winner_id IS NULL AND loser_id IS NULL')
+  end
+  
   # this bot dependency stinks
   # Art dependency meh
-  def self.stage(bot=false)
-    return unless Art.published.count >= 2
+  def self.stage(user)
+    return unless user && Art.published.count >= 2
     pair = new_battle_pair
-    if bot
-      new(art: pair[0], challenger: pair[1])
+    if user.type == "BotUser"
+      user.competitions.build(art: pair[0], challenger: pair[1])
     else
-      create(art: pair[0], challenger: pair[1])
+      user.competitions.create(art: pair[0], challenger: pair[1])
     end
   end
   

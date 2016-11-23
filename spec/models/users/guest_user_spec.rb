@@ -5,18 +5,18 @@ RSpec.describe GuestUser, type: :model do
     create_list(:art, 30)
   end
   
-  it "can only judge ten competitions before needing to register" do
+  it "can only judge ten competitions before needing to register", focus: true do
     user = GuestUser.create(email: Faker::Internet.email, password: "password")
     expect(user.judged_competitions.size).to eq 0
     
     10.times.each do |time|
-      competition = Competition.stage
+      competition = Competition.stage(user)
       user.judge(competition, winner: competition.challenger_id)
     end
     
     expect(user.judged_competitions.size).to eq 10
     
-    competition_over_limit = Competition.stage
+    competition_over_limit = Competition.stage(user)
     
     expect{user.judge(competition_over_limit, winner: competition_over_limit.art_id)}.
       to change{competition_over_limit.errors.size}.from(0).to(1)
@@ -30,11 +30,11 @@ RSpec.describe GuestUser, type: :model do
     expect(user.judged_competitions.size).to eq 0
     
     10.times.each do |time|
-      competition = Competition.stage
+      competition = Competition.stage(user)
       user.judge(competition, winner: competition.challenger_id)
     end
     
-    new_competition = Competition.stage
+    new_competition = Competition.stage(user)
     
     expect{user.judge(new_competition, winner: new_competition.art_id)}.
       to change{user.judged_competitions.size}.from(10).to(11)
@@ -42,14 +42,14 @@ RSpec.describe GuestUser, type: :model do
   
   it "can #elevate_to, transferring competitions" do
     guest_user = GuestUser.create(email: 'guest_user@user.com', password: "password")
-    guest_user.judged_competitions << create_list(:competition, 5)
+    guest_user.competitions << create_list(:competition, 5)
     user = guest_user.elevate_to(type: nil, email: "my_real_email", password: "my_real_password")
     expect(user.type).to eq nil # again, base class types are nil in Rails STI
   end
   
   it "does not exist after #elevate_to to User" do
     guest_user = GuestUser.create(email: 'guest_user@user.com', password: "password")
-    guest_user.judged_competitions << create_list(:competition, 5)
+    guest_user.competitions << create_list(:competition, 5)
     user = guest_user.elevate_to(type: nil, email: "my_real_email@email.com", password: "my_real_password")
 
     expect(GuestUser.find_by(email: 'my_real_email@email.com')).to eq nil

@@ -59,65 +59,60 @@ RSpec.describe Competition, type: :model do
       competition = Competition.create(art: winner, challenger: loser)
       expect{competition.update(winner_id: winner.id)}.to change{competition.errors[:user].size}.from(0).to(1)
     end
+    
+    it "cannot hold a battle between the same art" do
+      competitor = create(:art, name: "I'm the real art.")
+      expect{Competition.create(challenger: competitor, art: competitor, user: create(:user))}.to_not change{Competition.count}
+    end
+  
   end
   
-  it "can ::stage an instance of itself" do
-    create_list(:art, 2, status: 1)
-    expect{Competition.stage}.to change {Competition.count}.from(0).to(1)
+  context "staging" do
+    it "can ::stage an instance of itself" do
+      create_list(:art, 2, status: 1)
+      expect{Competition.stage(create(:user))}.to change {Competition.count}.from(0).to(1)
+    end
+  
+  
+    it "doesn't ::stage an instance of itself without 2 arts" do
+      Art.delete_all
+      expect{Competition.stage(create(:user))}.to_not change {Competition.count}
+      create(:art, status: 1)
+      expect{Competition.stage(create(:user))}.to_not change {Competition.count}
+      create(:art, status: 1)
+      expect{Competition.stage(create(:user))}.to change {Competition.count}.from(0).to(1)
+    end 
+  
+    it "doesn't ::stage Art which is pending_review" do
+      Art.delete_all
+      art = create_list(:art, 2, status: 0)
+      expect{Competition.stage(create(:user))}.to_not change {Competition.count}
+    end
+  
+    it "doesn't ::stage Art which is declined" do
+      Art.delete_all
+      art = create_list(:art, 2, status: 2)
+      expect{Competition.stage(create(:user))}.to_not change {Competition.count}
+    end
+  
+    it "doesn't stage art without a judge" do
+      Art.delete_all
+      art = create_list(:art, 2, status: 1)
+      expect{Competition.stage}.to raise_error {ArgumentError}
+    end
+        
+  
+    it "cannot be judged twice" do
+      user = create(:user)
+      competitor = create(:art, name: "Art Competitor")
+      challenger = create(:art, name: "Art Challenger")
+      competition = Competition.create(challenger: challenger, art: competitor)
+      expect{competition.select_winner(challenger.id)}.to change{competition.winner}.from(nil).to(challenger)
+      expect{competition.select_winner(competitor.id)}.to_not change{competition.winner}
+    end
+    
   end
-  
-  
-  it "doesn't ::stage an instance of itself without 2 arts" do
-    Art.delete_all
-    expect{Competition.stage}.to_not change {Competition.count}
-    create(:art, status: 1)
-    expect{Competition.stage}.to_not change {Competition.count}
-    create(:art, status: 1)
-    expect{Competition.stage}.to change {Competition.count}.from(0).to(1)
-  end 
-  
-  it "doesn't ::stage Art which is pending_review" do
-    Art.delete_all
-    art = create_list(:art, 2, status: 0)
-    expect{Competition.stage}.to_not change {Competition.count}
-  end
-  
-  it "doesn't ::stage Art which is declined" do
-    Art.delete_all
-    art = create_list(:art, 2, status: 2)
-    expect{Competition.stage}.to_not change {Competition.count}
-  end
-  
-  it "cannot be judged twice" do
-    user = create(:user)
-    competitor = create(:art, name: "Art Competitor")
-    challenger = create(:art, name: "Art Challenger")
-    competition = Competition.create(challenger: challenger, art: competitor)
-    expect{competition.select_winner(challenger.id, user)}.to change{competition.winner}.from(nil).to(challenger)
-    expect{competition.select_winner(competitor.id, user)}.to_not change{competition.winner}
-  end
-  
-  it "cannot hold a battle between the same art" do
-    competitor = create(:art, name: "I'm the real art.")
-    expect{Competition.create(challenger: competitor, art: competitor, user: create(:user))}.to_not change{Competition.count}
-  end
-  
-  it "increments winner and loser's respective counts after battle" do
-    user = create(:user)
-    competitor = create(:art, name: "Art Competitor")
-    challenger = create(:art, name: "Art Challenger")
-    competition = Competition.create(challenger: challenger, art: competitor)
-    expect(challenger.win_count).to eq 0
-    expect(competitor.loss_count).to eq 0
-    competition.select_winner(challenger.id, user)
-    challenger.reload
-    competitor.reload
-    expect(challenger.win_count).to eq 1
-    expect(competitor.loss_count).to eq 1
-  end
-  
 
-  
   context "statistics" do
     let(:competitor) {create(:art, name: "Art Competitor")}
     let(:challenger) {create(:art, name: "Art Challenger")}
@@ -228,28 +223,42 @@ RSpec.describe Competition, type: :model do
     end
   end
   
-  context "winners and losers", focus: true do
+  context "#select_winner", focus: true do
     let(:competitor) {create(:art, name: "Art Competitor")}
     let(:challenger) {create(:art, name: "Art Challenger")}
     let(:user) {create(:user)}
     
     it "sets the competitor as a winner" do    
       competition = competitor.competitions.create(challenger: challenger, art: competitor)
-      expect{competition.select_winner(competitor.id, user)}.to change{competition.winner}.to(competitor)
+      expect{competition.select_winner(competitor.id)}.to change{competition.winner}.to(competitor)
     end
   
     it "sets the challenger as a loser" do    
       competition = competitor.competitions.create(challenger: challenger, art: competitor)
-      expect{competition.select_winner(competitor.id, user)}.to change{competition.loser_id}.to(challenger.id)
+      expect{competition.select_winner(competitor.id)}.to change{competition.loser_id}.to(challenger.id)
     end
   
     it "sets the challenger as a winner" do
       competition = competitor.competitions.create(challenger: challenger)
-      expect{competition.select_winner(challenger.id, user)}.to change{competition.winner}.to(challenger)
+      expect{competition.select_winner(challenger.id)}.to change{competition.winner}.to(challenger)
+    end
+    
+    it "increments winner and loser's respective counts after battle" do
+      user = create(:user)
+      competitor = create(:art, name: "Art Competitor")
+      challenger = create(:art, name: "Art Challenger")
+      competition = Competition.create(challenger: challenger, art: competitor, user: user)
+      expect(challenger.win_count).to eq 0
+      expect(competitor.loss_count).to eq 0
+      competition.select_winner(challenger.id)
+      challenger.reload
+      competitor.reload
+      expect(challenger.win_count).to eq 1
+      expect(competitor.loss_count).to eq 1
     end
   
   end
   
   
-  skip "assigns a uid to the @competition"
+
 end

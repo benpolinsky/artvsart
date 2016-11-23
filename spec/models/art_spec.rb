@@ -215,8 +215,8 @@ RSpec.describe Art, type: :model do
 
       200.times {create(:art)}
       100.times do
-        competition = Competition.stage
-        competition.select_winner(competition.art.id, judge)
+        competition = Competition.stage(judge)
+        competition.select_winner(competition.art.id)
       end
       
       expect(Art.leaders.size).to eq 50

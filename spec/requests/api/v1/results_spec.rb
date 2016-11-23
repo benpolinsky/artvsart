@@ -48,8 +48,8 @@ RSpec.describe "Results" do
     before do
       200.times {create(:art)}
       100.times do
-        competition = Competition.stage
-        competition.select_winner(competition.art.id, judge)
+        competition = Competition.stage(judge)
+        competition.select_winner(competition.art.id)
       end
       get '/api/v1/results'
     end 

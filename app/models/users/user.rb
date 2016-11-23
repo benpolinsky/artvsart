@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :judged_competitions, class_name: "Competition"
+  has_many :competitions
   has_many :identities
 
   devise :database_authenticatable, :registerable,
@@ -10,14 +10,22 @@ class User < ApplicationRecord
   acts_as_paranoid
   
   before_create :generate_auth_token!
-
+  
+  def unjudged_competitions
+    competitions.unjudged
+  end
+  
+  def judged_competitions
+    competitions.judged
+  end
+  
+  
   def generate_auth_token!
     self.auth_token =  Devise.friendly_token
   end
 
   def judge(competition, winner: nil)
-    competition.select_winner(winner, self)
-    judged_competitions << competition
+    competition.select_winner(winner)
     competition
   end
   
@@ -80,6 +88,9 @@ class User < ApplicationRecord
       judge.update(rank: index+1)
     end
   end
+  
+  
+
   
   private
   
