@@ -1,5 +1,5 @@
 # TODO: LIMIT FIELDS BEING RETURNED FROM API
-# TODO: Change id/ids to listing_id/listing_ids
+
 
 class HarvardArtGateway
   attr_reader :api, :listing_id, :listing_ids, :guaranteed_ids, :errors
@@ -30,11 +30,9 @@ class HarvardArtGateway
     query_params.reverse_merge!({q: query, apikey: ENV['harvard_token']})
     records = api.get("/object?#{query_params.to_param}").body.records
     if records.none?
-      @errors << "No results found!"
-      false
+      error_response
     elsif !images_present?(records)
-      @errors << "Results found, but no images present..."
-      false
+      error_response("Results found, but no images present...")
     else
       records.select{|r| r['images'].present?}.map{ |record| record['image'] = "#{record['images'].first.baseimageurl}?width=200&height=200"; record}
     end
