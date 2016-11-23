@@ -1,6 +1,6 @@
 desc "Calculate User Rankings"
 task rank_users: :environment do
-  User.rank!
+  User.judges.rank!
 end
 
 task calculate_elo_rankings: :environment do
