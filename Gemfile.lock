@@ -444,6 +444,8 @@ GEM
       railties (>= 4.2.0, < 5.1)
     retriable (2.1.0)
     rmagick (2.16.0)
+    rollbar (2.13.3)
+      multi_json
     rspec (3.6.0.beta1)
       rspec-core (= 3.6.0.beta1)
       rspec-expectations (= 3.6.0.beta1)
@@ -539,6 +541,7 @@ DEPENDENCIES
   rails
   rails-controller-testing
   rmagick
+  rollbar
   rspec-core!
   rspec-expectations!
   rspec-mocks!

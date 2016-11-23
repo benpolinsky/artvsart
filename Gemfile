@@ -21,6 +21,7 @@ gem 'rack-cors'
 
 gem 'whenever', :require => false
 gem 'slack-notifier'
+gem 'rollbar'
 
 gem 'elo'
 

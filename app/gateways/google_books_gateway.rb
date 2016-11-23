@@ -64,7 +64,7 @@ class GoogleBooksGateway
   end
   
   def art_creator(art)
-    art.authors.join(", ")
+    art.authors.try(:join, ', ')
   end
   
   def art_release_date(art)
