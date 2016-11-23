@@ -11,8 +11,9 @@ RSpec.describe "Accessing Ranked Users" do
           
             200.times {create(:art)}
             100.times do |i|
+              user = other_users[i%50+1]
               competition = Competition.stage(other_users[i%50+1])
-              competition.select_winner(competition.art.id)
+              user.judge(competition, winner: competition.art.id)
             end
             User.rank!
             @headers = {'Authorization' => visitor.auth_token}
@@ -33,8 +34,9 @@ RSpec.describe "Accessing Ranked Users" do
           
             200.times {create(:art)}
             100.times do |i|
-              competition = Competition.stage(other_users[i%10+1])
-              competition.select_winner(competition.art.id)
+              user = other_users[i%10+1]
+              competition = Competition.stage(user)
+              user.judge(competition, winner: competition.art.id)
             end
             User.rank!
             @headers = {'Authorization' => visitor.auth_token}
@@ -60,9 +62,9 @@ RSpec.describe "Accessing Ranked Users" do
             other_user = create(:user, username: "ME")
           
             10.times {create(:art)}
-
+              
             competition = Competition.stage(other_user)
-            competition.select_winner(competition.art.id)
+            other_user.judge(competition, winner: competition.art.id)
             
             User.rank!
             @headers = {'Authorization' => visitor.auth_token}
@@ -105,7 +107,7 @@ RSpec.describe "Accessing Ranked Users" do
             2.times {create(:art)}
 
             competition = Competition.stage(judge)
-            competition.select_winner(competition.art.id)
+            judge.judge(competition, winner: competition.art.id)
             
             User.rank!
             judge.destroy

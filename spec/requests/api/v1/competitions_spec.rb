@@ -87,9 +87,10 @@ RSpec.describe "Competitions API" do
       before do
         winning_art = create(:art, id: 99)
         losing_art = create(:art, id: 100)
+        user = create(:user)
         
-        judged_competition = create(:competition, id: 10, art: winning_art, challenger: losing_art, user: create(:user))
-        judged_competition.select_winner(99)
+        judged_competition = create(:competition, id: 10, art: winning_art, challenger: losing_art, user: user)
+        user.judge(judged_competition, winner: 99)
         
         unjudged_competition = create(:competition, id: 11, art: winning_art, challenger: losing_art)
         

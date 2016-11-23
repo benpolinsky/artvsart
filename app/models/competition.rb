@@ -1,5 +1,5 @@
 class Competition < ApplicationRecord    
-  belongs_to :user, counter_cache: :judged_competitions_count
+  belongs_to :user
   
   # the defender
   belongs_to :challenger, class_name: "Art"

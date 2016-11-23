@@ -26,6 +26,7 @@ class User < ApplicationRecord
 
   def judge(competition, winner: nil)
     competition.select_winner(winner)
+    update(judged_competitions_count: judged_competitions_count + 1)
     competition
   end
   
