@@ -54,6 +54,38 @@ RSpec.describe "Art", type: :request do
         end
       end
       
+      context "category count", focus: true do
+        before do
+          music = Category.create(name: "music", color: 'blue')
+          art = Category.create(name: "art", color: 'red')
+          literature = Category.create(name: "literature", color: 'green')
+          
+          music_art = create_list(:art, 3)
+          art_art = create_list(:art, 2)
+          literature_art = create_list(:art, 1)
+          music.arts << music_art
+          music.save
+          art.arts << art_art
+          art.save
+          literature.arts << literature_art
+          literature.save
+          @user = User.create(email: "what@what.com", password: "password", admin: true)
+          @headers = {'Authorization' => @user.auth_token}
+        end
+        
+        it "returns art counts for each category" do
+          get '/api/v1/art', headers: @headers
+          expect(response.code).to eq '200'
+
+          expect(json_response['category_counts'].select{|c| c.name == 'music'}.first['art_count']).to eq 3
+          expect(json_response['category_counts'].select{|c| c.name == 'art'}.first['art_count']).to eq 2
+          expect(json_response['category_counts'].select{|c| c.name == 'literature'}.first['art_count']).to eq 1
+
+        end
+        
+  
+      end
+      
       context "searching" do
         before do
           create_list(:art, 10)
@@ -253,7 +285,7 @@ RSpec.describe "Art", type: :request do
 
 
 
-    context "GET /art/:id", focus: true do
+    context "GET /art/:id" do
       before do
         @art_previous = create(:art, name: "My First Fetched Art", id: 999)
         @art = create(:art, name: "My Fetched Art", id: 10012)

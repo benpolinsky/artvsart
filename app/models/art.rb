@@ -19,7 +19,7 @@ class Art < ApplicationRecord
   # when challenging
   has_many :challenges, class_name: "Competition", foreign_key: "challenger_id"
   has_many :competitors, through: :challenges, source: :art
-  belongs_to :category
+  belongs_to :category, counter_cache: :art_count
 
   validates :name, presence: true
   validates :creator, presence: true
@@ -129,6 +129,7 @@ class Art < ApplicationRecord
   def self.by_losses
     published.order(loss_count: :desc)
   end
+
   
   # Divide win count by total competition count (both as floats)
   # ensuring the divisor is never 0 (psql will deal with NULL values nicely)

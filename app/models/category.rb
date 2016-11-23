@@ -22,6 +22,10 @@ class Category < ApplicationRecord
     where("parent_id IS NOT NULL")
   end
   
+  def self.by_art_count
+    Category.order(art_count: :desc)
+  end
+  
   def saves_with_parent_category?(params)
     if params[:parent_category].present?
       category = if params[:parent_category] == "none" 
