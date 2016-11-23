@@ -1,4 +1,4 @@
-describe "set category art counts"
+desc "set category art counts"
 
 task update_art_counts: :environment do
   Category.all.each do |category|
