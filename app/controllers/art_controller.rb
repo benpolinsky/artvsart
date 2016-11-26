@@ -9,7 +9,7 @@ class ArtController < ApplicationController
     else
       art = Art.ordered.page(params[:page])
     end
-    render json: {art: art, pages: pagination_for(art), search: params[:search]}
+    render json: {art: art, pages: pagination_for(art), search: params[:search], category_counts: Category.by_art_count}
   end
   
   
@@ -107,7 +107,8 @@ class ArtController < ApplicationController
       limit_value:   collection.limit_value,
       offset_value:  collection.offset_value,
       first_page:    collection.first_page?,
-      last_page:     collection.last_page?
+      last_page:     collection.last_page?,
+      total_count:   collection.total_count
     }
   end
     

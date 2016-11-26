@@ -1,3 +1,7 @@
+# Only searches titles for now...
+# There's also no pagintaion yet implemented
+
+
 require 'google/apis/books_v1'
 require 'nokogiri'
 
@@ -42,7 +46,7 @@ class GoogleBooksGateway < AbstractGateway
   end
   
   def art_creator(art)
-    art.authors.join(", ")
+    art.authors.try(:join, ', ')
   end
   
   def art_release_date(art)
@@ -59,7 +63,7 @@ class GoogleBooksGateway < AbstractGateway
   end
   
   def art_source
-    "books.google.com"
+    VALID_GATEWAYS.key("GoogleBooksGateway")
   end
   
   def art_source_link(art)

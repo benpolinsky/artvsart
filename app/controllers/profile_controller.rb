@@ -8,7 +8,7 @@ class ProfileController < ApplicationController
   end
   # probably not the place for this...
   def competitions
-    competitions = Competition.from_current_user(current_user.auth_token).size
+    competitions = current_user.judged_competitions.size
     render json: {competition_size: competitions}, status: 200
   end
   

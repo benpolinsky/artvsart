@@ -14,7 +14,8 @@ class RegistrationsController < Devise::RegistrationsController
         password: user_params[:password]
       })
       if user.save
-        render json: {user: UserSerializer.new(user), notice: 
+         Slacker.notify_slack(user.email)
+         render json: {user: UserSerializer.new(user), notice: 
           "We've sent you a confirmation email.  Click the link to finish the sign up process."}
       else
         render json: {errors: user.errors}, status: 422

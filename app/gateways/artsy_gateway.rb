@@ -1,3 +1,30 @@
+# This Gateway isn't suitable for production use.
+# It's goal is to target published artwork with images
+
+# Possibility I'm missing something, but neither 
+# Artsy's Artwork endpoint, nor its genes allow for search terms
+
+# Thus we're forced to go through the generalized, google-backed, search.
+
+# Most of the artwork (which we can thankfully target
+# through +more:pagemap:metatags-og_type:artwork)
+# isn't published, and AFAIK you can't query that aspect.
+
+# Thus, we're forced to check for an ID (denotes published)
+# which creates another request as the ID isn't return
+# without calling #self on the hyperclient record returned.
+
+# In addition, there's a size limit of 10 records per query.
+# Often a query will return a total_count of thousands...
+
+# It seems ridiculous, as none of the other apis utilized
+# in this app have similar limitations.  The APIs range from
+# Google to Discogs.com, Harvard Art Museum (all sizes of operation, is my point),
+# and are implemented using REST to various degrees of 'psuedo'-REST.
+
+# Sigh.
+
+
 require 'hyperclient'
 
 class ArtsyGateway
@@ -22,19 +49,20 @@ class ArtsyGateway
   # 3. will have to duplicate the behavior for single_listing as well...
   # and most of it is because artsy doesn't provide a way to query what we need...
   def search(query, params={})
+    number_of_records_per = 10
     offset = params[:offset] ? params[:offset] : 0
     begin
-      whole = api.search({q: query, size: 10, offset: offset, total_count: 1}.reverse_merge(params))
+      whole = api.search({q: "#{query}+more:pagemap:metatags-og_type:artwork", size: number_of_records_per, offset: offset}.reverse_merge(params))
       results = parse_results(whole.self)
-      if results.any? || whole.self.total_count <= offset+10
+      if results.any? || whole.self.total_count <= offset+number_of_records_per
         if results.empty?
           error_response
         else 
           results
         end
       else
-        offset = offset+10
-        self.search(query, {size: 10, offset: offset, total_count: 1}.reverse_merge(params))
+        offset = offset+number_of_records_per
+        self.search(query, {size: number_of_records_per, offset: offset}.reverse_merge(params))
       end
     rescue Faraday::Error::ResourceNotFound => e
       error_response(e.message)
@@ -80,9 +108,6 @@ class ArtsyGateway
   end
   
   def art_release_date(art)
-    # date is a range or a year...
-    # we could keep everything as a string and pass it on to views
-    # but then we lack any query ability
     art.date
   end
   
@@ -99,7 +124,7 @@ class ArtsyGateway
   end
   
   def art_source
-    "Artsy.com"
+    VALID_GATEWAYS.key("ArtsyGateway")
   end
   
   def art_source_link(art)
@@ -107,7 +132,7 @@ class ArtsyGateway
   end
   
   def art_category(art)
-    "Art"
+    "Visual Arts"
   end
   
   def links_for_resource(resource)
@@ -160,9 +185,11 @@ class ArtsyGateway
   end
   
   def parse_results(whole)
+
     whole.results.map do |result|
      begin
-       next unless result.type == 'Artwork' && result.self.id.present?
+
+       next unless result.self.id.present?
       {
         title: result.title,
         id: result.self.id,

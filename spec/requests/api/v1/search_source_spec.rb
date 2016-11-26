@@ -20,7 +20,6 @@ RSpec.describe "Search Source" do
       
           it "returns an empty array of results if none found", focus: true do
             get '/api/v1/search_source', params: {source: 'Artsy', query: 'Benjamin David Polinsky'}, headers: @headers
-            pp json_response
             expect(json_response['errors'][0]).to eq "No Results Found!"
           end
         end

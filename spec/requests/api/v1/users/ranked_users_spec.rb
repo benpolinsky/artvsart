@@ -6,13 +6,14 @@ RSpec.describe "Accessing Ranked Users" do
       context "GET /ranked_users" do
         context "50 or more" do
           before do
-            visitor = create(:user)
+            visitor = create(:confirmed_user)
             other_users = create_list(:user, 100)
           
             200.times {create(:art)}
             100.times do |i|
-              competition = Competition.stage
-              competition.select_winner(competition.art.id, other_users[i%50+1])
+              user = other_users[i%50+1]
+              competition = Competition.stage(other_users[i%50+1])
+              user.judge(competition, winner: competition.art.id)
             end
             User.rank!
             @headers = {'Authorization' => visitor.auth_token}
@@ -28,13 +29,14 @@ RSpec.describe "Accessing Ranked Users" do
         
         context "under 50" do
           before do
-            visitor = create(:user, email: "neverthat@judge.com")
+            visitor = create(:confirmed_user, email: "neverthat@judge.com")
             other_users = create_list(:user, 20)
           
             200.times {create(:art)}
             100.times do |i|
-              competition = Competition.stage
-              competition.select_winner(competition.art.id, other_users[i%10+1])
+              user = other_users[i%10+1]
+              competition = Competition.stage(user)
+              user.judge(competition, winner: competition.art.id)
             end
             User.rank!
             @headers = {'Authorization' => visitor.auth_token}
@@ -56,13 +58,13 @@ RSpec.describe "Accessing Ranked Users" do
        
         context "1" do
           before do
-            visitor = create(:user, email: "neverthat@judge.com")
-            other_user = create(:user, username: "ME")
+            visitor = create(:confirmed_user, email: "neverthat@judge.com")
+            other_user = create(:confirmed_user, username: "ME")
           
             10.times {create(:art)}
-
-            competition = Competition.stage
-            competition.select_winner(competition.art.id, other_user)
+              
+            competition = Competition.stage(other_user)
+            other_user.judge(competition, winner: competition.art.id)
             
             User.rank!
             @headers = {'Authorization' => visitor.auth_token}
@@ -86,7 +88,7 @@ RSpec.describe "Accessing Ranked Users" do
         end
         context "0" do
           before do
-            visitor = create(:user, email: "neverthat@judge.com")
+            visitor = create(:confirmed_user, email: "neverthat@judge.com")
             User.rank!
             @headers = {'Authorization' => visitor.auth_token}
           end
@@ -100,12 +102,12 @@ RSpec.describe "Accessing Ranked Users" do
         
         context "deleted users" do
           before do
-            judge = create(:user, email: "easycome@easygo.com", username: "imoutyo")
-            visitor = create(:user)
+            judge = create(:confirmed_user, email: "easycome@easygo.com", username: "imoutyo")
+            visitor = create(:confirmed_user)
             2.times {create(:art)}
 
-            competition = Competition.stage
-            competition.select_winner(competition.art.id, judge)
+            competition = Competition.stage(judge)
+            judge.judge(competition, winner: competition.art.id)
             
             User.rank!
             judge.destroy

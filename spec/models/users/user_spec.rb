@@ -62,20 +62,31 @@ RSpec.describe User, type: :model do
   end
   
   context '#judged_competitions' do
+    it "has many unjudged_competitions" do
+      user = create(:user)
+      art = create_list(:art, 10)
+      3.times {Competition.stage(user)}
+      expect{Competition.stage(user)}.to change {user.unjudged_competitions.size}.from(3).to(4)      
+    end
+    
+  
     it "has many judged_competitions" do   
       competitions = create_list(:judged_competitions, 2)
       user = create(:user)
-      user.judged_competitions << competitions
+      user.competitions << competitions
       expect(user.judged_competitions.count).to eq 2
     end
     
     it "can #judge a competition" do
-      unjudged_competitions = create_list(:competition, 2)
-      user = create(:user)
+      new_user = create(:user)
+      
+      unjudged_competitions = create_list(:competition, 2, user: new_user)
       unjudged_competitions.each do |competition|
-        user.judge(competition, winner: competition.art_id)
+        new_user.judge(competition, winner: competition.art_id)
       end
-      expect(user.judged_competitions.size).to eq 2
+
+      expect(new_user.judged_competitions.size).to eq 2
+      expect(new_user.unjudged_competitions.size).to eq 0
     end 
   end
   

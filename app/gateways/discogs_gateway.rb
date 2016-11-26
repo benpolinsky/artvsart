@@ -43,7 +43,7 @@ class DiscogsGateway < AbstractGateway
   end
   
   def art_source
-    "Discogs.com"
+    VALID_GATEWAYS.key("DiscogsGateway")
   end
   
   def art_source_link(art)

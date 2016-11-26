@@ -29,11 +29,11 @@ class AbstractGateway
   end
   
   def art_images(art)
-
+    
   end
   
   def art_additional_images(art)
-    art_images(art) - [art_image(art)]
+    [art_images(art)].flatten(1).compact - [art_image(art)]
   end
   
   def art_creator(art)

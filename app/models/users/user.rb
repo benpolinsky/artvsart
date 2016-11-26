@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :judged_competitions, class_name: "Competition"
+  has_many :competitions
   has_many :identities
 
   devise :database_authenticatable, :registerable,
@@ -10,22 +10,26 @@ class User < ApplicationRecord
   acts_as_paranoid
   
   before_create :generate_auth_token!
-
+  
+  def unjudged_competitions
+    competitions.unjudged
+  end
+  
+  def judged_competitions
+    competitions.judged
+  end
+  
+  
   def generate_auth_token!
     self.auth_token =  Devise.friendly_token
   end
 
   def judge(competition, winner: nil)
-    competition.select_winner(winner, self)
-    judged_competitions << competition
+    competition.select_winner(winner)
+    update(judged_competitions_count: judged_competitions_count + 1)
     competition
   end
   
-  def gravatar_hash
-    md5 = Digest::MD5.new
-    md5.update formatted_email
-    md5.hexdigest
-  end
   
   def elevate_to(params={})    
     assign_attributes({
@@ -44,6 +48,11 @@ class User < ApplicationRecord
     end
   end
   
+  def gravatar_hash
+    md5 = Digest::MD5.new
+    md5.update formatted_email
+    md5.hexdigest
+  end
   
   # Refactor into AuthService.
   def self.from_omniauth(auth)
@@ -58,7 +67,7 @@ class User < ApplicationRecord
   end
 
   def self.ranked_judges
-    where("rank IS NOT NULL").order(rank: :asc)
+    judges.where("rank > 0 AND rank IS NOT NULL").order(rank: :asc)
   end
   
   def self.judges
@@ -73,6 +82,7 @@ class User < ApplicationRecord
     where(admin: true)
   end
   
+  
   # https://github.com/telent/ar-as-batches eventually
   def self.rank!(reset=false)
     update_all(rank: nil) if reset
@@ -80,6 +90,9 @@ class User < ApplicationRecord
       judge.update(rank: index+1)
     end
   end
+  
+  
+
   
   private
   

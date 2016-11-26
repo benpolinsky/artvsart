@@ -20,6 +20,8 @@ gem 'cancancan', '~> 1.10' # not sure if im using
 gem 'rack-cors'
 
 gem 'whenever', :require => false
+gem 'slack-notifier'
+gem 'rollbar'
 
 gem 'elo'
 

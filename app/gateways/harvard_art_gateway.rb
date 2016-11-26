@@ -1,4 +1,7 @@
+
 class HarvardArtGateway < AbstractGateway
+
+# TODO: LIMIT FIELDS BEING RETURNED FROM API
 
   def single_listing(listing_id, fields=[])
     # fields + ['title']
@@ -14,7 +17,7 @@ class HarvardArtGateway < AbstractGateway
     query_params.reverse_merge!({q: query, apikey: ENV['harvard_token']})
     records = api.get("/object?#{query_params.to_param}").body.records
     if records.none?
-      error_response("No results found!")
+      error_response
     elsif !images_present?(records)
       error_response("Results found, but no images present...")
     else
@@ -31,7 +34,7 @@ class HarvardArtGateway < AbstractGateway
   end
   
   def art_creator(art)
-    art.people.map(&:name).to_sentence
+    art['people'] ? art.people.map(&:name).to_sentence : "N/A"
   end
   
   def art_description(art)
@@ -45,11 +48,11 @@ class HarvardArtGateway < AbstractGateway
   end
 
   def art_category(art)
-    "Art"
+    "Visual Arts"
   end
   
   def art_source
-    "Harvard Art Gallery"
+    VALID_GATEWAYS.key("HarvardArtGateway")
   end
   
   def art_source_link(art)

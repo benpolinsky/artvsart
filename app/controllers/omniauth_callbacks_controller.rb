@@ -12,7 +12,11 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     else
       user = User.from_omniauth(request.env["omniauth.auth"])
       if user.persisted?
-        user.confirm if user.confirmed_at.nil?
+        if user.confirmed_at.nil?
+          user.confirm
+          Slacker.notify_slack(user.email)
+        end
+        user.type = nil
         sign_in user, store: false
         user.generate_auth_token!
         user.save

@@ -85,13 +85,13 @@ class PhilartGateway < AbstractGateway
   end
   
   def art_category(art)
-    "Art"
+    "Visual Arts"
   end
   
   def art_source
-    "www.philart.net"
+    VALID_GATEWAYS.key("PhilartGateway")
   end
-
+  
   def art_source_link(art)
     "#{BASE_URL}/#{slugged_name(art)}/#{id_for(art)}.html"
   end
