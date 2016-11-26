@@ -1,20 +1,5 @@
-# TODO: LIMIT FIELDS BEING RETURNED FROM API
-# TODO: Change id/ids to listing_id/listing_ids
+class HarvardArtGateway < AbstractGateway
 
-class HarvardArtGateway
-  attr_reader :api, :listing_id, :listing_ids, :guaranteed_ids, :errors
-
-  def initialize(params={})
-    @listing_id = params[:listing_id]
-    @listing_ids = params[:listing_ids]
-    @guaranteed_ids = ([listing_id]+[listing_ids]).flatten(1).compact
-    @errors = []
-  end
-  
-  def items
-    guaranteed_ids.map {|id| single_listing(id)} 
-  end
-  
   def single_listing(listing_id, fields=[])
     # fields + ['title']
     response = api.get("/object/#{listing_id}?apikey=#{ENV['harvard_token']}")   
@@ -24,17 +9,14 @@ class HarvardArtGateway
       response.body
     end
   end
-  
 
   def search(query, query_params={})
     query_params.reverse_merge!({q: query, apikey: ENV['harvard_token']})
     records = api.get("/object?#{query_params.to_param}").body.records
     if records.none?
-      @errors << "No results found!"
-      false
+      error_response("No results found!")
     elsif !images_present?(records)
-      @errors << "Results found, but no images present..."
-      false
+      error_response("Results found, but no images present...")
     else
       records.select{|r| r['images'].present?}.map{ |record| record['image'] = "#{record['images'].first.baseimageurl}?width=200&height=200"; record}
     end
@@ -44,16 +26,8 @@ class HarvardArtGateway
     art.images.first.baseimageurl
   end
   
-  def art_additional_images(art)
-    art_images(art) - [art_image(art)]
-  end
-  
   def art_images(art)
     art.images.map(&:baseimageurl)
-  end
-  
-  def art_name(art)
-    art.title
   end
   
   def art_creator(art)
@@ -82,10 +56,6 @@ class HarvardArtGateway
     art.url
   end
   
-  def valid?
-    !items.any?{|item| item == false} 
-  end
-  
   private
   
   def api(path='http://api.harvardartmuseums.org')
@@ -101,9 +71,5 @@ class HarvardArtGateway
   def images_present?(records)
     records.map{|r| r['images'] }.present?
   end
-  
-  def error_response(message="No Results Found!")
-    @errors << message
-    false 
-  end
+ 
 end

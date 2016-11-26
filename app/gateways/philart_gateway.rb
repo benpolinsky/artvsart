@@ -1,8 +1,8 @@
-class PhilartGateway
+class PhilartGateway < AbstractGateway
   PHILART_ENDPOINT = "http://www.philart.net/api.json"
   BASE_URL = 'http://www.philart.net/art'
 
-  attr_reader :api, :path, :paths, :errors
+  attr_reader :path, :paths
   
   def initialize(params={})
     @path = params[:path] || params[:listing_id]
@@ -84,10 +84,6 @@ class PhilartGateway
     found_images.flatten
   end
   
-  def art_additional_images(art)
-    art_images(art) - [art_image(art)]
-  end
-  
   def art_category(art)
     "Art"
   end
@@ -99,11 +95,7 @@ class PhilartGateway
   def art_source_link(art)
     "#{BASE_URL}/#{slugged_name(art)}/#{id_for(art)}.html"
   end
-
-  def valid?
-    !items.any?{|item| item == false} 
-  end
-
+  
   private
   
   def slugged_name(art)
@@ -129,11 +121,6 @@ class PhilartGateway
         conn.adapter :net_http
       end
     end
-  end
-  
-  def error_response(message="No Results Found!")
-    @errors << message
-    false 
   end
   
 end

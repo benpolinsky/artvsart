@@ -1,36 +1,22 @@
-class DiscogsGateway
-  attr_reader :wrapper, :listing_id, :listing_ids, :artist_id
-  attr_accessor :errors
+class DiscogsGateway < AbstractGateway
+  attr_reader :artist_id
+  
   def initialize(params={})
-    @listing_id = params[:listing_id]
-    @listing_ids = params[:listing_ids]
+    super
     @artist_id = params[:artist_id]
-    @errors = []
   end
   
   def items
-    if artist_id
-      artist_works(artist_id).releases
-    else
-      guaranteed_items.map {|listing_id| single_listing(listing_id) }.compact
-    end
+    artist_id ? artist_works(artist_id).releases : super
   end
 
-  
   def single_listing(release_id)
-    # this is bad, mkay
-    sleep 1
     begin
-      wrapper.get_release(release_id)
+      api.get_release(release_id)
     rescue Discogs::UnknownResource
       error_response
     end
-    
   end
-
-  # single item methods
-  # and most likely to be used by the Importer
-  # grab art param from #single_listing above
   
   def art_creator(art)
     art.artist || art.artists.map(&:name).to_sentence
@@ -38,10 +24,6 @@ class DiscogsGateway
   
   def art_release_date(art)
     art.released
-  end
-  
-  def art_name(art)
-    art.title
   end
   
   def art_description(art)
@@ -54,10 +36,6 @@ class DiscogsGateway
   
   def art_images(art)
     art.images.map(&:uri) if art.images
-  end
-  
-  def art_additional_images(art)
-    art_images(art) - [art_image(art)] if art.images
   end
   
   def art_category(art)
@@ -94,13 +72,13 @@ class DiscogsGateway
       search_type = "release"
     end
     params.delete(:search_type)
-    results = wrapper.search(query, {type: search_type}.reverse_merge(params)).results.map {|r| r.image = r.delete(:thumb); r}
+    results = api.search(query, {type: search_type}.reverse_merge(params)).results.map {|r| r.image = r.delete(:thumb); r}
     results.empty? ? error_response : results
   end
   
   # good way to get release_ids
   def artist_works(artist_id)
-    wrapper.get_artist_releases(artist_id)
+    api.get_artist_releases(artist_id)
   end
   
   # not sure if I'll use this (especially since it's repeating #art_name)
@@ -108,29 +86,15 @@ class DiscogsGateway
     search_result.artists.map(&:name).join
   end
     
-  # renamed to api in other Gateways
-  def wrapper
-    @wrapper ||= Discogs::Wrapper.new(ENV['discogs_app_name'], user_token: ENV['discogs_user_token'])
+
+  def api
+    @api ||= Discogs::Wrapper.new(ENV['discogs_app_name'], user_token: ENV['discogs_user_token'])
   end
   
   
-  # if any items have return false, 
-  # the gateway is not valid
   def valid?
-    !items.empty? && !items.any?{|item| item == false}
+    !items.empty? && super
   end
 
-
-  private
-  
-  def guaranteed_items
-    [listing_id, listing_ids].compact.flatten(1)
-  end
-  
-  def error_response(message="No Results Found!")
-    @errors << message
-    @errors.uniq!
-    false
-  end
   
 end

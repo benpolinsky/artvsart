@@ -1,29 +1,15 @@
 require 'google/apis/books_v1'
 require 'nokogiri'
 
-class GoogleBooksGateway
-  attr_accessor :listing_id, :listing_ids, :guaranteed_ids, :errors
-  
-  def initialize(params={})
-    @listing_id             = params[:listing_id]
-    @listing_ids            = params[:listing_ids]
-    @guaranteed_ids = ([listing_id]+[listing_ids]).flatten(1).compact
-    @errors = []
-  end
-  
-  def items
-    guaranteed_ids.map {|id| single_listing(id)}
-  end
+class GoogleBooksGateway < AbstractGateway
   
   def single_listing(id)
     begin
       api.get_volume(id).volume_info
     rescue Google::Apis::ClientError => e
-      @errors = [e.message]
-      return false
+      error_response(e.message)
     rescue Google::Apis::ServerError
-      @errors = ["No Results Found!"]
-      return false
+      error_response
     end
   end
 
@@ -55,20 +41,12 @@ class GoogleBooksGateway
     art.image_links.to_h.values
   end
   
-  def art_additional_images(art)
-    art_images(art) - [art_image(art)]
-  end
-  
   def art_creator(art)
     art.authors.join(", ")
   end
   
   def art_release_date(art)
     art.published_date
-  end
-  
-  def art_name(art)
-    art.title
   end
   
   def art_description(art)
@@ -88,10 +66,6 @@ class GoogleBooksGateway
     art.preview_link
   end
   
-  def valid?
-    !items.any?{|item| item == false} 
-  end
-  
   private
   
   def api
@@ -100,12 +74,6 @@ class GoogleBooksGateway
 
     @api.key = ENV['google_books_key']
     @api
-  end
-  
-  
-  def error_response(message="No Results Found!")
-    @errors << message
-    false
   end
 
 end
