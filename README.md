@@ -1,5 +1,5 @@
 ## We're live @ [artvsart.io!](http://artvsart.io)
-__
 
-Here lies the Rails API for the site.  
+### This is the API for Art vs Art.  
+
 [Check out the React front-end code here](https://github.com/benpolinsky/artvsart_react)
