@@ -42,10 +42,6 @@ class DiscogsGateway < AbstractGateway
     "Music"
   end
   
-  def art_source
-    VALID_GATEWAYS.key("DiscogsGateway")
-  end
-  
   def art_source_link(art)
     art.uri
   end

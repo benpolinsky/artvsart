@@ -57,7 +57,7 @@ class AbstractGateway
   end
   
   def art_source
-    "Unknown"
+    VALID_GATEWAYS.key "#{self.class.name}"
   end
   
   def art_source_link(art)
