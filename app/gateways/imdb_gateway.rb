@@ -22,7 +22,7 @@ class IMDBGateway
   end
 
   def search(query, params={})
-    results = [OMDB.search(query)].flatten(1)
+    results = [*OMDB.search(query)]
     if results.first[:response] == "False"
       error_response('No Results!')
     else
