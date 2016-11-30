@@ -51,10 +51,6 @@ class HarvardArtGateway < AbstractGateway
     "Visual Arts"
   end
   
-  def art_source
-    VALID_GATEWAYS.key("HarvardArtGateway")
-  end
-  
   def art_source_link(art)
     art.url
   end

@@ -27,21 +27,14 @@
 
 require 'hyperclient'
 
-class ArtsyGateway
+class ArtsyGateway < AbstractGateway
   ARTSY_ENDPOINT = 'https://api.artsy.net/api'
-  
-  attr_accessor :listing_id, :listing_ids, :api, :errors
-  
+
   def initialize(params={})
-    @listing_id  = params[:listing_id]
-    @listing_ids = params[:listing_ids]
-    @errors = []
+    super
     renew_token if !token || token.expiring_soon?
   end
   
-  def items
-    guaranteed_items.map{|listing_id| single_listing(listing_id) }
-  end
 
   #  this is getting crazy..
   # 1. we're using error handling as a conditional
@@ -77,7 +70,6 @@ class ArtsyGateway
     works.artworks
   end
 
-  #  #find is a better name or find_artwork
   def single_listing(listing_id)
     begin
      artwork = api.artwork(id: listing_id)
@@ -92,18 +84,12 @@ class ArtsyGateway
     works = api.artist(id: artist_id).artworks(total_count: 1)
     works.artworks
   end
-  
-  def art_name(art)
-    art.title
-  end
-  
+
   def art_creator(art)
     art.artists.map(&:name).to_sentence  
   end
   
   def art_description(art)
-    # I'm going to want to concat some stuff here,
-    # the medium, the collecting_institution and perhps additional_information and image_rights
     art.blurb
   end
   
@@ -117,14 +103,6 @@ class ArtsyGateway
   
   def art_images(art)
     art.image_versions.map{ |version| art_image(art)}
-  end
-  
-  def art_additional_images(art)
-    art_images(art) - [art_image(art)]
-  end
-  
-  def art_source
-    VALID_GATEWAYS.key("ArtsyGateway")
   end
   
   def art_source_link(art)
@@ -153,10 +131,6 @@ class ArtsyGateway
       AuthorizationToken.create(service: "artsy", token: response.token, expires_on: response.expires_at) 
     end
   end
-
-  def valid?
-    !items.any?{|item| item == false} 
-  end
   
   private
   
@@ -179,11 +153,7 @@ class ArtsyGateway
         end
       end
   end
-  
-  def guaranteed_items
-    [listing_id, listing_ids].compact.flatten(1) 
-  end
-  
+    
   def parse_results(whole)
 
     whole.results.map do |result|
@@ -199,11 +169,6 @@ class ArtsyGateway
      rescue Faraday::ResourceNotFound => e
      end
    end.compact
-  end
-  
-  def error_response(message="No Results Found!")
-    @errors << message
-    false 
   end
   
 end

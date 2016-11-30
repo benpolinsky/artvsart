@@ -21,14 +21,14 @@ RSpec.describe "Philart Gateway" do
   
   it "can be initialized with the path of an art" do
     art_path = "http://www.philart.net/api/art/590.json"
-    gateway = PhilartGateway.new(path: art_path)
+    gateway = PhilartGateway.new(listing_id: art_path)
     expect(gateway.items.first.body.title['display']).to eq "Zoo Mural"
   end
   
   it "can be initialized with an array of paths of art" do
     zoo_mural_path = "http://www.philart.net/api/art/590.json"
     fence_path = "http://www.philart.net/api/art/591.json"
-    gateway = PhilartGateway.new(paths: [zoo_mural_path, fence_path])
+    gateway = PhilartGateway.new(listing_ids: [zoo_mural_path, fence_path])
     expect(gateway.items.map {|item| item.body.title['display']}).to match ["Zoo Mural", "Fence"]
   end
   
@@ -88,7 +88,7 @@ RSpec.describe "Philart Gateway" do
   
   
   it "checks if it is #valid?" do
-    new_gateway = PhilartGateway.new(path: 'http://www.philart.net/api/art/1935345320.json')
+    new_gateway = PhilartGateway.new(listing_id: 'http://www.philart.net/api/art/1935345320.json')
     expect(new_gateway.valid?).to eq false
   end
   

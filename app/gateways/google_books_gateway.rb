@@ -62,10 +62,6 @@ class GoogleBooksGateway < AbstractGateway
     "Books and Literature"
   end
   
-  def art_source
-    VALID_GATEWAYS.key("GoogleBooksGateway")
-  end
-  
   def art_source_link(art)
     art.preview_link
   end

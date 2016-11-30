@@ -1,14 +1,6 @@
 class PhilartGateway < AbstractGateway
   PHILART_ENDPOINT = "http://www.philart.net/api.json"
   BASE_URL = 'http://www.philart.net/art'
-
-  attr_reader :path, :paths
-  
-  def initialize(params={})
-    @path = params[:path] || params[:listing_id]
-    @paths = params[:paths] || params[:listing_ids]
-    @errors = []
-  end
   
   def search(query, params={})
     art_link = api.links.find{|link| link.rel == 'titles'}.href
@@ -36,16 +28,7 @@ class PhilartGateway < AbstractGateway
       error_response
     end
   end
-  
-  def items
-    if path.present?
-      [single_listing(path)]
-    else
-      paths.map do |path|
-        single_listing(path)
-      end
-    end
-  end
+
   
   def art_name(art)
     art['body']['title']['display']
@@ -85,11 +68,7 @@ class PhilartGateway < AbstractGateway
   end
   
   def art_category(art)
-    "Visual Arts"
-  end
-  
-  def art_source
-    VALID_GATEWAYS.key("PhilartGateway")
+    "Paintings"
   end
   
   def art_source_link(art)

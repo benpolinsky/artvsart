@@ -81,16 +81,19 @@ class DiscogsGateway < AbstractGateway
   def artist_names(search_result)
     search_result.artists.map(&:name).join
   end
-    
-
+  
+  def valid?
+    !items.empty? && super
+  end
+     
+  private 
+  
   def api
     @api ||= Discogs::Wrapper.new(ENV['discogs_app_name'], user_token: ENV['discogs_user_token'])
   end
   
   
-  def valid?
-    !items.empty? && super
-  end
+
 
   
 end

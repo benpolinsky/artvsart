@@ -68,6 +68,9 @@ RSpec.describe "Google Books Gateway" do
     expect(gateway.art_source_link(listing)).to match /books.google.com/
   end
 
+  it "returns the correct source", focus: true do
+    expect(gateway.art_source).to eq "Google Books"
+  end
   
   skip "checks if it is #valid?" do
     new_gateway = GoogleBooksGateway.new(listing_id: 'in valid id')
