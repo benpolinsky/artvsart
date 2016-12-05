@@ -25,3 +25,5 @@ notes
 # Ignore spec ajax responses for now
 
 spec/support/responses/*
+
+spec/cassettes

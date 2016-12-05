@@ -34,8 +34,6 @@ class ArtController < ApplicationController
     else
       render json: {listing_id: params[:id], errors: importer.errors}, status: 422
     end
-
-
   end
 
   def edit

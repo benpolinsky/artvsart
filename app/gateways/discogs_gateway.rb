@@ -10,6 +10,20 @@ class DiscogsGateway < AbstractGateway
     artist_id ? artist_works(artist_id).releases : super
   end
 
+  def search(query, params={})
+    case params[:search_by]
+    when 'release'
+      search_type = 'artist'
+    when 'artist'
+      search_type = 'master'
+    else
+      search_type = "release"
+    end
+    params.delete(:search_type)
+    results = api.search(query, {type: search_type}.reverse_merge(params)).results.map {|r| r.image = r.delete(:thumb); r}
+    results.empty? ? error_response : results
+  end
+
   def single_listing(release_id)
     begin
       api.get_release(release_id)
@@ -55,23 +69,6 @@ class DiscogsGateway < AbstractGateway
     }
   end
   
-  # good way to get release ids
-  def search(query, params={})
-    case params[:search_by]
-    when 'release'
-      search_type = 'artist'
-    when 'master'
-      search_type = 'release'
-    when 'artist'
-      search_type = 'master'
-    else
-      search_type = "release"
-    end
-    params.delete(:search_type)
-    results = api.search(query, {type: search_type}.reverse_merge(params)).results.map {|r| r.image = r.delete(:thumb); r}
-    results.empty? ? error_response : results
-  end
-  
   # good way to get release_ids
   def artist_works(artist_id)
     api.get_artist_releases(artist_id)
@@ -92,8 +89,11 @@ class DiscogsGateway < AbstractGateway
     @api ||= Discogs::Wrapper.new(ENV['discogs_app_name'], user_token: ENV['discogs_user_token'])
   end
   
+  # override #validate! to allow for an artist_id 
   
-
-
+  def validate!
+    @errors << 'Please provide a listing_id, listing_ids, or an artist_id' if @guaranteed_ids.none? && artist_id.blank?
+    
+  end
   
 end

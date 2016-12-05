@@ -12,6 +12,7 @@ require 'capybara/rspec'
 Rails.application.load_tasks
 require 'support/factory_girl'
 require 'support/json_response_helper'
+require 'support/vcr_setup'
 require "fantaskspec"
 
 # Add additional requires below this line. Rails is not loaded until this point!

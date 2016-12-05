@@ -54,7 +54,7 @@ RSpec.describe "Art", type: :request do
         end
       end
       
-      context "category count", focus: true do
+      context "category count" do
         before do
           music = Category.create(name: "music", color: 'blue')
           art = Category.create(name: "art", color: 'red')
@@ -327,7 +327,7 @@ RSpec.describe "Art", type: :request do
           expect(Art.count).to eq 1
         end
         
-        it "returns an array of errors if something goes wrong" do
+        it "returns an array of errors if something goes wrong (Discogs Gateway)" do
           expect(Art.count).to eq 0
           art_params = {
             id: 'sjdvgf',
@@ -335,7 +335,9 @@ RSpec.describe "Art", type: :request do
           }
           post '/api/v1/art/import', params: art_params, headers: @headers
           expect(json_response['errors']).to eq ["No Results Found!"]
-          
+        end
+
+        it "returns an array of errors if something goes wrong (Google Books Gateway)", focus: true do
           expect(Art.count).to eq 0
           art_params = {
             id: 'sjdvgf',
@@ -344,7 +346,18 @@ RSpec.describe "Art", type: :request do
           post '/api/v1/art/import', params: art_params, headers: @headers
           expect(json_response['errors']).to eq ["No Results Found!"]
         end
+        
+        it "returns an error if an id isn't provided" do
+          art_params = {
+            source: "Artsy"
+          }
+          post '/api/v1/art/import', params: art_params, headers: @headers
+          expect(json_response['errors']).to eq ["Please provide a listing id or ids"]
+        end
+        
       end
+      
+      
     end
     
     context "DELETE /art/:id" do 

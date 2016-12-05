@@ -129,6 +129,8 @@ GEM
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.10.2)
     concurrent-ruby (1.0.2)
+    crack (0.4.3)
+      safe_yaml (~> 1.0.0)
     devise (4.2.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -313,6 +315,7 @@ GEM
       multi_json (~> 1.11)
       os (~> 0.9)
       signet (~> 0.7)
+    hashdiff (0.3.1)
     hashie (3.4.6)
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
@@ -451,6 +454,7 @@ GEM
       rspec-expectations (= 3.6.0.beta1)
       rspec-mocks (= 3.6.0.beta1)
     rubyzip (1.2.0)
+    safe_yaml (1.0.4)
     selenium-webdriver (3.0.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
@@ -488,8 +492,13 @@ GEM
     uber (0.0.15)
     uniform_notifier (1.10.0)
     uri_template (0.7.0)
+    vcr (3.0.3)
     warden (1.2.6)
       rack (>= 1.0)
+    webmock (2.3.0)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff
     websocket (1.2.3)
     websocket-driver (0.6.4)
       websocket-extensions (>= 0.1.0)
@@ -554,6 +563,8 @@ DEPENDENCIES
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
+  vcr
+  webmock
   whenever
   whenever-test
 

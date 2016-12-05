@@ -36,27 +36,26 @@ class ArtsyGateway < AbstractGateway
   end
   
 
-  #  this is getting crazy..
-  # 1. we're using error handling as a conditional
-  # 2. two nested conditionals
-  # 3. will have to duplicate the behavior for single_listing as well...
-  # and most of it is because artsy doesn't provide a way to query what we need...
   def search(query, params={})
-    number_of_records_per = 10
     offset = params[:offset] ? params[:offset] : 0
+    number_of_records_per = 10
+   
+    searcher = ArtsySearcher.new({
+      query: query,
+      number_of_records_per: number_of_records_per,
+      offset: offset,
+      api: api,
+      params: params
+    })
+    
     begin
-      whole = api.search({q: "#{query}+more:pagemap:metatags-og_type:artwork", size: number_of_records_per, offset: offset}.reverse_merge(params))
-      results = parse_results(whole.self)
-      if results.any? || whole.self.total_count <= offset+number_of_records_per
-        if results.empty?
-          error_response
-        else 
-          results
-        end
+      searcher.find_results
+      if searcher.errors || !searcher.results?
+        error_response
       else
-        offset = offset+number_of_records_per
-        self.search(query, {size: number_of_records_per, offset: offset}.reverse_merge(params))
+        searcher.results.results
       end
+      
     rescue Faraday::Error::ResourceNotFound => e
       error_response(e.message)
     rescue Faraday::ClientError => e
@@ -155,10 +154,8 @@ class ArtsyGateway < AbstractGateway
   end
     
   def parse_results(whole)
-
     whole.results.map do |result|
      begin
-
        next unless result.self.id.present?
       {
         title: result.title,

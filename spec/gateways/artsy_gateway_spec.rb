@@ -7,7 +7,7 @@ require 'rails_helper'
 #  Not sure about Artsy, highly unstable (says on site)
 #  and so many artworks aren't available...
 
-RSpec.describe "Artsy Gateway" do
+RSpec.describe "Artsy Gateway", :vcr do
   let(:old_token) {"JvTPWe4WsQO-xqX6Bts49i1QS4LS0d6TF3uhXOpx-GViySdeutQGNjljT7JhKI6d-ZEiOQMjv1Q_gzNA-uhBwVYoi2dm7BMqiSNTEjfb6lWxiDXYfR6IkkR_Nwa8BZgbmUWD7jxfurGSPbmIFEMnArfDLBPMKkXC9zqB_LrmXUK5eKEiPOUrntzPSpIzNgGdouZzCZ5M8cc5ZHCpfsbgK6K3j8jNlUN5Qsl7wRuFX_8="}
   let(:gateway) {ArtsyGateway.new}
   before do
@@ -22,9 +22,8 @@ RSpec.describe "Artsy Gateway" do
     expect(gateway.token).to_not be_blank
   end
 
-  it "automatically renews a token if one is expired" do
-    expect{gateway.search('statue')}.to_not raise_error
-  end
+  # so, this isn't testing the case at all and is useless as is
+  pending "automatically renews a token if one is expired"
   
   it "returns general search results" do
     search_results = gateway.search("statue")
@@ -74,16 +73,6 @@ RSpec.describe "Artsy Gateway" do
   it "returns a release_date for each result" do
    the_kiss = gateway.single_listing('4d8b92eb4eb68a1b2c000968')
    expect(gateway.art_release_date(the_kiss)).to eq "1907-1908"
-  end
-
-  it "returns all works" do
-    warhol_collection = gateway.artist_works('andy-warhol')
-    expect(warhol_collection.size).to eq 0 # i need to find an artist with collections...
-  end
-
-  # this is assuiming allworks.first will always return the earlier artwork...
-  it "returns all works" do
-    expect(gateway.all_works.first._attributes.title).to eq "Der Kuss (The Kiss)"
   end
   
   it "checks if it is #valid?" do
