@@ -7,7 +7,8 @@ require 'rails_helper'
 #  Not sure about Artsy, highly unstable (says on site)
 #  and so many artworks aren't available...
 
-RSpec.describe "Artsy Gateway", :vcr do
+vcr_options = {record: :new_episodes}
+RSpec.describe "Artsy Gateway", vcr: vcr_options do
   let(:old_token) {"JvTPWe4WsQO-xqX6Bts49i1QS4LS0d6TF3uhXOpx-GViySdeutQGNjljT7JhKI6d-ZEiOQMjv1Q_gzNA-uhBwVYoi2dm7BMqiSNTEjfb6lWxiDXYfR6IkkR_Nwa8BZgbmUWD7jxfurGSPbmIFEMnArfDLBPMKkXC9zqB_LrmXUK5eKEiPOUrntzPSpIzNgGdouZzCZ5M8cc5ZHCpfsbgK6K3j8jNlUN5Qsl7wRuFX_8="}
   let(:gateway) {ArtsyGateway.new}
   before do
@@ -33,6 +34,12 @@ RSpec.describe "Artsy Gateway", :vcr do
   it "returns false and populates errors if no listing found" do
     expect(gateway.search("sssadsa32ss")).to eq false
     expect(gateway.errors).to eq ["No Results Found!"]
+  end
+  
+  it "returns an image and id for each search result" do
+    search_results = gateway.search("statue")
+    expect(search_results.first[:image]).to match /\.cloudfront.net/
+    expect(search_results.first[:name]).to_not be_blank
   end
 
   it "returns an image uri for each result" do

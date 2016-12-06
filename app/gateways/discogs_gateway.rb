@@ -20,7 +20,11 @@ class DiscogsGateway < AbstractGateway
       search_type = "release"
     end
     params.delete(:search_type)
-    results = api.search(query, {type: search_type}.reverse_merge(params)).results.map {|r| r.image = r.delete(:thumb); r}
+    results = api.search(query, {type: search_type}.reverse_merge(params)).results.map do |r|
+      r.image = r.delete(:thumb);
+      r.name = r.delete(:title)
+      r
+    end
     results.empty? ? error_response : results
   end
 

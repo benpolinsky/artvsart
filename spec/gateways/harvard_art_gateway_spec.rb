@@ -3,7 +3,7 @@ require 'rails_helper'
 # the specs are inconsistent because they test for specific titles that aren't guaranteed
 # by the search query.  
 
-RSpec.describe "HarvardArtGateway" do
+RSpec.describe "HarvardArtGateway", :vcr do
   let(:gateway){ HarvardArtGateway.new }
   
 

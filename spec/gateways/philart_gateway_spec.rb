@@ -1,16 +1,16 @@
 require 'rails_helper'
 
-RSpec.describe "Philart Gateway" do
+RSpec.describe "Philart Gateway", :vcr do
   let(:gateway){PhilartGateway.new}
   
   it "returns general search results" do
     search_results = gateway.search("zoo")
-    expect(search_results.first["title"]).to eq "Zoo Mural"
+    expect(search_results.first["name"]).to eq "Zoo Mural"
   end
   
   it "returns results for a different search" do
     search_results = gateway.search("Chestnut")
-    expect(search_results.first["title"]).to eq "1822 Chestnut"
+    expect(search_results.first["name"]).to eq "1822 Chestnut"
   end
 
   

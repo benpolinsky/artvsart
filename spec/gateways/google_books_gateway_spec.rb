@@ -1,17 +1,17 @@
 require 'rails_helper'
 
 
-RSpec.describe "Google Books Gateway" do
+RSpec.describe "Google Books Gateway", :vcr do
   let(:gateway){GoogleBooksGateway.new}
   
   it "returns general search results" do
     search_results = gateway.search("Fahrenheit 451")
-    expect(search_results.first.title).to eq "Fahrenheit 451"
+    expect(search_results.first.name).to eq "Fahrenheit 451"
   end
   
   it "returns results for a different search" do
     search_results = gateway.search("Infinite Jest")
-    expect(search_results.first.title).to eq "Infinite Jest"
+    expect(search_results.first.name).to eq "Infinite Jest"
   end
   
   it "can be initialized with an id" do

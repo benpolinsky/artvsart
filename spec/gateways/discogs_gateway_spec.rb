@@ -4,7 +4,7 @@ require 'rails_helper'
 # The Various Art Gateways will plug respond to messages
 # sent by an Importer.  
 
-RSpec.describe "Discogs Gateway" do
+RSpec.describe "Discogs Gateway", :vcr do
   let(:gateway){DiscogsGateway.new}
 
   it "returns general search results" do

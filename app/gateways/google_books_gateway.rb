@@ -24,7 +24,7 @@ class GoogleBooksGateway < AbstractGateway
         b.volume_info.image_links.present? && b.volume_info.description.present?
       end.map do |b|
         {
-          title: art_name(b.volume_info),
+          name: art_name(b.volume_info),
           year: art_release_date(b.volume_info),
           type: art_category(b.volume_info),
           image: art_image(b.volume_info),

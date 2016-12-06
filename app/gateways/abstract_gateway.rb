@@ -55,6 +55,11 @@ class AbstractGateway
     "Unclassified"
   end
   
+  
+  def art_id(art)
+    art.id
+  end
+  
   def art_image(art)
     # please implement
   end
@@ -101,6 +106,17 @@ class AbstractGateway
   def all_art_properties
     items.map do |item|
       art_properties(item)
+    end
+  end
+  
+  def search_properties(art)
+    [art].flatten(1).compact.map do |a|
+      {
+        name: art_name(a),
+        creator: art_creator(a),
+        image: art_image(a),
+        id: art_id(a)
+      }
     end
   end
   

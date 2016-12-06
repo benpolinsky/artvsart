@@ -310,7 +310,7 @@ RSpec.describe "Art", type: :request do
       end
     end
     
-    context "POST /art/import" do
+    context "POST /art/import", :vcr do
       context "if authorized as admin" do
         before do
           @user = User.create(email: "what@what.com", password: "password", admin: true)

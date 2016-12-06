@@ -17,6 +17,7 @@ class IMDBGateway < AbstractGateway
       results.map do |art|
         art[:image] = art.delete(:poster)
         art[:id] = art.delete(:imdb_id)
+        art[:name] = art.delete(:title)
         art
       end
     end

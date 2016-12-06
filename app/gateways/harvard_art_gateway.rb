@@ -21,7 +21,11 @@ class HarvardArtGateway < AbstractGateway
     elsif !images_present?(records)
       error_response("Results found, but no images present...")
     else
-      records.select{|r| r['images'].present?}.map{ |record| record['image'] = "#{record['images'].first.baseimageurl}?width=200&height=200"; record}
+      records.select{|r| r['images'].present?}.map do |record| 
+        record['image'] = "#{record['images'].first.baseimageurl}?width=200&height=200"
+        record['name'] = record['title']
+        record
+      end
     end
   end
   

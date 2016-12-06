@@ -1,22 +1,22 @@
 require 'rails_helper'
 
 
-RSpec.describe "IMDB Gateway" do
+RSpec.describe "IMDB Gateway", :vcr do
   let(:gateway){IMDBGateway.new}
   
   it "returns general search results" do
     search_results = gateway.search("usual suspects")
-    expect(search_results.first[:title]).to eq "The Usual Suspects"
+    expect(search_results.first[:name]).to eq "The Usual Suspects"
   end
   
   it "returns results for a different search" do
     search_results = gateway.search("Pulp")
-    expect(search_results.first[:title]).to eq "Pulp Fiction"
+    expect(search_results.first[:name]).to eq "Pulp Fiction"
   end
   
   it "returns an array even when OMDB returns a single record" do
     search_results = gateway.search("Sssss")
-    expect(search_results.first[:title]).to eq "Sssss"
+    expect(search_results.first[:name]).to eq "Sssss"
   end
   
   it "can be initialized with an imdb_id" do

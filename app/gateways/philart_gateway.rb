@@ -7,7 +7,6 @@ class PhilartGateway < AbstractGateway
     art = api art_link
     query = Regexp.new(query, Regexp::IGNORECASE)
     results = art.body.list.select {|a| a["name"] =~ query}.map do |art| 
-      art["title"] = art.delete("name")
       art["image"] = art_image(single_listing(link_for(art)))
       art['id'] = link_for(art)
       art

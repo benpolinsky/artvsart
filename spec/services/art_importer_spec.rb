@@ -4,8 +4,8 @@ require 'rails_helper'
 # An ArtImporter takes a Gateway-ish object, and calls it to retrieve art info
 # After the Gateway fetches and normalizes (standardizes?) data
 # the Importer imports and saves the data as Art object(s).
-
-RSpec.describe "Art Importer" do  
+vcr_options = {record: :new_episodes}
+RSpec.describe "Art Importer", vcr: vcr_options do  
   it "creates an Art for Dur Kuss from its ID of 4d8b92eb4eb68a1b2c000968" do
     gateway = ArtsyGateway.new(listing_id: '4d8b92eb4eb68a1b2c000968')
     importer = ArtImporter.new(gateway)

@@ -1,6 +1,7 @@
 require 'rails_helper'
 # this really isn't the best controller name.... or action name
-RSpec.describe "Search Source" do
+vcr_options = {record: :new_episodes}
+RSpec.describe "Search Source", vcr: vcr_options do
   context "v1" do
     context "GET /search_source?params" do      
       context "authorized" do
@@ -31,7 +32,7 @@ RSpec.describe "Search Source" do
             get '/api/v1/search_source', params: {source: 'Discogs', query: 'Earth Rocks Harder', query_params: {search_by: 'release'}}, headers: @headers
             expect(json_response['results']).to_not eq nil
 
-            expect(json_response['results'].first['title']).to match /Earth Rocks Harder/
+            expect(json_response['results'].first['name']).to match /Earth Rocks Harder/
             expect(json_response['results'].first['id']).to_not eq nil
           end
         end

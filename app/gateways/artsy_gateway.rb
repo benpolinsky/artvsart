@@ -1,30 +1,3 @@
-# This Gateway isn't suitable for production use.
-# It's goal is to target published artwork with images
-
-# Possibility I'm missing something, but neither 
-# Artsy's Artwork endpoint, nor its genes allow for search terms
-
-# Thus we're forced to go through the generalized, google-backed, search.
-
-# Most of the artwork (which we can thankfully target
-# through +more:pagemap:metatags-og_type:artwork)
-# isn't published, and AFAIK you can't query that aspect.
-
-# Thus, we're forced to check for an ID (denotes published)
-# which creates another request as the ID isn't return
-# without calling #self on the hyperclient record returned.
-
-# In addition, there's a size limit of 10 records per query.
-# Often a query will return a total_count of thousands...
-
-# It seems ridiculous, as none of the other apis utilized
-# in this app have similar limitations.  The APIs range from
-# Google to Discogs.com, Harvard Art Museum (all sizes of operation, is my point),
-# and are implemented using REST to various degrees of 'psuedo'-REST.
-
-# Sigh.
-
-
 require 'hyperclient'
 
 class ArtsyGateway < AbstractGateway
@@ -35,25 +8,25 @@ class ArtsyGateway < AbstractGateway
     renew_token if !token || token.expiring_soon?
   end
   
-
+  # Parsing Artsy's API for what we need gets a bit hairy...
+  # So, I've refactored most of the behavior out to an ArtsySearcher
+  
   def search(query, params={})
     offset = params[:offset] ? params[:offset] : 0
     number_of_records_per = 10
    
     searcher = ArtsySearcher.new({
-      query: query,
-      number_of_records_per: number_of_records_per,
-      offset: offset,
       api: api,
+      query: query,
       params: params
     })
     
     begin
       searcher.find_results
-      if searcher.errors || !searcher.results?
+      if searcher.errors || !searcher.results.first
         error_response
       else
-        searcher.results.results
+        search_properties(searcher.results)
       end
       
     rescue Faraday::Error::ResourceNotFound => e
@@ -97,7 +70,7 @@ class ArtsyGateway < AbstractGateway
   end
   
   def art_image(art, image_version='medium')
-    "#{art.image._url.split(".jpg")[0]}#{image_version}.jpg"
+    "#{art.self['image']._url.split(".jpg")[0]}#{image_version}.jpg"
   end
   
   def art_images(art)
@@ -116,7 +89,10 @@ class ArtsyGateway < AbstractGateway
     resource._links
   end
   
-
+  def art_id(art)
+    art.self.id
+  end
+  
   def token
     @token ||= AuthorizationToken.artsy
   end
@@ -131,41 +107,53 @@ class ArtsyGateway < AbstractGateway
     end
   end
   
+  def search_properties(art)
+    [art].flatten(1).compact.map do |a|
+      {
+        name: art_name(a),
+        creator: art_creator(a.self),
+        image: art_image(a),
+        id: art_id(a),
+        type: "Artwork"
+      }
+    end
+  end
+  
   private
   
   def api(renewing=false)
-      Hyperclient.new(ARTSY_ENDPOINT) do |api|
-        api.headers['Accept'] = 'application/vnd.artsy-v2+json'
-        if renewing
-          api.headers['Content-Type'] = 'application/json' 
-        else
-          api.headers['X-Xapp-Token'] = token.token
-        end
-
-
-        api.connection(default: false) do |conn|
-          conn.use FaradayMiddleware::FollowRedirects
-          conn.use Faraday::Response::RaiseError
-          conn.request :json
-          conn.response :json, content_type: /\bjson$/
-          conn.adapter :net_http
-        end
+    Hyperclient.new(ARTSY_ENDPOINT) do |api|
+      api.headers['Accept'] = 'application/vnd.artsy-v2+json'
+      if renewing
+        api.headers['Content-Type'] = 'application/json' 
+      else
+        api.headers['X-Xapp-Token'] = token.token
       end
+
+
+      api.connection(default: false) do |conn|
+        conn.use FaradayMiddleware::FollowRedirects
+        conn.use Faraday::Response::RaiseError
+        conn.request :json
+        conn.response :json, content_type: /\bjson$/
+        conn.adapter :net_http
+      end
+    end
   end
     
-  def parse_results(whole)
-    whole.results.map do |result|
-     begin
-       next unless result.self.id.present?
-      {
-        title: result.title,
-        id: result.self.id,
-        image: art_image(result.self),
-        type: result.type
-      }  
-     rescue Faraday::ResourceNotFound => e
-     end
-   end.compact
-  end
+  # def parse_results(whole)
+  #   whole.results.map do |result|
+  #    begin
+  #      next unless result.self.id.present?
+  #     {
+  #       title: result.title,
+  #       id: result.self.id,
+  #       image: art_image(result.self),
+  #       type: result.type
+  #     }
+  #    rescue Faraday::ResourceNotFound => e
+  #    end
+  #  end.compact
+  # end
   
 end
