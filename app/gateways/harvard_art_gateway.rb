@@ -16,8 +16,8 @@ class HarvardArtGateway
   end
   
   def single_listing(listing_id, fields=[])
-    # fields + ['title']
     response = api.get("/object/#{listing_id}?apikey=#{ENV['harvard_token']}")   
+
     if response.body['error']
       error_response(response.body['error'])
     else
@@ -89,7 +89,8 @@ class HarvardArtGateway
   def api(path='http://api.harvardartmuseums.org')
     @api ||= Faraday.new(url: path) do |connection|
       connection.request :url_encoded
-      connection.response :json, content_type: /\bjson$/
+      connection.response :json, content_type: /\bjson$/, :parser_options => { :symbolize_names => true }
+      connection.response :json, :parser_options => { :object_class => OpenStruct }
       connection.use FaradayMiddleware::FollowRedirects
       connection.use Faraday::Response::RaiseError
       connection.adapter Faraday.default_adapter

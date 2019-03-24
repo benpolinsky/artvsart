@@ -76,7 +76,6 @@ RSpec.describe "Discogs Gateway" do
   
   it "checks if it is #valid?" do
     new_gateway = DiscogsGateway.new(listing_id: 'sdfh9834')
-    pp new_gateway.errors
     expect(new_gateway.valid?).to eq false
   end
   

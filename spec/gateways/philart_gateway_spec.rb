@@ -16,20 +16,20 @@ RSpec.describe "Philart Gateway" do
   
   it "finds a single listing by path" do
     art_path = "http://www.philart.net/api/art/590.json"
-    expect(gateway.single_listing(art_path).body.title['display']).to eq "Zoo Mural"
+    expect(gateway.single_listing(art_path).body['title']['display']).to eq "Zoo Mural"
   end
   
   it "can be initialized with the path of an art" do
     art_path = "http://www.philart.net/api/art/590.json"
     gateway = PhilartGateway.new(path: art_path)
-    expect(gateway.items.first.body.title['display']).to eq "Zoo Mural"
+    expect(gateway.items.first.body["title"]['display']).to eq "Zoo Mural"
   end
   
   it "can be initialized with an array of paths of art" do
     zoo_mural_path = "http://www.philart.net/api/art/590.json"
     fence_path = "http://www.philart.net/api/art/591.json"
     gateway = PhilartGateway.new(paths: [zoo_mural_path, fence_path])
-    expect(gateway.items.map {|item| item.body.title['display']}).to match ["Zoo Mural", "Fence"]
+    expect(gateway.items.map {|item| item.body["title"]['display']}).to match ["Zoo Mural", "Fence"]
   end
   
   it "returns a name for each result" do
