@@ -334,7 +334,7 @@ RSpec.describe "Art", type: :request do
             source: "Discogs"
           }
           post '/api/v1/art/import', params: art_params, headers: @headers
-          expect(json_response['errors']).to eq ["No Results Found!"]
+          expect(json_response['errors']).to eq ["The requested resource was not found."]
           
           expect(Art.count).to eq 0
           art_params = {

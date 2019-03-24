@@ -90,9 +90,9 @@ class HarvardArtGateway
     @api ||= Faraday.new(url: path) do |connection|
       connection.request :url_encoded
       connection.response :json, content_type: /\bjson$/
-      connection.adapter Faraday.default_adapter
       connection.use FaradayMiddleware::FollowRedirects
       connection.use Faraday::Response::RaiseError
+      connection.adapter Faraday.default_adapter
     end
   end
   

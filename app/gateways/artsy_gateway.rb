@@ -188,7 +188,6 @@ class ArtsyGateway
 
     whole.results.map do |result|
      begin
-
        next unless result.self.id.present?
       {
         title: result.title,

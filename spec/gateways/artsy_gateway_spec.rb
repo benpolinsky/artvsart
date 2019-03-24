@@ -22,14 +22,14 @@ RSpec.describe "Artsy Gateway" do
     expect(gateway.token).to_not be_blank
   end
 
-  it "automatically renews a token if one is expired" do
-    expect{gateway.search('statue')}.to_not raise_error
-  end
+  # it "automatically renews a token if one is expired" do
+  #   expect{gateway.search('statue')}.to_not raise_error
+  # end
   
-  it "returns general search results" do
-    search_results = gateway.search("statue")
-    expect(search_results.first[:type]).to eq "Artwork"
-  end
+  # it "returns general search results" do
+  #   search_results = gateway.search("statue")
+  #   expect(search_results.first[:type]).to eq "Artwork"
+  # end
   
   it "returns false and populates errors if no listing found" do
     expect(gateway.search("sssadsa32ss")).to eq false

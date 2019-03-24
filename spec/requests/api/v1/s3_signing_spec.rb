@@ -11,7 +11,7 @@ RSpec.describe "S3 Signing" do
         
         it "returns a signed url" do
           get '/api/v1/s3/sign', params: {objectName: 'mylovelypic.jpg'}, headers: @headers
-          expect(json_response['signedUrl']).to match /artvsart-development/
+          expect(json_response['signedUrl']).to match /artvsart_development/
           expect(json_response['signedUrl']).to match /mylovelypic.jpg/
         end
       end
