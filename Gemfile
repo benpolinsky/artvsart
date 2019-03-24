@@ -18,18 +18,20 @@ gem 'omniauth-github'
 gem 'cancancan', '~> 1.10' # not sure if im using
 
 gem 'rack-cors'
-
+gem 'faraday'
 gem 'whenever', :require => false
 gem 'slack-notifier'
 gem 'rollbar'
 
 gem 'elo'
 
+
 # Gateways
 gem "discogs-wrapper"
-gem 'omdbapi'
+gem 'omdb-api', "1.0.0"
 gem 'hyperclient'
 gem 'hyperresource'
+gem 'http'
 gem 'google-api-client', '~> 0.9'
 
 gem 'rmagick'
@@ -38,6 +40,7 @@ gem 'fog'
 gem 'fog-aws'
 gem 'jsonapi-parser', '~> 0.1.1.beta2'
 gem 'browser', require: 'browser/browser'
+gem 'nokogiri', '>= 1.8.5'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -49,6 +52,7 @@ group :development, :test do
   gem 'capybara', "2.3.0"
   gem "capybara-webkit", "1.5.1"
   gem 'launchy'
+  gem 'rb-readline'
 end
 
 group :test do
