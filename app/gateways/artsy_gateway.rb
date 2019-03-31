@@ -1,34 +1,11 @@
-# This Gateway isn't suitable for production use.
-# It's goal is to target published artwork with images
-
-# Possibility I'm missing something, but neither 
-# Artsy's Artwork endpoint, nor its genes allow for search terms
-
-# Thus we're forced to go through the generalized, google-backed, search.
-
-# Most of the artwork (which we can thankfully target
-# through +more:pagemap:metatags-og_type:artwork)
-# isn't published, and AFAIK you can't query that aspect.
-
-# Thus, we're forced to check for an ID (denotes published)
-# which creates another request as the ID isn't return
-# without calling #self on the hyperclient record returned.
-
-# In addition, there's a size limit of 10 records per query.
-# Often a query will return a total_count of thousands...
-
-# It seems ridiculous, as none of the other apis utilized
-# in this app have similar limitations.  The APIs range from
-# Google to Discogs.com, Harvard Art Museum (all sizes of operation, is my point),
-# and are implemented using REST to various degrees of 'psuedo'-REST.
-
-# Sigh.
-
-
-require 'hyperclient'
+require 'http'
+require 'net/http'
+require 'json'
 
 class ArtsyGateway
   ARTSY_ENDPOINT = 'https://api.artsy.net/api'
+  ARTWORK_ENDPOINT = 'https://api.artsy.net/api/artworks'
+  SEARCH_ENDPOINT = 'https://api.artsy.net/api/search'
   
   attr_accessor :listing_id, :listing_ids, :api, :errors
   
@@ -51,76 +28,92 @@ class ArtsyGateway
   def search(query, params={})
     number_of_records_per = 10
     offset = params[:offset] ? params[:offset] : 0
-    begin
-      whole = api.search({q: "#{query}+more:pagemap:metatags-og_type:artwork", size: number_of_records_per, offset: offset}.reverse_merge(params))
-      results = parse_results(whole.self)
-      if results.any? || whole.self.total_count <= offset+number_of_records_per
+    
+      # begin
+      
+      response = api.get(SEARCH_ENDPOINT, params: {q: query, type: 'artwork', size: number_of_records_per, offset: offset, published: 'true'}.reverse_merge(params)).parse
+      # whole = api.search({q: "#{query}type=artwork", size: number_of_records_per, offset: offset}.reverse_merge(params))
+     
+      results = parse_results(response["_embedded"]["results"])
+
+      if results.any? || response["total_count"] <= offset+number_of_records_per
         if results.empty?
           error_response
         else 
           results
         end
       else
+         
         offset = offset+number_of_records_per
-        self.search(query, {size: number_of_records_per, offset: offset}.reverse_merge(params))
+        search(query, {offset: offset})
       end
-    rescue Faraday::Error::ResourceNotFound => e
-      error_response(e.message)
-    rescue Faraday::ClientError => e
-      error_response
-    end
+    # rescue Faraday::Error::ResourceNotFound => e
+    #   # error_response(e.message)
+    # rescue Faraday::ClientError => e
+    #   # error_response
+    # end
   end
   
   # this isn't really getting all works - need to add pagination
   def all_works
-    works = api.artworks(total_count: 1)
-    works.artworks
+    works = api.get(ARTWORK_ENDPOINT)
+    works.parse["_embedded"]["artworks"]
   end
 
   #  #find is a better name or find_artwork
   def single_listing(listing_id)
-    begin
-     artwork = api.artwork(id: listing_id)
-     artwork.title # to see if we've found anything
-     artwork
-    rescue Faraday::Error::ResourceNotFound => e
-      error_response
-    end
+     artwork_query = api.get(ARTWORK_ENDPOINT + '/' + listing_id)
+     # So, sometimes the contnet_type isn't set? That's odd
+    #  p "Artwork query content type: #{artwork_query.content_type}"
+     artwork = artwork_query.parse
+    unless artwork["title"].nil?
+      artwork
+     else 
+      error_response(artwork['message'])
+     end
+
   end
   
   def artist_works(artist_id)
-    works = api.artist(id: artist_id).artworks(total_count: 1)
-    works.artworks
+    response = api.follow.get("https://api.artsy.net/api/artworks/", params: {artist_id: artist_id}).parse
+    response["_embedded"]["artworks"]
   end
   
   def art_name(art)
-    art.title
+    art["title"]
   end
   
   def art_creator(art)
-    art.artists.map(&:name).to_sentence  
+    artist_link = api.get(art["_links"]["artists"]["href"])
+    artist_response = artist_link.parse
+    artist = artist_response["_embedded"]["artists"]
+    artist.map{|a| a["name"]}.to_sentence
   end
   
   def art_description(art)
     # I'm going to want to concat some stuff here,
     # the medium, the collecting_institution and perhps additional_information and image_rights
-    art.blurb
+
+    art["blurb"]
   end
   
   def art_release_date(art)
-    art.date
+    art["date"]
   end
   
-  def art_image(art, image_version='medium')
-    "#{art.image._url.split(".jpg")[0]}#{image_version}.jpg"
+  def art_image(url, image_version='medium')
+    if url.class == Hash
+      url = url["_links"]["thumbnail"]["href"]
+    end
+    "#{url.split(/\/\w+.jpg$/)[0]}/#{image_version}.jpg"
   end
   
   def art_images(art)
-    art.image_versions.map{ |version| art_image(art)}
+    art["image_versions"].map{ |version| art_image(art["_links"]["thumbnail"]["href"], version)}
   end
   
   def art_additional_images(art)
-    art_images(art) - [art_image(art)]
+    art_images(art) - [art_image(art["_links"]["thumbnail"]["href"])]
   end
   
   def art_source
@@ -128,7 +121,8 @@ class ArtsyGateway
   end
   
   def art_source_link(art)
-    art.permalink.to_s
+
+    art["_links"]["permalink"]["href"]
   end
   
   def art_category(art)
@@ -136,7 +130,7 @@ class ArtsyGateway
   end
   
   def links_for_resource(resource)
-    resource._links
+    resource["_links"]
   end
   
 
@@ -145,12 +139,16 @@ class ArtsyGateway
   end
   
   def renew_token
-    response = api(true).tokens.xapp_token._post(client_id: ENV['artsy_client_id'], client_secret: ENV['artsy_client_secret'])
+    api_url = URI.parse('https://api.artsy.net/api/tokens/xapp_token')
+    response = Net::HTTP.post_form(api_url, client_id:  ENV['artsy_client_id'], client_secret: ENV['artsy_client_secret'])
+    
+    xapp_token = JSON.parse(response.body)['token']
+    expires_on = JSON.parse(response.body)['expires_at']
 
     if token.present?
-      token.update(token: response.token, expires_on: response.expires_at)
+      token.update(token: xapp_token, expires_on: expires_on)
     else
-      AuthorizationToken.create(service: "artsy", token: response.token, expires_on: response.expires_at) 
+      AuthorizationToken.create(service: "artsy", token: xapp_token, expires_on: expires_on) 
     end
   end
 
@@ -161,49 +159,50 @@ class ArtsyGateway
   private
   
   def api(renewing=false)
-      Hyperclient.new(ARTSY_ENDPOINT) do |api|
-        api.headers['Accept'] = 'application/vnd.artsy-v2+json'
-        if renewing
-          api.headers['Content-Type'] = 'application/json' 
-        else
-          api.headers['X-Xapp-Token'] = token.token
-        end
+    headers = {
+      accept: 'application/vnd.artsy-v2+json'
+    }
+    if renewing 
+      headers[:content_type] = "application/json" 
+    else
+      headers['X-Xapp-Token'] = token.token
+    end
 
-
-        api.connection(default: false) do |conn|
-          conn.use FaradayMiddleware::FollowRedirects
-          conn.use Faraday::Response::RaiseError
-          conn.request :json
-          conn.response :json, content_type: /\bjson$/
-          conn.adapter :net_http
-        end
-      end
+    HTTP.headers("Accept": "application/vnd.artsy-v2+json", "X-Xapp-Token": token.token)
+  
   end
   
   def guaranteed_items
     [listing_id, listing_ids].compact.flatten(1) 
   end
   
-  def parse_results(whole)
-
-    whole.results.map do |result|
-     begin
-
-       next unless result.self.id.present?
+  def parse_results(results)
+    results.map do |result|
+      id = result_id(result)
+      thumbnail_url = result_thumbnail(result)
+      
+      next unless id && thumbnail_url
       {
-        title: result.title,
-        id: result.self.id,
-        image: art_image(result.self),
-        type: result.type
+        title: result["title"],
+        id: id,
+        image: art_image(thumbnail_url),
+        type: result["type"]
       }  
-     rescue Faraday::ResourceNotFound => e
-     end
    end.compact
   end
   
   def error_response(message="No Results Found!")
     @errors << message
     false 
+  end
+
+  def result_id(result)
+    available = api.get(result["_links"]["self"]["href"]).code != 404
+    available && result["_links"]["permalink"] && result["_links"]["permalink"]["href"].split("/").last
+  end
+
+  def result_thumbnail(result)
+    result["_links"].has_key?("thumbnail") && result["_links"]["thumbnail"] != "/assets/shared/missing_image.png" &&  result["_links"]["thumbnail"]["href"]
   end
   
 end

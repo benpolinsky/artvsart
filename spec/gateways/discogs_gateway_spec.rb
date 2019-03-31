@@ -3,7 +3,7 @@ require 'rails_helper'
 
 # The Various Art Gateways will plug respond to messages
 # sent by an Importer.  
-
+DISCOGS_IMAGE_ARRAY = /https\:\/\/img.discogs.com/
 RSpec.describe "Discogs Gateway" do
   let(:gateway){DiscogsGateway.new}
 
@@ -30,18 +30,18 @@ RSpec.describe "Discogs Gateway" do
   it "returns all works for an artist" do
     slick = gateway.single_listing('7028129').artists.first.id
     slick_discog = gateway.artist_works(slick)
-    expect(slick_discog.pagination.items).to eq 2
-    expect(slick_discog.releases.map(&:title)).to match ["Everything's Game", "Earth Rocks Harder"]
+    expect(slick_discog.pagination.items).to eq 3
+    expect(slick_discog.releases.map(&:title)).to match ["Everything's Game", "Earth Rocks Harder", "Philly Sound Clash - Music To Drive By Volume 1"]
   end
   
   it "returns an image uri for each result" do
     erh = gateway.single_listing('7028129')
-    expect(gateway.art_image(erh)).to match /https\:\/\/api\-img.discogs.com/
+    expect(gateway.art_image(erh)).to match DISCOGS_IMAGE_ARRAY
   end
   
   it "returns an array of image uris for each result" do
     erh = gateway.single_listing('7028129')
-    expect(gateway.art_images(erh).all?{|a| a.match(/https\:\/\/api\-img.discogs.com/) }).to eq true 
+    expect(gateway.art_images(erh).all?{|a| a.match(DISCOGS_IMAGE_ARRAY) }).to eq true 
   end
   
   it "returns #additional_images as all images except the primary" do
@@ -81,7 +81,7 @@ RSpec.describe "Discogs Gateway" do
   
   it "sets errors if an id is not found or invalid", focus: true do
     expect(gateway.single_listing('bogasdh083d2')).to eq false
-    expect(gateway.errors).to eq ["No Results Found!"]
+    expect(gateway.errors).to eq ["The requested resource was not found."]
   end
   
 end

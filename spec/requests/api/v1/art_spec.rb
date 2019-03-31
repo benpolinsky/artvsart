@@ -77,9 +77,9 @@ RSpec.describe "Art", type: :request do
           get '/api/v1/art', headers: @headers
           expect(response.code).to eq '200'
 
-          expect(json_response['category_counts'].select{|c| c.name == 'music'}.first['art_count']).to eq 3
-          expect(json_response['category_counts'].select{|c| c.name == 'art'}.first['art_count']).to eq 2
-          expect(json_response['category_counts'].select{|c| c.name == 'literature'}.first['art_count']).to eq 1
+          expect(json_response['category_counts'].select{|c| c['name'] == 'music'}.first['art_count']).to eq 3
+          expect(json_response['category_counts'].select{|c| c['name'] == 'art'}.first['art_count']).to eq 2
+          expect(json_response['category_counts'].select{|c| c['name'] == 'literature'}.first['art_count']).to eq 1
 
         end
         
@@ -265,7 +265,7 @@ RSpec.describe "Art", type: :request do
       
         it "updates the status of many pieces of art" do
           put '/api/v1/art/toggle_many', params: {status: 'published', art_ids: @ids}, headers: @headers
-          expect(json_response['art'].map{|a| a.id}).to match @ids
+          expect(json_response['art'].map{|a| a['id']}).to match @ids
           expect(json_response['art'].all?{|a| a['status'] == 'published'}).to eq true
         end
         
@@ -334,7 +334,7 @@ RSpec.describe "Art", type: :request do
             source: "Discogs"
           }
           post '/api/v1/art/import', params: art_params, headers: @headers
-          expect(json_response['errors']).to eq ["No Results Found!"]
+          expect(json_response['errors']).to eq ["The requested resource was not found."]
           
           expect(Art.count).to eq 0
           art_params = {

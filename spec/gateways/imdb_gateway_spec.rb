@@ -8,7 +8,7 @@ RSpec.describe "IMDB Gateway" do
     search_results = gateway.search("usual suspects")
     expect(search_results.first[:title]).to eq "The Usual Suspects"
   end
-  
+
   it "returns results for a different search" do
     search_results = gateway.search("Pulp")
     expect(search_results.first[:title]).to eq "Pulp Fiction"
@@ -34,7 +34,7 @@ RSpec.describe "IMDB Gateway" do
   it "returns an image uri for each result" do
     search_results = gateway.search("Pulp")
     pulp = search_results.first
-    expect(pulp.image).to match /.jpg/
+    expect(pulp[:image]).to match /.jpg/
   end
 
   it "returns #additional_images as all images except the primary" do
@@ -54,7 +54,7 @@ RSpec.describe "IMDB Gateway" do
 
   it "returns a description for each result" do
     listing = gateway.single_listing('tt0114814')
-    expect(gateway.art_description(listing)).to eq "A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which begin when five criminals meet at a seemingly random police lineup."
+    expect(gateway.art_description(listing)).to eq "A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which began when five criminals met at a seemingly random police lineup."
   end
 
   it "returns a release_date for each result" do

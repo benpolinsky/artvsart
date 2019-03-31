@@ -11,10 +11,10 @@ class PhilartGateway
   end
   
   def search(query, params={})
-    art_link = api.links.find{|link| link.rel == 'titles'}.href
+    art_link = api["links"].find{|link| link['rel'] == 'titles'}["href"]
     art = api art_link
     query = Regexp.new(query, Regexp::IGNORECASE)
-    results = art.body.list.select {|a| a["name"] =~ query}.map do |art| 
+    results = art.body['list'].select {|a| a["name"] =~ query}.map do |art| 
       art["title"] = art.delete("name")
       art["image"] = art_image(single_listing(link_for(art)))
       art['id'] = link_for(art)
@@ -65,7 +65,7 @@ class PhilartGateway
   end
   
   def art_location(art)
-    "Located: #{art.body.location["description"]}."
+    "Located: #{art.body["location"]["description"]}."
   end
   
   def art_comments(art)
@@ -78,8 +78,8 @@ class PhilartGateway
   
   def art_images(art)
     found_images = []
-    art.body.pictures.each do |value| 
-      found_images << value.values.map(&:url)
+    art.body["pictures"].each do |value| 
+      found_images << value.values.map{|v| v["url"]}
     end
     found_images.flatten
   end
@@ -115,7 +115,7 @@ class PhilartGateway
   end
   
   def link_for(art)
-    art.links.find{|link| link.rel == 'self'}.href
+    art['links'].find{|link| link["rel"] == 'self'}['href']
   end
   
   def api(path=PHILART_ENDPOINT)

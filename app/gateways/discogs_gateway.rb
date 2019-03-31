@@ -1,6 +1,7 @@
 class DiscogsGateway
   attr_reader :wrapper, :listing_id, :listing_ids, :artist_id
   attr_accessor :errors
+
   def initialize(params={})
     @listing_id = params[:listing_id]
     @listing_ids = params[:listing_ids]
@@ -16,14 +17,17 @@ class DiscogsGateway
     end
   end
 
-  
+
   def single_listing(release_id)
     # this is bad, mkay
     sleep 1
-    begin
-      wrapper.get_release(release_id)
-    rescue Discogs::UnknownResource
-      error_response
+    
+    response = wrapper.get_release(release_id)
+    
+    if response.message
+      error_response(response.message)
+    else
+      response
     end
     
   end
@@ -128,6 +132,7 @@ class DiscogsGateway
   end
   
   def error_response(message="No Results Found!")
+    
     @errors << message
     @errors.uniq!
     false

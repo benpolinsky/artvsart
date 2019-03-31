@@ -13,8 +13,8 @@ class IMDBGateway
   end
   
   def single_listing(id)
-    result = OMDB.id(id) 
-    if result[:error]
+    result = api.find_by_id(id) 
+    if result.error
       error_response
     else
       result
@@ -22,14 +22,18 @@ class IMDBGateway
   end
 
   def search(query, params={})
-    results = [OMDB.search(query)].flatten(1)
-    if results.first[:response] == "False"
+    
+    results = api.search(query)
+    if !results.methods.include?(:movies)
       error_response('No Results!')
     else
-      results.map do |art|
-        art[:image] = art.delete(:poster)
-        art[:id] = art.delete(:imdb_id)
-        art
+      results.movies.map do |art|
+        {
+          image: art.poster,
+          id: art.imdbid,
+          title: art.title
+        }
+
       end
     end
   end
@@ -40,11 +44,11 @@ class IMDBGateway
   # extract_class and delegate_class?
   # Not sure...
   def art_image(art)
-    art[:poster]
+    art.poster
   end
   
   def art_images(art)
-    [art[:poster]]
+    [art.poster]
   end
   
   def art_additional_images(art)
@@ -76,7 +80,7 @@ class IMDBGateway
   end
   
   def art_source_link(art)
-    "https://www.imdb.com/title/#{art.imdb_id}"
+    "https://www.imdb.com/title/#{art.imdbid}"
   end
   
   def art_other(art)
@@ -93,6 +97,11 @@ class IMDBGateway
   def error_response(message="Incorrect IMDb ID.")
     @errors << message
     false
+  end
+
+  private
+  def api
+    Omdb::Api::Client.new(api_key: ENV['omdb_key'])
   end
 
 end

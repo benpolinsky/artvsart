@@ -9,8 +9,9 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'capybara/rails'
 require 'capybara/rspec'
+require 'support/factory_bot'
 Rails.application.load_tasks
-require 'support/factory_girl'
+
 require 'support/json_response_helper'
 require "fantaskspec"
 

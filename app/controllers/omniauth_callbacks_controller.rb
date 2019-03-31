@@ -1,7 +1,10 @@
 # Yeah, getting outta control... time to refactor to an AuthService
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def facebook
+    puts "WEre in facebook callback!"
+    puts request.env['omniauth.auth'].inspect
     user = User.only_deleted.find_by(email: request.env['omniauth.auth'].info.email)
+    # byebug
     if user
       if params[:restoring] == 'true'
         user.restore
