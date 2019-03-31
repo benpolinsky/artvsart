@@ -31,10 +31,11 @@ class ArtsyGateway
     
       # begin
       
-      response = api.get(SEARCH_ENDPOINT, params: {q: query, type: 'artwork', size: number_of_records_per, offset: offset}.reverse_merge(params)).parse
+      response = api.get(SEARCH_ENDPOINT, params: {q: query, type: 'artwork', size: number_of_records_per, offset: offset, published: 'true'}.reverse_merge(params)).parse
       # whole = api.search({q: "#{query}type=artwork", size: number_of_records_per, offset: offset}.reverse_merge(params))
      
       results = parse_results(response["_embedded"]["results"])
+
       if results.any? || response["total_count"] <= offset+number_of_records_per
         if results.empty?
           error_response
@@ -42,7 +43,9 @@ class ArtsyGateway
           results
         end
       else
+         
         offset = offset+number_of_records_per
+        search(query, {offset: offset})
       end
     # rescue Faraday::Error::ResourceNotFound => e
     #   # error_response(e.message)
@@ -102,7 +105,7 @@ class ArtsyGateway
     if url.class == Hash
       url = url["_links"]["thumbnail"]["href"]
     end
-    "#{url.split(".jpg")[0]}#{image_version}.jpg"
+    "#{url.split(/\/\w+.jpg$/)[0]}/#{image_version}.jpg"
   end
   
   def art_images(art)
@@ -194,7 +197,8 @@ class ArtsyGateway
   end
 
   def result_id(result)
-    result["_links"]["permalink"] && result["_links"]["permalink"]["href"].split("/").last
+    available = api.get(result["_links"]["self"]["href"]).code != 404
+    available && result["_links"]["permalink"] && result["_links"]["permalink"]["href"].split("/").last
   end
 
   def result_thumbnail(result)

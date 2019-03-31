@@ -15,6 +15,7 @@ RSpec.describe "HarvardArtGateway" do
 
   it "returns results for a different search" do
     search_results = gateway.search("Oranges")
+
     expect(search_results.first.title).to_not be_blank
   end
   

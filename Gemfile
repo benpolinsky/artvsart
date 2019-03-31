@@ -13,8 +13,10 @@ gem "paranoia", "~> 2.4.1"
 gem 'kaminari', "~> 1.0.0"
 # auth
 gem 'devise', "~> 4.2.1"
-gem 'omniauth-facebook'
-gem 'omniauth-github'
+gem 'omniauth', '~> 1.3.1'
+gem 'omniauth-facebook', "~> 4.0.0"
+gem 'omniauth-github', "~> 1.1.2"
+gem "omniauth-oauth2", "~> 1.2"
 gem 'cancancan', '~> 1.10' # not sure if im using
 
 gem 'rack-cors'

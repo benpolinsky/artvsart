@@ -171,7 +171,7 @@ class Competition < ApplicationRecord
   
  
   def self.new_battle_pair    
-    Art.all.sample(2)
+    Art.published.sample(2)
   end
   
   def self.competitions_between_competitors(art_one, art_two)

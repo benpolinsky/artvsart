@@ -1,5 +1,6 @@
 class CompetitionsController < ApplicationController
   include ActionController::Serialization
+  
   before_action :authorize_user_or_create_guest!, except: [:index, :show]
   
   def show
