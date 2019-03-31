@@ -36,7 +36,7 @@ gem 'hyperresource'
 gem 'http'
 gem 'google-api-client', '~> 0.9'
 
-gem 'rmagick'
+gem 'rmagick', '2.16.0', :require => 'rmagick'
 gem 'carrierwave'
 gem 'fog'
 gem 'fog-aws'
