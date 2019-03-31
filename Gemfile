@@ -13,7 +13,7 @@ gem 'friendly_id', '~> 5.2.4'
 gem "paranoia", "~> 2.4.1"
 gem 'kaminari', "~> 1.0.0"
 # auth
-gem 'devise', "~> 4.2.1"
+gem 'devise', "~> 4.4.0"
 gem 'omniauth', '~> 1.3.1'
 gem 'omniauth-facebook', "~> 4.0.0"
 gem 'omniauth-github', "~> 1.1.2"
